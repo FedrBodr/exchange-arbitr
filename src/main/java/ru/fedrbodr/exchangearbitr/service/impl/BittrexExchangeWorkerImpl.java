@@ -10,11 +10,12 @@ import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.model.MarketPosition;
 import ru.fedrbodr.exchangearbitr.service.ExchangeWorker;
 
-import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BittrexExchangeWorkerImpl implements ExchangeWorker {
@@ -24,7 +25,7 @@ public class BittrexExchangeWorkerImpl implements ExchangeWorker {
 	public void readAndSaveMarketPositions() throws IOException, JSONException {
 		JSONObject json = new JSONObject(IOUtils.toString(new URL("https://bittrex.com/api/v2.0/pub/Markets/GetMarketSummaries"), Charset.forName("UTF-8")));
 		JSONArray result = json.getJSONArray("result");
-
+		List<MarketPosition> marketPositions = new ArrayList<>();
 		for(int i = result.length()-1; i>0; i--) {
 			JSONObject marketPositionJsonObject = result.getJSONObject(i);
 			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
@@ -36,8 +37,10 @@ public class BittrexExchangeWorkerImpl implements ExchangeWorker {
 			marketPosition.setPrimaryCurrencyName(market.getString("BaseCurrency"));
 			marketPosition.setSecondaryCurrencyName(market.getString("MarketCurrency"));
 			marketPosition.setTimeStamp(LocalDateTime.parse(summary.getString("TimeStamp")));
-
-			marketPositionRepository.saveAndFlush(marketPosition);
+			marketPositions.add(marketPosition);
 		}
+
+		marketPositionRepository.save(marketPositions);
+		marketPositionRepository.flush();
 	}
 }

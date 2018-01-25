@@ -1,9 +1,7 @@
 package ru.fedrbodr.exchangearbitr.model;
 
-import com.sun.javafx.binding.StringFormatter;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
