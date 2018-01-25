@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.model.MarketPosition;
 import ru.fedrbodr.exchangearbitr.service.ExchangeWorker;
 
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 @Service
 public class BittrexExchangeWorkerImpl implements ExchangeWorker {
 	@Autowired
-	private EntityManager entityManager;
+	private MarketPositionRepository marketPositionRepository;
 
 	public void readAndSaveMarketPositions() throws IOException, JSONException {
 		JSONObject json = new JSONObject(IOUtils.toString(new URL("https://bittrex.com/api/v2.0/pub/Markets/GetMarketSummaries"), Charset.forName("UTF-8")));
@@ -35,9 +36,8 @@ public class BittrexExchangeWorkerImpl implements ExchangeWorker {
 			marketPosition.setPrimaryCurrencyName(market.getString("BaseCurrency"));
 			marketPosition.setSecondaryCurrencyName(market.getString("MarketCurrency"));
 			marketPosition.setTimeStamp(LocalDateTime.parse(summary.getString("TimeStamp")));
-			entityManager.persist(marketPosition);
-			entityManager.flush();
-		}
 
+			marketPositionRepository.saveAndFlush(marketPosition);
+		}
 	}
 }
