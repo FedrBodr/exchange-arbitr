@@ -28,7 +28,7 @@ public class MarketPositionRepositoryTest {
 		entityManager.flush();
 
 		// when
-		MarketPosition btcLtcFound = marketPositionRepository.findByMarketName(btcLtc.getMarketName());
+		MarketPosition btcLtcFound = marketPositionRepository.findByMarketName("BTC-LTC");
 
 		// then
 		assertEquals(btcLtcFound.getMarketName(), btcLtc.getMarketName());
