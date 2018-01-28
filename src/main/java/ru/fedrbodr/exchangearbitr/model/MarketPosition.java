@@ -15,24 +15,18 @@ public class MarketPosition {
 	@Id
 	@GeneratedValue
 	private long id;
+	private long exchangeId;
 	private String marketName;
 	private String primaryCurrencyName;
 	private String secondaryCurrencyName;
 	private Double price;
 	private LocalDateTime timeStamp;
+	private LocalDateTime dbSaveTime;
 
 
 
 	public MarketPosition(String marketName) {
 		this.marketName = marketName;
-	}
-
-	public MarketPosition(String marketName, String primaryCurrencyName, String secondaryCurrencyName, Double price, LocalDateTime timeStamp) {
-		this.marketName = marketName;
-		this.primaryCurrencyName = primaryCurrencyName;
-		this.secondaryCurrencyName = secondaryCurrencyName;
-		this.price = price;
-		this.timeStamp = timeStamp;
 	}
 
 	@Override

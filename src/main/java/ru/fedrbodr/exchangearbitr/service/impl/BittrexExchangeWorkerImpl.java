@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
+import ru.fedrbodr.exchangearbitr.model.Exchange;
 import ru.fedrbodr.exchangearbitr.model.MarketPosition;
 import ru.fedrbodr.exchangearbitr.service.ExchangeWorker;
 
@@ -29,14 +30,16 @@ public class BittrexExchangeWorkerImpl implements ExchangeWorker {
 		for(int i = result.length()-1; i>0; i--) {
 			JSONObject marketPositionJsonObject = result.getJSONObject(i);
 			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
+			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");
 
 			MarketPosition marketPosition = new MarketPosition();
 			marketPosition.setMarketName(market.getString("MarketName"));
-			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");
 			marketPosition.setPrice(summary.getDouble("Last"));
 			marketPosition.setPrimaryCurrencyName(market.getString("BaseCurrency"));
 			marketPosition.setSecondaryCurrencyName(market.getString("MarketCurrency"));
 			marketPosition.setTimeStamp(LocalDateTime.parse(summary.getString("TimeStamp")));
+			marketPosition.setDbSaveTime(LocalDateTime.now());
+			marketPosition.setExchangeId(Exchange.BITTREX.getId());
 			marketPositions.add(marketPosition);
 		}
 

@@ -11,6 +11,10 @@ public class ExchangeArbitrApplication {
 	public static void main(String[] args) {
 
 		ApplicationContext ctx = SpringApplication.run(ExchangeArbitrApplication.class, args);
-		ctx.getBean(CrawlerWorker.class).do10DataSaves();
+		try {
+			ctx.getBean(CrawlerWorker.class).do100DataSaves();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }
