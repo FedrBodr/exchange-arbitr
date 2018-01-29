@@ -12,11 +12,11 @@ public class CrawlerWorker {
 	@Autowired
 	private BittrexExchangeWorkerImpl bittrexExchangeWorker;
 
-	public void do100DataSaves() throws InterruptedException {
+	public void do10DataSaves() throws InterruptedException {
 		Date start = new Date();
 		System.out.println("Before start 10 iteration of bittrexExchangeWorker.readAndSaveMarketPositions");
 		Date startPreviousCall = new Date();
-		for(int i = 100; i>0 ; i--) {
+		for(int i = 10; i>0 ; i--) {
 			try {
 				bittrexExchangeWorker.readAndSaveMarketPositions();
 			} catch (IOException e) {
@@ -24,7 +24,10 @@ public class CrawlerWorker {
 			}
 			long lastCallWas = System.currentTimeMillis() - startPreviousCall.getTime();
 			if( lastCallWas < 500){
-				this.wait(500 - lastCallWas);
+				synchronized (this) { // obtain lock's monitor
+					// Release the lock, but wait only 500 ms for notify
+					this.wait(500 - lastCallWas);
+				}
 			}
 			startPreviousCall = new Date();
 		}

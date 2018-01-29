@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.ParseException;
-import java.time.LocalDateTime;
-
-import static org.junit.Assert.*;
 
 public class ExchangeReaderTest {
 	@Test
@@ -29,12 +26,12 @@ public class ExchangeReaderTest {
 			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
 
 			MarketPosition marketPosition = new MarketPosition();
-			marketPosition.setMarketName(market.getString("MarketName"));
+			/*marketPosition.setMarketName(market.getString("MarketName"));
 			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");
 			marketPosition.setPrice(summary.getDouble("Last"));
 			marketPosition.setPrimaryCurrencyName(market.getString("BaseCurrency"));
-			marketPosition.setSecondaryCurrencyName(market.getString("MarketCurrency"));
-			marketPosition.setTimeStamp(LocalDateTime.parse(summary.getString("TimeStamp")));
+			marketPosition.setSecondaryCurrencyName(market.getString("MarketCurrency"));*/
+			/*marketPosition.setTimeStamp(LocalDateTime.parse(summary.getString("TimeStamp")));*/
 			System.out.println(marketPosition);
 		}
 	}

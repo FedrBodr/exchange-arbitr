@@ -1,43 +1,34 @@
 package ru.fedrbodr.exchangearbitr.model;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
-@NoArgsConstructor
 public class MarketPosition {
 	@Id
 	@GeneratedValue
 	private long id;
 	private long exchangeId;
-	private String marketName;
-	private String primaryCurrencyName;
-	private String secondaryCurrencyName;
 	private Double price;
+	@Column(columnDefinition="DATETIME(6)")
 	private LocalDateTime timeStamp;
+	@Column(columnDefinition="DATETIME(6) NOT NULL")
 	private LocalDateTime dbSaveTime;
-
-
-
-	public MarketPosition(String marketName) {
-		this.marketName = marketName;
-	}
+	@ManyToOne
+	@JoinColumn(name = "market_summary_id")
+	private MarketSummary marketSummary;
 
 	@Override
 	public String toString() {
 		return "MarketPosition{" +
 				"id=" + id +
-				", marketName='" + marketName + '\'' +
-				", primaryCurrencyName='" + primaryCurrencyName + '\'' +
-				", secondaryCurrencyName='" + secondaryCurrencyName + '\'' +
+				", exchangeId=" + exchangeId +
 				", price=" + String.format("%f" , price)+
 				", timeStamp=" + timeStamp +
+				", dbSaveTime=" + dbSaveTime +
 				'}';
 	}
 }

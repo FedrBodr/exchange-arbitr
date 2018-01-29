@@ -8,13 +8,9 @@ import ru.fedrbodr.exchangearbitr.service.CrawlerWorker;
 @SpringBootApplication
 public class ExchangeArbitrApplication {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 
 		ApplicationContext ctx = SpringApplication.run(ExchangeArbitrApplication.class, args);
-		try {
-			ctx.getBean(CrawlerWorker.class).do100DataSaves();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		ctx.getBean(CrawlerWorker.class).do10DataSaves();
 	}
 }

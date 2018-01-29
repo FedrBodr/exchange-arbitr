@@ -7,8 +7,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.fedrbodr.exchangearbitr.model.MarketPosition;
+import ru.fedrbodr.exchangearbitr.model.MarketSummary;
 
-import static org.junit.Assert.*;
+import java.time.LocalDateTime;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -21,17 +24,20 @@ public class MarketPositionRepositoryTest {
 	private MarketPositionRepository marketPositionRepository;
 
 	@Test
-	public void insertReadByNameTest() {
-		// given
-		MarketPosition btcLtc = new MarketPosition("BTC-LTC");
-		entityManager.persist(btcLtc);
-		entityManager.flush();
-
+	public void insertReadTest() {
+		MarketPosition marketPositionForPersist = new MarketPosition();
+		MarketSummary marketSummary = new MarketSummary("ETH-LTC", "ETH", "LTC");
+		marketPositionForPersist.setMarketSummary(marketSummary);
+		marketPositionForPersist.setExchangeId(0);
+		marketPositionForPersist.setDbSaveTime(LocalDateTime.now());
+		marketPositionForPersist.setPrice(0.0000018);
+		entityManager.persistAndFlush(marketSummary);
+		entityManager.persistAndFlush(marketPositionForPersist);
 		// when
-		MarketPosition btcLtcFound = marketPositionRepository.findByMarketName("BTC-LTC");
+		MarketPosition marketPositionFromDb = marketPositionRepository.findOne(marketPositionForPersist.getId());
 
 		// then
-		assertEquals(btcLtcFound.getMarketName(), btcLtc.getMarketName());
+		assertEquals(marketPositionFromDb.getMarketSummary().getMarketName(), marketPositionForPersist.getMarketSummary().getMarketName());
 	}
 
 }
