@@ -12,7 +12,6 @@ import ru.fedrbodr.exchangearbitr.model.MarketPosition;
 import ru.fedrbodr.exchangearbitr.model.MarketSummary;
 import ru.fedrbodr.exchangearbitr.service.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.service.MarketSummaryService;
-import ru.fedrbodr.exchangearbitr.utils.MarketUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -40,8 +39,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 			MarketPosition marketPosition = new MarketPosition();
 			marketPosition.setPrice(summary.getDouble("Last"));
 
-			MarketSummary marketSummary = marketSummaryService.getOrCreateNewMarketSummary(
-					MarketUtils.convertPoloniexToUniversalMarketName(market.getString("MarketName")));
+			MarketSummary marketSummary = marketSummaryService.getOrCreateNewMarketSummary(market.getString("MarketName"));
 
 			marketPosition.setMarketSummary(marketSummary);
 			marketPosition.setTimeStamp(LocalDateTime.parse(summary.getString("TimeStamp")));
