@@ -37,7 +37,7 @@ public class MarketPositionRepositoryTest {
 		MarketPosition marketPositionFromDb = marketPositionRepository.findOne(marketPositionForPersist.getId());
 
 		// then
-		assertEquals(marketPositionFromDb.getMarketSummary().getMarketName(), marketPositionForPersist.getMarketSummary().getMarketName());
+		assertEquals(marketPositionFromDb.getMarketSummary().getName(), marketPositionForPersist.getMarketSummary().getName());
 	}
 
 }

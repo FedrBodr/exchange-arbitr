@@ -1,8 +1,8 @@
 package ru.fedrbodr.exchangearbitr.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.fedrbodr.exchangearbitr.service.impl.BittrexExchangeWorkerImpl;
 
 import java.io.IOException;
 import java.util.Date;
@@ -10,15 +10,20 @@ import java.util.Date;
 @Service
 public class CrawlerWorker {
 	@Autowired
-	private BittrexExchangeWorkerImpl bittrexExchangeWorker;
+	@Qualifier("bittrexExchangeReaderImpl")
+	private ExchangeReader bittrexExchangeReader;
+	@Autowired
+	@Qualifier("poloniexExchangeReaderImpl")
+	private ExchangeReader poloniexExchangeReader;
 
 	public void do10DataSaves() throws InterruptedException {
 		Date start = new Date();
-		System.out.println("Before start 10 iteration of bittrexExchangeWorker.readAndSaveMarketPositions");
+		System.out.println("Before start 10 iteration of bittrexExchangeReader.readAndSaveMarketPositions");
 		Date startPreviousCall = new Date();
 		for(int i = 10; i>0 ; i--) {
 			try {
-				bittrexExchangeWorker.readAndSaveMarketPositions();
+				bittrexExchangeReader.readAndSaveMarketPositions();
+				poloniexExchangeReader.readAndSaveMarketPositions();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -33,7 +38,7 @@ public class CrawlerWorker {
 		}
 		Date end = new Date();
 
-		System.out.println("After start 10 iteration of bittrexExchangeWorker.readAndSaveMarketPositions total time in " +
+		System.out.println("After start 10 iteration of bittrexExchangeReader.readAndSaveMarketPositions total time in " +
 				"millisecconds:"+ (start.getTime() - end.getTime()));
 	}
 }

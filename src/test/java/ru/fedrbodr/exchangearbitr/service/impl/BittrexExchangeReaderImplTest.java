@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
-import ru.fedrbodr.exchangearbitr.service.ExchangeWorker;
+import ru.fedrbodr.exchangearbitr.service.ExchangeReader;
 
 import java.io.IOException;
 
@@ -17,12 +17,12 @@ import java.io.IOException;
 @DataJpaTest
 @SpringBootTest
 @ComponentScan("ru.fedrbodr.exchangearbitr")
-public class BittrexExchangeWorkerImplTest {
+public class BittrexExchangeReaderImplTest {
 	@Autowired
 	private MarketPositionRepository marketPositionRepository;
 
 	@Autowired
-	private ExchangeWorker exchangeReader;
+	private ExchangeReader exchangeReader;
 
 	@Test
 	public void insertReadByNameTest() throws IOException, JSONException {
@@ -31,7 +31,7 @@ public class BittrexExchangeWorkerImplTest {
 		// and found
 		MarketPosition btcLtcFound = marketPositionRepository.;
 		// then
-		assertEquals(btcLtcFound.getMarketName(), "BTC-LTC");
+		assertEquals(btcLtcFound.getName(), "BTC-LTC");
 		assertEquals(btcLtcFound.getPrimaryCurrencyName(), "BTC");
 		assertEquals(btcLtcFound.getSecondaryCurrencyName(), "LTC");*/
 	}

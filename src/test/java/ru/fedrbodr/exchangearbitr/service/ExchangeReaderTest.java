@@ -26,7 +26,7 @@ public class ExchangeReaderTest {
 			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
 
 			MarketPosition marketPosition = new MarketPosition();
-			/*marketPosition.setMarketName(market.getString("MarketName"));
+			/*marketPosition.setName(market.getString("MarketName"));
 			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");
 			marketPosition.setPrice(summary.getDouble("Last"));
 			marketPosition.setPrimaryCurrencyName(market.getString("BaseCurrency"));

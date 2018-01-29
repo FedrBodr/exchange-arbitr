@@ -7,6 +7,6 @@ import java.io.IOException;
 /*
 * Some logic with specific exchane site like read and save to db last prices
 * */
-public interface ExchangeWorker {
+public interface ExchangeReader {
 	void readAndSaveMarketPositions() throws IOException, JSONException;
 }
