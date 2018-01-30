@@ -1,9 +1,9 @@
 package ru.fedrbodr.exchangearbitr.services;
 
-import ru.fedrbodr.exchangearbitr.model.MarketSummary;
+import ru.fedrbodr.exchangearbitr.model.Symbol;
 
 public interface MarketSummaryService {
-	MarketSummary getOrCreateNewMarketSummary(String marketName, String baseCurrency, String marketCurrency);
+	Symbol getOrCreateNewMarketSummary(String marketName, String baseCurrency, String marketCurrency);
 
-	MarketSummary getOrCreateNewMarketSummary(String marketName);
+	Symbol getOrCreateNewMarketSummary(String marketName);
 }

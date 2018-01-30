@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.model.Exchange;
 import ru.fedrbodr.exchangearbitr.model.MarketPosition;
-import ru.fedrbodr.exchangearbitr.model.MarketSummary;
+import ru.fedrbodr.exchangearbitr.model.Symbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.MarketSummaryService;
 import ru.fedrbodr.exchangearbitr.utils.MarketNamesUtils;
@@ -33,9 +33,9 @@ public class PoloniexExchangeReaderImpl implements ExchangeReader {
 
 		while (marketNameIterator.hasNext()) {
 			String poloniexMarketName = marketNameIterator.next();
-			MarketSummary marketSummary = marketSummaryService.getOrCreateNewMarketSummary(MarketNamesUtils.convertPoloniexToUniversalMarketName(poloniexMarketName));
+			Symbol symbol = marketSummaryService.getOrCreateNewMarketSummary(MarketNamesUtils.convertPoloniexToUniversalMarketName(poloniexMarketName));
 			JSONObject jsonObject = json.getJSONObject(poloniexMarketName);
-			MarketPosition marketPosition = new MarketPosition(Exchange.POLONIEX, marketSummary, jsonObject.getDouble("last"));
+			MarketPosition marketPosition = new MarketPosition(Exchange.POLONIEX, symbol, jsonObject.getDouble("last"));
 			marketPositions.add(marketPosition);
 		}
 

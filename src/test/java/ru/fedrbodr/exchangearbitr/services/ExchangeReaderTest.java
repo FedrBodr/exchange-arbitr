@@ -31,8 +31,8 @@ public class ExchangeReaderTest {
 			/*marketPosition.setName(market.getString("MarketName"));
 			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");
 			marketPosition.setPrice(summary.getDouble("Last"));
-			marketPosition.setPrimaryCurrencyName(market.getString("BaseCurrency"));
-			marketPosition.setSecondaryCurrencyName(market.getString("MarketCurrency"));*/
+			marketPosition.setBaseName(market.getString("BaseCurrency"));
+			marketPosition.setQuoteName(market.getString("MarketCurrency"));*/
 			/*marketPosition.setTimeStamp(LocalDateTime.parse(summary.getString("TimeStamp")));*/
 			log.info(marketPosition.toString());
 		}

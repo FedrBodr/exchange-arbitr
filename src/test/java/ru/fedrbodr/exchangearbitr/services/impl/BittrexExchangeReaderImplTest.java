@@ -32,7 +32,7 @@ public class BittrexExchangeReaderImplTest {
 		MarketPosition btcLtcFound = marketPositionRepository.;
 		// then
 		assertEquals(btcLtcFound.getName(), "BTC-LTC");
-		assertEquals(btcLtcFound.getPrimaryCurrencyName(), "BTC");
-		assertEquals(btcLtcFound.getSecondaryCurrencyName(), "LTC");*/
+		assertEquals(btcLtcFound.getBaseName(), "BTC");
+		assertEquals(btcLtcFound.getQuoteName(), "LTC");*/
 	}
 }

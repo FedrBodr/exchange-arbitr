@@ -11,18 +11,18 @@ import javax.persistence.Id;
 @Entity
 @Data
 @NoArgsConstructor
-public class MarketSummary {
+public class Symbol {
 	@Id
 	@GeneratedValue
 	private long id;
 	@Column(unique=true)
 	private String name;
-	private String primaryCurrencyName;
-	private String secondaryCurrencyName;
+	private String baseName;
+	private String quoteName;
 
-	public MarketSummary(String name, String primaryCurrencyName, String secondaryCurrencyName) {
+	public Symbol(String name, String baseName, String quoteName) {
 		this.name = name;
-		this.primaryCurrencyName = primaryCurrencyName;
-		this.secondaryCurrencyName = secondaryCurrencyName;
+		this.baseName = baseName;
+		this.quoteName = quoteName;
 	}
 }

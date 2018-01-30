@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.model.Exchange;
 import ru.fedrbodr.exchangearbitr.model.MarketPosition;
-import ru.fedrbodr.exchangearbitr.model.MarketSummary;
+import ru.fedrbodr.exchangearbitr.model.Symbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.MarketSummaryService;
 import ru.fedrbodr.exchangearbitr.utils.MarketNamesUtils;
@@ -31,7 +31,7 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 	private MarketPositionRepository marketPositionRepository;
 	@Autowired
 	private MarketSummaryService marketSummaryService;
-	private Map<Integer, MarketSummary> coinexchangeIdToMarketSummaryMap;
+	private Map<Integer, Symbol> coinexchangeIdToMarketSummaryMap;
 
 	@PostConstruct
 	private void init(){
@@ -43,10 +43,10 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 			JSONArray markets = getNewJsonObject(" https://www.coinexchange.io/api/v1/getmarkets").getJSONArray("result");
 			markets.forEach(item -> {
 				JSONObject obj = (JSONObject) item;
-				MarketSummary marketSummary = marketSummaryService.getOrCreateNewMarketSummary(
+				Symbol symbol = marketSummaryService.getOrCreateNewMarketSummary(
 						MarketNamesUtils.convertCoinexchangeToUniversalMarketName(obj.getString("BaseCurrencyCode"), obj.getString("MarketAssetCode")));
 				int coinexchangeMarketID = obj.getInt("MarketID");
-				coinexchangeIdToMarketSummaryMap.put(coinexchangeMarketID, marketSummary);
+				coinexchangeIdToMarketSummaryMap.put(coinexchangeMarketID, symbol);
 			});
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
@@ -73,14 +73,14 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 		marketPositionRepository.flush();
 	}
 
-	private MarketSummary getUnifiedMarketSummary(int coinexchangeMarketID) {
-		MarketSummary marketSummary = coinexchangeIdToMarketSummaryMap.get(coinexchangeMarketID);
-		if(marketSummary==null){
-			log.info("Found Market Summary at coinexchange for non existen marketSummary");
+	private Symbol getUnifiedMarketSummary(int coinexchangeMarketID) {
+		Symbol symbol = coinexchangeIdToMarketSummaryMap.get(coinexchangeMarketID);
+		if(symbol ==null){
+			log.info("Found Market Summary at coinexchange for non existen symbol");
 			/* init all coinexchange markets summary again*/
 			this.init();
 		}
-		return marketSummary;
+		return symbol;
 	}
 
 

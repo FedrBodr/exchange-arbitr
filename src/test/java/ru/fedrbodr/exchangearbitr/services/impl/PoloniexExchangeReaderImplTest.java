@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.fedrbodr.exchangearbitr.dao.MarketSummaryRepository;
-import ru.fedrbodr.exchangearbitr.model.MarketSummary;
+import ru.fedrbodr.exchangearbitr.model.Symbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 
 import java.io.IOException;
@@ -35,8 +35,8 @@ public class PoloniexExchangeReaderImplTest {
 		// when
 		exchangeReader.readAndSaveMarketPositionsBySummaries();
 		// and found
-		MarketSummary marketSummary = marketSummaryRepository.findByName("BTC-LTC");
-		assertNotNull(marketSummary);
+		Symbol symbol = marketSummaryRepository.findByName("BTC-LTC");
+		assertNotNull(symbol);
 		assertNull(marketSummaryRepository.findByName("BTC_LTC"));
 
 	}

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.model.Exchange;
 import ru.fedrbodr.exchangearbitr.model.MarketPosition;
-import ru.fedrbodr.exchangearbitr.model.MarketSummary;
+import ru.fedrbodr.exchangearbitr.model.Symbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.MarketSummaryService;
 
@@ -59,8 +59,8 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
 			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");
 
-			MarketSummary marketSummary = marketSummaryService.getOrCreateNewMarketSummary(market.getString("MarketName"));
-			MarketPosition marketPosition = new MarketPosition(Exchange.BITTREX, marketSummary, summary.getDouble("Last"));
+			Symbol symbol = marketSummaryService.getOrCreateNewMarketSummary(market.getString("MarketName"));
+			MarketPosition marketPosition = new MarketPosition(Exchange.BITTREX, symbol, summary.getDouble("Last"));
 			marketPosition.setTimeStamp(LocalDateTime.parse(summary.getString("TimeStamp")));
 
 			marketPositions.add(marketPosition);

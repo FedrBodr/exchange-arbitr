@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.fedrbodr.exchangearbitr.model.Exchange;
 import ru.fedrbodr.exchangearbitr.model.MarketPosition;
-import ru.fedrbodr.exchangearbitr.model.MarketSummary;
+import ru.fedrbodr.exchangearbitr.model.Symbol;
 
 import java.time.LocalDateTime;
 
@@ -27,18 +27,18 @@ public class MarketPositionRepositoryTest {
 	@Test
 	public void insertReadTest() {
 		MarketPosition marketPositionForPersist = new MarketPosition();
-		MarketSummary marketSummary = new MarketSummary("ETH-LTC", "ETH", "LTC");
-		marketPositionForPersist.setMarketSummary(marketSummary);
+		Symbol symbol = new Symbol("ETH-LTC", "ETH", "LTC");
+		marketPositionForPersist.setSymbol(symbol);
 		marketPositionForPersist.setExchange(Exchange.BITTREX);
 		marketPositionForPersist.setCreateTime(LocalDateTime.now());
 		marketPositionForPersist.setPrice(0.0000018);
-		entityManager.persistAndFlush(marketSummary);
+		entityManager.persistAndFlush(symbol);
 		entityManager.persistAndFlush(marketPositionForPersist);
 		// when
 		MarketPosition marketPositionFromDb = marketPositionRepository.findOne(marketPositionForPersist.getId());
 
 		// then
-		assertEquals(marketPositionFromDb.getMarketSummary().getName(), marketPositionForPersist.getMarketSummary().getName());
+		assertEquals(marketPositionFromDb.getSymbol().getName(), marketPositionForPersist.getSymbol().getName());
 	}
 
 }

@@ -22,13 +22,13 @@ public class MarketPosition {
 	@Column(columnDefinition="DATETIME(6) NOT NULL")
 	private LocalDateTime createTime;
 	@ManyToOne
-	@JoinColumn(name = "market_summary_id")
-	private MarketSummary marketSummary;
+	@JoinColumn(name = "symbol_id")
+	private Symbol symbol;
 
-	public MarketPosition(Exchange exchange, MarketSummary marketSummary, Double price) {
+	public MarketPosition(Exchange exchange, Symbol symbol, Double price) {
 		this.exchange = exchange;
 		this.price = price;
-		this.marketSummary = marketSummary;
+		this.symbol = symbol;
 		this.createTime = LocalDateTime.now();
 	}
 
