@@ -16,24 +16,17 @@ public class MarketSummaryServiceImpl implements MarketSummaryService {
 
 	@Override
 	@Transactional
-	public Symbol getOrCreateNewMarketSummary(String marketName, @Nullable String baseCurrency, @Nullable String marketCurrency) {
+	public Symbol getOrCreateNewSymbol(String marketName, @Nullable String baseCurrency, @Nullable String marketCurrency) {
 		Symbol symbol = marketSummaryRepository.findByName(marketName);
-		/* TODO REFACTOR TO INIT SEPARATELY AND THEN USE*/
 		if(symbol == null){
-			symbol = saveNewMarketSummary(marketName, null, null);
+			symbol = marketSummaryRepository.saveAndFlush(new Symbol(marketName, baseCurrency, marketCurrency));
 		}
 		return symbol;
 	}
 
 	@Override
-	@Cacheable("marketSummariesByName")
-	public Symbol getOrCreateNewMarketSummary(String marketName) {
-		return this.getOrCreateNewMarketSummary(marketName, null, null);
-	}
-
-	private Symbol saveNewMarketSummary(String marketName, String baseCurrency, String marketCurrency) {
-		Symbol foundedSymbol = new Symbol(marketName, baseCurrency, marketCurrency);
-		marketSummaryRepository.saveAndFlush(foundedSymbol);
-		return foundedSymbol;
+	@Cacheable("symbolByName")
+	public Symbol getOrCreateNewSymbol(String symbolName) {
+		return this.getOrCreateNewSymbol(symbolName, null, null);
 	}
 }

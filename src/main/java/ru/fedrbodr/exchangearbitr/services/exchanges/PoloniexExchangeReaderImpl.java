@@ -33,7 +33,7 @@ public class PoloniexExchangeReaderImpl implements ExchangeReader {
 
 		while (marketNameIterator.hasNext()) {
 			String poloniexMarketName = marketNameIterator.next();
-			Symbol symbol = marketSummaryService.getOrCreateNewMarketSummary(MarketNamesUtils.convertPoloniexToUniversalMarketName(poloniexMarketName));
+			Symbol symbol = marketSummaryService.getOrCreateNewSymbol(MarketNamesUtils.convertPoloniexToUniversalMarketName(poloniexMarketName));
 			JSONObject jsonObject = json.getJSONObject(poloniexMarketName);
 			MarketPosition marketPosition = new MarketPosition(Exchange.POLONIEX, symbol, jsonObject.getDouble("last"));
 			marketPositions.add(marketPosition);

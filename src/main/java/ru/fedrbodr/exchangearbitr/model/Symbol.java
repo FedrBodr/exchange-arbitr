@@ -20,9 +20,9 @@ public class Symbol {
 	private String baseName;
 	private String quoteName;
 
-	public Symbol(String name, String baseName, String quoteName) {
+	public Symbol(String name, String baseName, String secondaryCurrencyName) {
 		this.name = name;
 		this.baseName = baseName;
-		this.quoteName = quoteName;
+		this.quoteName = secondaryCurrencyName;
 	}
 }

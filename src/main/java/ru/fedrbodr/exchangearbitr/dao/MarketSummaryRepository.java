@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 import ru.fedrbodr.exchangearbitr.model.Symbol;
 
 public interface MarketSummaryRepository extends JpaRepository<Symbol, Long>, CrudRepository<Symbol, Long> {
-	@Cacheable("marketSummariesByName")
+	@Cacheable("symbolByName")
 	Symbol findByName(String name);
 }

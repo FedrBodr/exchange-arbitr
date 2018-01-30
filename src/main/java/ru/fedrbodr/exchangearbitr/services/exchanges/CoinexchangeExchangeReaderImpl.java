@@ -43,7 +43,7 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 			JSONArray markets = getNewJsonObject(" https://www.coinexchange.io/api/v1/getmarkets").getJSONArray("result");
 			markets.forEach(item -> {
 				JSONObject obj = (JSONObject) item;
-				Symbol symbol = marketSummaryService.getOrCreateNewMarketSummary(
+				Symbol symbol = marketSummaryService.getOrCreateNewSymbol(
 						MarketNamesUtils.convertCoinexchangeToUniversalMarketName(obj.getString("BaseCurrencyCode"), obj.getString("MarketAssetCode")));
 				int coinexchangeMarketID = obj.getInt("MarketID");
 				coinexchangeIdToMarketSummaryMap.put(coinexchangeMarketID, symbol);
