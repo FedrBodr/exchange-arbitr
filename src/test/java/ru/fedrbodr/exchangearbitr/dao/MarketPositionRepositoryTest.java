@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
+import ru.fedrbodr.exchangearbitr.model.Exchange;
 import ru.fedrbodr.exchangearbitr.model.MarketPosition;
 import ru.fedrbodr.exchangearbitr.model.MarketSummary;
 
@@ -28,8 +29,8 @@ public class MarketPositionRepositoryTest {
 		MarketPosition marketPositionForPersist = new MarketPosition();
 		MarketSummary marketSummary = new MarketSummary("ETH-LTC", "ETH", "LTC");
 		marketPositionForPersist.setMarketSummary(marketSummary);
-		marketPositionForPersist.setExchangeId(0);
-		marketPositionForPersist.setDbSaveTime(LocalDateTime.now());
+		marketPositionForPersist.setExchange(Exchange.BITTREX);
+		marketPositionForPersist.setCreateTime(LocalDateTime.now());
 		marketPositionForPersist.setPrice(0.0000018);
 		entityManager.persistAndFlush(marketSummary);
 		entityManager.persistAndFlush(marketPositionForPersist);

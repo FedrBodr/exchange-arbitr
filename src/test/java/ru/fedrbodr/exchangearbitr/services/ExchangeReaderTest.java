@@ -1,5 +1,6 @@
-package ru.fedrbodr.exchangearbitr.service;
+package ru.fedrbodr.exchangearbitr.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,6 +13,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 
+@Slf4j
 public class ExchangeReaderTest {
 	@Test
 	public void readAllSoutOneBittrexMarketPosition() throws IOException, JSONException, ParseException {
@@ -32,7 +34,7 @@ public class ExchangeReaderTest {
 			marketPosition.setPrimaryCurrencyName(market.getString("BaseCurrency"));
 			marketPosition.setSecondaryCurrencyName(market.getString("MarketCurrency"));*/
 			/*marketPosition.setTimeStamp(LocalDateTime.parse(summary.getString("TimeStamp")));*/
-			System.out.println(marketPosition);
+			log.info(marketPosition.toString());
 		}
 	}
 }

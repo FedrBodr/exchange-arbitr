@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr.service;
+package ru.fedrbodr.exchangearbitr.services;
 
 import ru.fedrbodr.exchangearbitr.model.MarketSummary;
 

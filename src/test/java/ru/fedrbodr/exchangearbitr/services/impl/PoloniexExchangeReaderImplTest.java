@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr.service.impl;
+package ru.fedrbodr.exchangearbitr.services.impl;
 
 import org.json.JSONException;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.fedrbodr.exchangearbitr.dao.MarketSummaryRepository;
 import ru.fedrbodr.exchangearbitr.model.MarketSummary;
-import ru.fedrbodr.exchangearbitr.service.ExchangeReader;
+import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 
 import java.io.IOException;
 
@@ -33,7 +33,7 @@ public class PoloniexExchangeReaderImplTest {
 	@Test
 	public void severalTest() throws IOException, JSONException {
 		// when
-		exchangeReader.readAndSaveMarketPositions();
+		exchangeReader.readAndSaveMarketPositionsBySummaries();
 		// and found
 		MarketSummary marketSummary = marketSummaryRepository.findByName("BTC-LTC");
 		assertNotNull(marketSummary);
