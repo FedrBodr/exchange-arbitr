@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.model.Exchange;
 import ru.fedrbodr.exchangearbitr.model.MarketPosition;
@@ -13,6 +14,7 @@ import ru.fedrbodr.exchangearbitr.model.Symbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.MarketSummaryService;
 import ru.fedrbodr.exchangearbitr.utils.MarketNamesUtils;
+import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -29,6 +31,8 @@ import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
 public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 	@Autowired
 	private MarketPositionRepository marketPositionRepository;
+	@Autowired
+	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
 	private MarketSummaryService marketSummaryService;
 	private Map<Integer, Symbol> coinexchangeIdToMarketSummaryMap;
@@ -69,6 +73,7 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 			marketPositions.add(marketPosition);
 		});
 
+		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositions));
 		marketPositionRepository.save(marketPositions);
 		marketPositionRepository.flush();
 	}

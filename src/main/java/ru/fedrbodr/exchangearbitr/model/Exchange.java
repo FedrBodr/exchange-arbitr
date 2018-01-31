@@ -6,12 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 @Entity
 @NoArgsConstructor
 @Slf4j
 @ToString
-public class Exchange {
+public class Exchange implements Serializable {
 	public static Exchange BITTREX = new Exchange("BITTREX", "https://bittrex.com", 1);
 	public static Exchange POLONIEX = new Exchange("POLONIEX", "https://poloniex.com/", 2);
 	public static Exchange COINEXCHANGE = new Exchange("COINEXCHANGE", "https://www.coinexchange.io", 3);

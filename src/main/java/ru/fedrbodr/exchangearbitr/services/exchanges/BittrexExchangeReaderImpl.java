@@ -6,12 +6,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.model.Exchange;
 import ru.fedrbodr.exchangearbitr.model.MarketPosition;
+import ru.fedrbodr.exchangearbitr.model.MarketPositionFast;
 import ru.fedrbodr.exchangearbitr.model.Symbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.MarketSummaryService;
+import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -30,6 +33,8 @@ import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
 public class BittrexExchangeReaderImpl implements ExchangeReader {
 	@Autowired
 	private MarketPositionRepository marketPositionRepository;
+	@Autowired
+	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
 	private MarketSummaryService marketSummaryService;
 
@@ -53,7 +58,8 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 	public void readAndSaveMarketPositionsBySummaries() throws IOException, JSONException {
 		JSONObject json = getNewJsonObject("https://bittrex.com/api/v2.0/pub/Markets/GetMarketSummaries");
 		JSONArray result = json.getJSONArray("result");
-		List<MarketPosition> marketPositions = new ArrayList<>();
+		List<MarketPosition> marketPositionList = new ArrayList<>();
+		List<MarketPositionFast> marketPositionFastList = new ArrayList<>();
 		for(int i = result.length()-1; i>0; i--) {
 			JSONObject marketPositionJsonObject = result.getJSONObject(i);
 			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
@@ -63,10 +69,11 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 			MarketPosition marketPosition = new MarketPosition(Exchange.BITTREX, symbol, summary.getDouble("Last"));
 			marketPosition.setTimeStamp(LocalDateTime.parse(summary.getString("TimeStamp")));
 
-			marketPositions.add(marketPosition);
+			marketPositionList.add(marketPosition);
 		}
 
-		marketPositionRepository.save(marketPositions);
+		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
+		marketPositionRepository.save(marketPositionList);
 		marketPositionRepository.flush();
 	}
 }
