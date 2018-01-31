@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
-import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 
 import java.io.IOException;
 
@@ -21,8 +20,6 @@ public class BittrexExchangeReaderImplTest {
 	@Autowired
 	private MarketPositionRepository marketPositionRepository;
 
-	@Autowired
-	private ExchangeReader exchangeReader;
 
 	@Test
 	public void insertReadByNameTest() throws IOException, JSONException {

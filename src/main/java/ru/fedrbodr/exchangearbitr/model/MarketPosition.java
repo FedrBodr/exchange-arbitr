@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Table(indexes={@Index(columnList="timeStamp"), @Index(columnList="createTime")})
 @Entity
 @Data
 @NoArgsConstructor

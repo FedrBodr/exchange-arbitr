@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
-public class CrawlerWorker {
+public class CrawlerWorker implements Runnable {
 	public static final int REQUESTS_PAUSE = 2000;
 	@Autowired
 	@Qualifier("bittrexExchangeReaderImpl")
@@ -32,6 +32,7 @@ public class CrawlerWorker {
 	private ExchangeReader coinexchangeExchangeReader;
 	@Autowired
 	private ExchangeRepository exchangeRepository;
+	private boolean doGrabbing = true;
 
 	@PostConstruct
 	private void init(){
@@ -55,19 +56,26 @@ public class CrawlerWorker {
 		Date end = new Date();
 		log.info("After start 10 iteration of bittrexExchangeReader.readAndSaveMarketPositionsBySummaries total time in millisecconds: {}", start.getTime() - end.getTime());
 	}
-
-	public void doNonStop() throws InterruptedException {
+	@Override
+	public void run() {
 		Date start = new Date();
 		log.info("Before start NonStop iterations of bittrexExchangeReader.readAndSaveMarketPositionsBySummaries");
 		Date startPreviousCall = new Date();
 		int threadNum = Runtime.getRuntime().availableProcessors()-1;
 
-		while(true) {
-			startPreviousCall = readAllExchangeSummaries(startPreviousCall, threadNum);
+		while(doGrabbing) {
+			try {
+				startPreviousCall = readAllExchangeSummaries(startPreviousCall, threadNum);
+			} catch (InterruptedException e) {
+				log.error(e.getMessage(), e);
+			}
 		}
 
-		// log.info("After start 10 iteration of bittrexExchangeReader.readAndSaveMarketPositionsBySummaries total time in  millisecconds: []", (start.getTime() - new Date().getTime()));
+		log.info("After start NonStop iteration of bittrexExchangeReader.readAndSaveMarketPositionsBySummaries total time in  millisecconds: []", (start.getTime() - new Date().getTime()));
 	}
+
+
+
 
 	private Date readAllExchangeSummaries(Date startPreviousCall, int threadCount) throws InterruptedException {
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
@@ -108,5 +116,9 @@ public class CrawlerWorker {
 		});
 		taskList.add(bittrexReaderTask);
 		executor.execute(bittrexReaderTask);
+	}
+
+	public void setDoGrabbing(boolean doGrabbing) {
+		this.doGrabbing = doGrabbing;
 	}
 }

@@ -1,6 +1,5 @@
 package ru.fedrbodr.exchangearbitr.services.impl;
 
-import com.sun.istack.internal.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ public class MarketSummaryServiceImpl implements MarketSummaryService {
 
 	@Override
 	@Transactional
-	public Symbol getOrCreateNewSymbol(String marketName, @Nullable String baseCurrency, @Nullable String marketCurrency) {
+	public Symbol getOrCreateNewSymbol(String marketName, String baseCurrency, String marketCurrency) {
 		Symbol symbol = marketSummaryRepository.findByName(marketName);
 		if(symbol == null){
 			symbol = marketSummaryRepository.saveAndFlush(new Symbol(marketName, baseCurrency, marketCurrency));
