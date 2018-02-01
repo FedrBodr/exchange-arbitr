@@ -6,7 +6,7 @@
 	<groupId>ru.fedrbodr</groupId>
 	<artifactId>exchange-arbitr</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<name>exchangeId-arbitr</name>
 	<description>Project for exchangeId monitoring and othe</description>
@@ -57,11 +57,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
 
 		<dependency>
 			<groupId>mysql</groupId>
@@ -103,9 +98,42 @@
 			<artifactId>hibernate-java8</artifactId>
 			<version>5.0.0.Final</version>
 		</dependency>
+
+		<!--JSF + primefaces dependencies-->
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<version>2.2.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-impl</artifactId>
+			<version>2.2.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>5.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.primefaces.themes</groupId>
+			<artifactId>start</artifactId>
+			<version>1.0.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.primefaces.themes</groupId>
+			<artifactId>all-themes</artifactId>
+			<version>1.0.10</version>
+		</dependency>
 	</dependencies>
 
 	<build>
+		<finalName>${project.artifactId}</finalName>
+
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -121,5 +149,11 @@
 		</plugins>
 	</build>
 
+	<repositories>
+		<repository>
+			<id>primefaces</id>
+			<url>http://repository.primefaces.org</url>
+		</repository>
+	</repositories>
 
 </project>

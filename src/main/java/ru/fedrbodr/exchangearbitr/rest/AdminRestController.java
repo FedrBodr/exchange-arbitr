@@ -9,7 +9,7 @@ import ru.fedrbodr.exchangearbitr.services.CrawlerWorker;
 
 @RestController
 @Slf4j
-public class AdminController {
+public class AdminRestController {
 
 	@Autowired
 	private CrawlerWorker crawlerWorker;

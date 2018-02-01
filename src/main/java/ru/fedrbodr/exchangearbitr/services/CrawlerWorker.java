@@ -32,7 +32,7 @@ public class CrawlerWorker implements Runnable {
 	private ExchangeReader coinexchangeExchangeReader;
 	@Autowired
 	private ExchangeRepository exchangeRepository;
-	private boolean doGrabbing = true;
+	private boolean doGrabbing = false;
 
 	@PostConstruct
 	private void init(){
@@ -120,5 +120,9 @@ public class CrawlerWorker implements Runnable {
 
 	public void setDoGrabbing(boolean doGrabbing) {
 		this.doGrabbing = doGrabbing;
+	}
+
+	public boolean isDoGrabbing() {
+		return doGrabbing;
 	}
 }
