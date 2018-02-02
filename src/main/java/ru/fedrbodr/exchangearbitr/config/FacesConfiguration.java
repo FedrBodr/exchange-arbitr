@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr;
+package ru.fedrbodr.exchangearbitr.config;
 
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;

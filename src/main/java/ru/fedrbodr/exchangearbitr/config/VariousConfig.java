@@ -8,7 +8,7 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
-public class Config {
+public class VariousConfig {
 	@Bean
 	ServletRegistrationBean h2servletRegistration(){
 		ServletRegistrationBean registrationBean = new ServletRegistrationBean( new WebServlet());
