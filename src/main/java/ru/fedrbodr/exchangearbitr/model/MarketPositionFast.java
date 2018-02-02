@@ -2,13 +2,17 @@ package ru.fedrbodr.exchangearbitr.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
-@Table(indexes={@Index(columnList="timeStamp"), @Index(columnList="createTime")})
+@Table()
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Data
 @NoArgsConstructor
 public class MarketPositionFast implements Serializable{
@@ -17,18 +21,21 @@ public class MarketPositionFast implements Serializable{
 	protected MarketPositionFastPK marketPositionFastPK;
 
 	private Double price;
-	@Column(columnDefinition="DATETIME(6)")
-	private LocalDateTime timeStamp;
-	@Column(columnDefinition="DATETIME(6) NOT NULL")
-	private LocalDateTime createTime;
+	private Date exchangeTimeStamp;
+	@Column(nullable = false, updatable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	private Date createAt;
+	@Column(nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	@LastModifiedDate
+	private Date updatedAt;
 
 	public MarketPositionFast(MarketPosition marketPosition) {
 		marketPositionFastPK = new MarketPositionFastPK();
 		this.marketPositionFastPK.setExchange(marketPosition.getExchange());
 		this.marketPositionFastPK.setSymbol(marketPosition.getSymbol());
 		this.price = marketPosition.getPrice();
-
-		this.timeStamp = marketPosition.getTimeStamp();
-		this.createTime = LocalDateTime.now();
+		this.exchangeTimeStamp = marketPosition.getExchangeTimeStamp();
 	}
 }

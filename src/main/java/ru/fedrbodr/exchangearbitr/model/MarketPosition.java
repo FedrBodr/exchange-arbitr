@@ -4,9 +4,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
-@Table(indexes={@Index(columnList="timeStamp"), @Index(columnList="createTime")})
+@Table(indexes={@Index(columnList="exchangeTimeStamp"), @Index(columnList="createTime")})
 @Entity
 @Data
 @NoArgsConstructor
@@ -18,10 +18,10 @@ public class MarketPosition {
 	@JoinColumn(name = "exchange_id")
 	private Exchange exchange;
 	private Double price;
-	@Column(columnDefinition="DATETIME(6)")
-	private LocalDateTime timeStamp;
-	@Column(columnDefinition="DATETIME(6) NOT NULL")
-	private LocalDateTime createTime;
+	@Column()
+	private Date exchangeTimeStamp;
+	@Column(nullable = false)
+	private Date createTime;
 	@ManyToOne
 	@JoinColumn(name = "symbol_id")
 	private Symbol symbol;
@@ -30,7 +30,7 @@ public class MarketPosition {
 		this.exchange = exchange;
 		this.price = price;
 		this.symbol = symbol;
-		this.createTime = LocalDateTime.now();
+		this.createTime = new Date();
 	}
 
 	@Override
@@ -39,8 +39,8 @@ public class MarketPosition {
 				"id=" + id +
 				", exchangeId=" + exchange +
 				", price=" + String.format("%f" , price)+
-				", timeStamp=" + timeStamp +
-				", createTime=" + createTime +
+				", exchangeTimeStamp=" + exchangeTimeStamp +
+				", createAt=" + createTime +
 				'}';
 	}
 }

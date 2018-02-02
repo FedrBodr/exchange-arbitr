@@ -18,7 +18,8 @@ import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,7 +56,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 		log.info(CoinexchangeExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
 	}
 
-	public void readAndSaveMarketPositionsBySummaries() throws IOException, JSONException {
+	public void readAndSaveMarketPositionsBySummaries() throws IOException, JSONException, ParseException {
 		JSONObject json = getNewJsonObject("https://bittrex.com/api/v2.0/pub/Markets/GetMarketSummaries");
 		JSONArray result = json.getJSONArray("result");
 		List<MarketPosition> marketPositionList = new ArrayList<>();
@@ -67,7 +68,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 
 			Symbol symbol = marketSummaryService.getOrCreateNewSymbol(market.getString("MarketName"));
 			MarketPosition marketPosition = new MarketPosition(Exchange.BITTREX, symbol, summary.getDouble("Last"));
-			marketPosition.setTimeStamp(LocalDateTime.parse(summary.getString("TimeStamp")));
+			marketPosition.setExchangeTimeStamp(DateFormat.getDateTimeInstance().parse(summary.getString("TimeStamp")));
 
 			marketPositionList.add(marketPosition);
 		}

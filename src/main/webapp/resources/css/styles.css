@@ -1,0 +1,8 @@
+/* start login page */
+.loginPagePanel {
+    text-align: center;
+    width: 400px;
+    height: 207px;
+    border: 1px solid dodgerblue;
+    margin: 2% auto auto;
+}

@@ -5,5 +5,4 @@ import org.springframework.data.repository.CrudRepository;
 import ru.fedrbodr.exchangearbitr.model.MarketPositionFast;
 
 public interface MarketPositionFastRepository extends JpaRepository<MarketPositionFast, Long>, CrudRepository<MarketPositionFast, Long> {
-
 }
