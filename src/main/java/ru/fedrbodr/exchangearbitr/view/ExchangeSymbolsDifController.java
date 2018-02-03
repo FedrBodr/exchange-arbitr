@@ -2,7 +2,7 @@ package ru.fedrbodr.exchangearbitr.view;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import ru.fedrbodr.exchangearbitr.model.dao.MarketPositionFastCompare;
+import ru.fedrbodr.exchangearbitr.model.MarketPositionFastCompare;
 import ru.fedrbodr.exchangearbitr.services.MarketPositionFastService;
 
 import java.util.List;

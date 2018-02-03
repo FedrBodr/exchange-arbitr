@@ -3,9 +3,10 @@ package ru.fedrbodr.exchangearbitr.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepositoryCustom;
+import ru.fedrbodr.exchangearbitr.model.MarketPositionFastCompare;
 import ru.fedrbodr.exchangearbitr.model.dao.MarketPositionFast;
-import ru.fedrbodr.exchangearbitr.model.dao.MarketPositionFastCompare;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 			MarketPositionFast marketPositionFastToCompare =(MarketPositionFast) marketPositionDif[1];
 			MarketPositionFast marketPositionBuy;
 			MarketPositionFast marketPositionSell;
-			if(marketPositionFast.getPrice()<marketPositionFastToCompare.getPrice()){
+			if(marketPositionFast.getLastPrice().compareTo(marketPositionFastToCompare.getLastPrice()) < 1){
 				marketPositionBuy = marketPositionFast;
 				marketPositionSell = marketPositionFastToCompare;
 
@@ -35,8 +36,8 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 			marketPositionFastCompares.add(new MarketPositionFastCompare(
 					marketPositionBuy,
 					marketPositionSell,
-					marketPositionSell.getPrice() - marketPositionBuy.getPrice(),
-					(marketPositionSell.getPrice() - marketPositionBuy.getPrice())*100
+					marketPositionSell.getLastPrice().subtract(marketPositionBuy.getLastPrice()),
+					marketPositionSell.getLastPrice().divide(marketPositionBuy.getLastPrice(),9, BigDecimal.ROUND_HALF_UP)
 			));
 
 		});

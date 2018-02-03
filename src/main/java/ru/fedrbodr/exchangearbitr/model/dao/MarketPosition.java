@@ -18,6 +18,7 @@ public class MarketPosition {
 	@ManyToOne
 	@JoinColumn(name = "exchange_id")
 	private Exchange exchange;
+	@Column(precision = 14, scale = 8)
 	private BigDecimal lastPrice;
 	@Column()
 	private Date exchangeTimeStamp;

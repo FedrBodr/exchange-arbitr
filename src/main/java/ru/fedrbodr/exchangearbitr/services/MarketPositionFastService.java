@@ -1,6 +1,6 @@
 package ru.fedrbodr.exchangearbitr.services;
 
-import ru.fedrbodr.exchangearbitr.model.dao.MarketPositionFastCompare;
+import ru.fedrbodr.exchangearbitr.model.MarketPositionFastCompare;
 
 import java.util.List;
 

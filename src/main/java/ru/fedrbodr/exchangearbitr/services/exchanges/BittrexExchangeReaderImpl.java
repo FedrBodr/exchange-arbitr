@@ -67,7 +67,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");
 
 			Symbol symbol = marketSummaryService.getOrCreateNewSymbol(market.getString("MarketName"));
-			MarketPosition marketPosition = new MarketPosition(Exchange.BITTREX, symbol, summary.getDouble("Last"));
+			MarketPosition marketPosition = new MarketPosition(Exchange.BITTREX, symbol, summary.getBigDecimal("Last"));
 			marketPosition.setExchangeTimeStamp(DateFormat.getDateTimeInstance().parse(summary.getString("TimeStamp")));
 
 			marketPositionList.add(marketPosition);

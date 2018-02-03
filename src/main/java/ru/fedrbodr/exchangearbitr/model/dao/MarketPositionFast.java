@@ -8,9 +8,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
-@Table()
+@Table
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Data
@@ -19,8 +20,8 @@ public class MarketPositionFast implements Serializable{
 
 	@EmbeddedId
 	protected MarketPositionFastPK marketPositionFastPK;
-
-	private Double price;
+	@Column(precision = 14, scale = 8)
+	private BigDecimal lastPrice;
 	private Date exchangeTimeStamp;
 	@Column(nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -35,7 +36,7 @@ public class MarketPositionFast implements Serializable{
 		marketPositionFastPK = new MarketPositionFastPK();
 		this.marketPositionFastPK.setExchange(marketPosition.getExchange());
 		this.marketPositionFastPK.setSymbol(marketPosition.getSymbol());
-		this.price = marketPosition.getLastPrice();
+		this.lastPrice = marketPosition.getLastPrice();
 		this.exchangeTimeStamp = marketPosition.getExchangeTimeStamp();
 	}
 }

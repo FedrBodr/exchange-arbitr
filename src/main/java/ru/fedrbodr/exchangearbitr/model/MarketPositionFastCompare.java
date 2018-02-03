@@ -1,8 +1,11 @@
-package ru.fedrbodr.exchangearbitr.model.dao;
+package ru.fedrbodr.exchangearbitr.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.fedrbodr.exchangearbitr.model.dao.MarketPositionFast;
+
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
@@ -10,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class MarketPositionFastCompare {
 	private MarketPositionFast buyMarketPosition;
 	private MarketPositionFast sellMarketPosition;
-	private Double difference;
-	private double differencePercent;
+	private BigDecimal difference;
+	private BigDecimal differencePercent;
 
 }

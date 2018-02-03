@@ -68,7 +68,7 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 			MarketPosition marketPosition = new MarketPosition(
 					Exchange.COINEXCHANGE,
 					getUnifiedMarketSummary(jsonObject.getInt("MarketID")),
-					jsonObject.getDouble("LastPrice"));
+					jsonObject.getBigDecimal("LastPrice"));
 
 			marketPositions.add(marketPosition);
 		});
