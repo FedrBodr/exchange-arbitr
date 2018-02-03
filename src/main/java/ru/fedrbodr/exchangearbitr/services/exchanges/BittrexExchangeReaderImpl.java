@@ -20,6 +20,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,11 +39,22 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
 	private MarketSummaryService marketSummaryService;
+	private static final ThreadLocal<DateFormat> dateFormat = new ThreadLocal<DateFormat>(){
+		@Override
+		protected DateFormat initialValue() {
+			return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+		}
+	};
+
+	public Date convert(String source) throws ParseException{
+		return dateFormat.get().parse(source);
+	}
 
 	@PostConstruct
 	private void init() throws IOException {
 		/*TODO refactor this with aop for all init methods*/
-		log.info(CoinexchangeExchangeReaderImpl.class.getSimpleName() + " initialisation start");
+		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
 		JSONObject json = getNewJsonObject("https://bittrex.com/api/v2.0/pub/Markets/GetMarketSummaries");
 		JSONArray result = json.getJSONArray("result");
@@ -53,7 +65,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 			marketSummaryService.getOrCreateNewSymbol(market.getString("MarketName"));
 		}
 		/*TODO refactor this with aop*/
-		log.info(CoinexchangeExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
+		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
 	}
 
 	public void readAndSaveMarketPositionsBySummaries() throws IOException, JSONException, ParseException {
@@ -68,12 +80,13 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 
 			Symbol symbol = marketSummaryService.getOrCreateNewSymbol(market.getString("MarketName"));
 			MarketPosition marketPosition = new MarketPosition(Exchange.BITTREX, symbol, summary.getBigDecimal("Last"));
-			marketPosition.setExchangeTimeStamp(DateFormat.getDateTimeInstance().parse(summary.getString("TimeStamp")));
+			marketPosition.setExchangeTimeStamp(convert(summary.getString("TimeStamp")));
 
 			marketPositionList.add(marketPosition);
 		}
 
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
+		marketPositionFastRepository.flush();
 		marketPositionRepository.save(marketPositionList);
 		marketPositionRepository.flush();
 	}

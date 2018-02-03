@@ -14,6 +14,6 @@ public class MarketPositionFastCompare {
 	private MarketPositionFast buyMarketPosition;
 	private MarketPositionFast sellMarketPosition;
 	private BigDecimal difference;
-	private BigDecimal differencePercent;
+	private float differencePercent;
 
 }

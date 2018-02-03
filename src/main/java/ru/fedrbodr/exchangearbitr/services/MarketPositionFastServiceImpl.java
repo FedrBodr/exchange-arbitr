@@ -6,7 +6,6 @@ import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepositoryCustom;
 import ru.fedrbodr.exchangearbitr.model.MarketPositionFastCompare;
 import ru.fedrbodr.exchangearbitr.model.dao.MarketPositionFast;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 					marketPositionBuy,
 					marketPositionSell,
 					marketPositionSell.getLastPrice().subtract(marketPositionBuy.getLastPrice()),
-					marketPositionSell.getLastPrice().divide(marketPositionBuy.getLastPrice(),9, BigDecimal.ROUND_HALF_UP)
+					marketPositionSell.getLastPrice().floatValue() / marketPositionBuy.getLastPrice().floatValue() / 100
 			));
 
 		});

@@ -21,7 +21,8 @@ public class MarketPositionFastRepositoryCustomImpl implements MarketPositionFas
 		SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
 		Session session = sessionFactory.getCurrentSession();
 		return session.createSQLQuery("select {mp1.*}, {mp2.*} from market_position_fast mp1, market_position_fast mp2 " +
-				"where mp1.symbol_id = mp2.symbol_id and mp1.exchange_id != mp2.exchange_id order by abs(mp1.last_price - mp2.last_price) desc limit 20;")
+				"where mp1.symbol_id = mp2.symbol_id and mp1.exchange_id != mp2.exchange_id and mp1.last_price > mp2.last_price " +
+				"order by mp1.last_price/mp2.last_price*100 desc limit 25;")
 				.addEntity("mp1", MarketPositionFast.class)
 				.addEntity("mp2", MarketPositionFast.class).list();
 

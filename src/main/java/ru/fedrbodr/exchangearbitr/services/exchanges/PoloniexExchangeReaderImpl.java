@@ -43,6 +43,7 @@ public class PoloniexExchangeReaderImpl implements ExchangeReader {
 			marketPositions.add(marketPosition);
 		}
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositions));
+		marketPositionFastRepository.flush();
 		marketPositionRepository.save(marketPositions);
 		marketPositionRepository.flush();
 	}
