@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr.model;
+package ru.fedrbodr.exchangearbitr.model.dao;
 
 import lombok.NoArgsConstructor;
 import lombok.ToString;

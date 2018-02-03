@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr.model;
+package ru.fedrbodr.exchangearbitr.model.dao;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,7 +35,7 @@ public class MarketPositionFast implements Serializable{
 		marketPositionFastPK = new MarketPositionFastPK();
 		this.marketPositionFastPK.setExchange(marketPosition.getExchange());
 		this.marketPositionFastPK.setSymbol(marketPosition.getSymbol());
-		this.price = marketPosition.getPrice();
+		this.price = marketPosition.getLastPrice();
 		this.exchangeTimeStamp = marketPosition.getExchangeTimeStamp();
 	}
 }

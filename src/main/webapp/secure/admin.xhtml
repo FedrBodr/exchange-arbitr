@@ -11,8 +11,41 @@
 		Crawling status <p:outputLabel value="#{adminController.crawlingStatus}"/> <br/><br/><br/>
 		<p:commandButton update="adminPanel" value="Run"  actionListener="#{adminController.startGrabbing}" style="margin-right: 25px;"/>
 		<p:commandButton update="adminPanel" value="Stop" action="#{adminController.stopGrabbing}"/>
-
 	</p:panel>
+		<p:poll interval="1" update="marketPositionsCompareTable" />
+		<p:dataTable id="marketPositionsCompareTable" var="marketPositionFastCompare" value="#{exchangeSymbolsDifController.marketPositionFastCompareList}">
+			<p:column headerText="symbol">
+				<h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.symbol.name}"/>
+			</p:column>
+
+			<p:column headerText="difference">
+				<h:outputText value="#{marketPositionFastCompare.difference}"/>
+			</p:column>
+
+			<p:column headerText="differencePercent">
+				<h:outputText value="#{marketPositionFastCompare.differencePercent}"/>
+			</p:column>
+
+			<p:column headerText="Buy exchange">
+				<h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.exchange.exchangeName}"/>
+			</p:column>
+
+			<p:column headerText="Buy lastPrice">
+				<h:outputText value="#{marketPositionFastCompare.buyMarketPosition.lastPrice}"/>
+			</p:column>
+
+			<p:column headerText="Sell exchange">
+				<h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.exchange.exchangeName}"/>
+			</p:column>
+
+			<p:column headerText="Sell lastPrice">
+				<h:outputText value="#{marketPositionFastCompare.sellMarketPosition.lastPrice}"/>
+			</p:column>
+
+			<p:column headerText="Update at">
+				<h:outputText value="#{marketPositionFastCompare.sellMarketPosition.updatedAt}"/>
+			</p:column>
+		</p:dataTable>
 	</h:form>
 </h:body>
 </html>

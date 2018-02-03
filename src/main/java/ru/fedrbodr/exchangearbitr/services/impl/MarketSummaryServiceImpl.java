@@ -5,7 +5,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.fedrbodr.exchangearbitr.dao.MarketSummaryRepository;
-import ru.fedrbodr.exchangearbitr.model.Symbol;
+import ru.fedrbodr.exchangearbitr.model.dao.Symbol;
 import ru.fedrbodr.exchangearbitr.services.MarketSummaryService;
 
 @Service

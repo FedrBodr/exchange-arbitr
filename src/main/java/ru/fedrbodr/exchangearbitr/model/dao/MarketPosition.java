@@ -1,9 +1,10 @@
-package ru.fedrbodr.exchangearbitr.model;
+package ru.fedrbodr.exchangearbitr.model.dao;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Table(indexes={@Index(columnList="exchangeTimeStamp"), @Index(columnList="createTime")})
@@ -17,7 +18,7 @@ public class MarketPosition {
 	@ManyToOne
 	@JoinColumn(name = "exchange_id")
 	private Exchange exchange;
-	private Double price;
+	private BigDecimal lastPrice;
 	@Column()
 	private Date exchangeTimeStamp;
 	@Column(nullable = false)
@@ -26,9 +27,9 @@ public class MarketPosition {
 	@JoinColumn(name = "symbol_id")
 	private Symbol symbol;
 
-	public MarketPosition(Exchange exchange, Symbol symbol, Double price) {
+	public MarketPosition(Exchange exchange, Symbol symbol, BigDecimal lastPrice) {
 		this.exchange = exchange;
-		this.price = price;
+		this.lastPrice = lastPrice;
 		this.symbol = symbol;
 		this.createTime = new Date();
 	}
@@ -38,7 +39,7 @@ public class MarketPosition {
 		return "MarketPosition{" +
 				"id=" + id +
 				", exchangeId=" + exchange +
-				", price=" + String.format("%f" , price)+
+				", lastPrice=" + String.format("%f" , lastPrice)+
 				", exchangeTimeStamp=" + exchangeTimeStamp +
 				", createAt=" + createTime +
 				'}';

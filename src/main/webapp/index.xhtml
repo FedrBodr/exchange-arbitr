@@ -1,10 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
-	<title>Greeting</title>
+    <title>Hello crypto arbitr</title>
 </h:head>
 <h:body>
-	<p:outputLabel value="#{greetingController.message}"/>
+    <h:form>
+        <p:poll interval="1" update="marketPositionsCompareTable" />
+        <p:dataTable id="marketPositionsCompareTable" var="marketPositionFastCompare" value="#{exchangeSymbolsDifController.marketPositionFastCompareList}">
+            <p:column headerText="symbol">
+                <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.symbol.name}"/>
+            </p:column>
+
+            <p:column headerText="difference">
+                <h:outputText value="#{marketPositionFastCompare.difference}">
+                    <f:convertNumber minFractionDigits="9" />
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="differencePercent">
+                <h:outputText value="#{marketPositionFastCompare.differencePercent}">
+                    <f:convertNumber minFractionDigits="2" />
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Buy exchange">
+                <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.exchange.exchangeName}"/>
+            </p:column>
+
+            <p:column headerText="Buy lastPrice">
+                <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.lastPrice}"/>
+            </p:column>
+
+            <p:column headerText="Sell exchange">
+                <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.marketPositionFastPK.exchange.exchangeName}"/>
+            </p:column>
+
+            <p:column headerText="Sell lastPrice">
+                <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.lastPrice}"/>
+            </p:column>
+
+            <p:column headerText="Update at">
+                <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.updatedAt}"/>
+            </p:column>
+        </p:dataTable>
+
+    </h:form>
 </h:body>
 </html>
