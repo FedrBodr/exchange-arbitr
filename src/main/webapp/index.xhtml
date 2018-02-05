@@ -1,51 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
-<h:head>
-    <title>Hello crypto arbitr</title>
-</h:head>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:body>
-    <h:form>
-        <p:poll interval="1" update="marketPositionsCompareTable" />
-        <p:dataTable id="marketPositionsCompareTable" var="marketPositionFastCompare" value="#{exchangeSymbolsDifController.marketPositionFastCompareList}">
-            <p:column headerText="symbol">
-                <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.symbol.name}"/>
-            </p:column>
+    <ui:composition template="/template/commonLayout.xhtml">
+        <ui:define name="content">
+        <h:form>
+            <p:poll interval="1" update="marketPositionsCompareTable"/>
+            <p:dataTable id="marketPositionsCompareTable" var="marketPositionFastCompare" value="#{exchangeSymbolsDifController.marketPositionFastCompareList}">
+                <p:column headerText="uniSymbol">
+                    <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.uniSymbol.name}"/>
+                </p:column>
 
-            <p:column headerText="difference">
-                <h:outputText value="#{marketPositionFastCompare.difference}">
-                    <f:convertNumber minFractionDigits="9" />
-                </h:outputText>
-            </p:column>
+                <p:column headerText="difference">
+                    <h:outputText value="#{marketPositionFastCompare.difference}">
+                        <f:convertNumber minFractionDigits="9"/>
+                    </h:outputText>
+                </p:column>
 
-            <p:column headerText="differencePercent">
-                <h:outputText value="#{marketPositionFastCompare.differencePercent}">
-                    <f:convertNumber pattern="#00.00%" />
-                    <!--<f:convertNumber minIntegerDigits="2" maxFractionDigits="2" />-->
-                </h:outputText>
-            </p:column>
+                <p:column headerText="differencePercent">
+                    <h:outputText value="#{marketPositionFastCompare.differencePercent}">
+                        <f:convertNumber pattern="#00.00%"/>
+                        <!--<f:convertNumber minIntegerDigits="2" maxFractionDigits="2" />-->
+                    </h:outputText>
+                </p:column>
 
-            <p:column headerText="Buy exchange">
-                <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.exchange.exchangeName}"/>
-            </p:column>
+                <p:column headerText="Buy exchangeMeta">
+                    <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.exchangeMeta.exchangeName}"/>
+                </p:column>
 
-            <p:column headerText="Buy lastPrice">
-                <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.lastPrice}"/>
-            </p:column>
+                <p:column headerText="Buy lastPrice">
+                    <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.lastPrice}"/>
+                </p:column>
 
-            <p:column headerText="Sell exchange">
-                <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.marketPositionFastPK.exchange.exchangeName}"/>
-            </p:column>
+                <p:column headerText="Sell exchangeMeta">
+                    <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.marketPositionFastPK.exchangeMeta.exchangeName}"/>
+                </p:column>
 
-            <p:column headerText="Sell lastPrice">
-                <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.lastPrice}"/>
-            </p:column>
+                <p:column headerText="Sell lastPrice">
+                    <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.lastPrice}"/>
+                </p:column>
 
-            <p:column headerText="Update at">
-                <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.updatedAt}"/>
-            </p:column>
-        </p:dataTable>
+                <p:column headerText="Update at">
+                    <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.updatedAt}"/>
+                </p:column>
+            </p:dataTable>
 
-    </h:form>
+        </h:form>
+        </ui:define>
+    </ui:composition>
 </h:body>
 </html>

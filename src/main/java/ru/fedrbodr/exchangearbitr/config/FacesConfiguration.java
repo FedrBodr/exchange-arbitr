@@ -33,6 +33,7 @@ public class FacesConfiguration extends SpringBootServletInitializer implements 
 		ServletRegistrationBean registration = new ServletRegistrationBean();
 		registration.setServlet(new FacesServlet());
 		registration.addUrlMappings("*.jsf");
+		registration.addUrlMappings("*.xhtml", "*.jsf");
 		registration.setLoadOnStartup(1);
 		registration.setName("facesServlet");
 		return registration;

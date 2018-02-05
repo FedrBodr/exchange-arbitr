@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+    <ui:composition template="/template/commonLayout.xhtml">
+        <ui:define name="content">
+            <div class="donateUpdate">
+                More donates - more updates!
+            </div>
+            <div class="grid">
+                <div class="addressLabel">My bitcoin Wallet: <span class="cryptoAddress">3HSdvTNJhq7pJTUmKsPXEdHaxMn8yP4Pon</span></div>
+                <div class="addressImg"><h:graphicImage value="/resources/img/bitcoinAddress.jpg"/></div>
+            </div>
+            <hr/>
+            <div class="grid">
+                <div class="addressLabel">My ethereum wallet: <span class="cryptoAddress">0x6A4034f3AFbeA177DC1Ae3626A265E92030D3E00</span></div>
+                <div class="addressImg ether"><h:graphicImage value="/resources/img/etherAddress.jpg"/></div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

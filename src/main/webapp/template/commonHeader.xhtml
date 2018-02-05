@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://primefaces.org/ui"
+>
+<body>
+<ui:composition>
+    <h:form>
+        <p:growl id="messages" showDetail="false"/>
+        <p:megaMenu styleClass="eaMenu">
+            <p:menuitem value="Donation" outcome="/donation" styleClass="donatBtn"/>
+            <p:menuitem value="Secured zone" outcome="/secure/admin"/>
+            <p:menuitem value="Index" outcome="/index"/>
+        </p:megaMenu>
+    </h:form>
+</ui:composition>
+</body>
+</html>
