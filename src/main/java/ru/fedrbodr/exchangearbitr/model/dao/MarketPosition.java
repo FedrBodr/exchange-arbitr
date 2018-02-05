@@ -17,7 +17,7 @@ public class MarketPosition {
 	private long id;
 	@ManyToOne
 	@JoinColumn(name = "exchange_id")
-	private Exchange exchange;
+	private ExchangeMeta exchangeMeta;
 	@Column(precision = 14, scale = 8)
 	private BigDecimal lastPrice;
 	@Column()
@@ -26,12 +26,12 @@ public class MarketPosition {
 	private Date createTime;
 	@ManyToOne
 	@JoinColumn(name = "symbol_id")
-	private Symbol symbol;
+	private UniSymbol uniSymbol;
 
-	public MarketPosition(Exchange exchange, Symbol symbol, BigDecimal lastPrice) {
-		this.exchange = exchange;
+	public MarketPosition(ExchangeMeta exchangeMeta, UniSymbol uniSymbol, BigDecimal lastPrice) {
+		this.exchangeMeta = exchangeMeta;
 		this.lastPrice = lastPrice;
-		this.symbol = symbol;
+		this.uniSymbol = uniSymbol;
 		this.createTime = new Date();
 	}
 
@@ -39,7 +39,7 @@ public class MarketPosition {
 	public String toString() {
 		return "MarketPosition{" +
 				"id=" + id +
-				", exchangeId=" + exchange +
+				", exchangeId=" + exchangeMeta +
 				", lastPrice=" + String.format("%f" , lastPrice)+
 				", exchangeTimeStamp=" + exchangeTimeStamp +
 				", createAt=" + createTime +

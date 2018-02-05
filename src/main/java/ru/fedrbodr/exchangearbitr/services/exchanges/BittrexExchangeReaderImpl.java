@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
-import ru.fedrbodr.exchangearbitr.model.dao.Exchange;
+import ru.fedrbodr.exchangearbitr.model.dao.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.model.dao.MarketPosition;
 import ru.fedrbodr.exchangearbitr.model.dao.MarketPositionFast;
-import ru.fedrbodr.exchangearbitr.model.dao.Symbol;
+import ru.fedrbodr.exchangearbitr.model.dao.UniSymbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.MarketSummaryService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
@@ -28,7 +28,7 @@ import java.util.List;
 import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
 
 /**
- * Bittrex Exchange markect names  format now is main inner format ETH-BTC
+ * Bittrex ExchangeMeta markect names  format now is main inner format ETH-BTC
  * */
 @Service
 @Slf4j
@@ -78,8 +78,8 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
 			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");
 
-			Symbol symbol = marketSummaryService.getOrCreateNewSymbol(market.getString("MarketName"));
-			MarketPosition marketPosition = new MarketPosition(Exchange.BITTREX, symbol, summary.getBigDecimal("Last"));
+			UniSymbol uniSymbol = marketSummaryService.getOrCreateNewSymbol(market.getString("MarketName"));
+			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.BITTREX, uniSymbol, summary.getBigDecimal("Last"));
 			marketPosition.setExchangeTimeStamp(convert(summary.getString("TimeStamp")));
 
 			marketPositionList.add(marketPosition);

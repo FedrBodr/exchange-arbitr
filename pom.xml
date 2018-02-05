@@ -22,6 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<xchange.api.version>4.3.2</xchange.api.version>
 	</properties>
 
 	<profiles>
@@ -151,6 +152,19 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.7</version>
 		</dependency>
+
+		<!-- Xchange api dependencies -->
+		<dependency>
+			<groupId>org.knowm.xchange</groupId>
+			<artifactId>xchange-binance</artifactId>
+			<version>4.3.3-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.knowm.xchange</groupId>
+			<artifactId>xchange-core</artifactId>
+			<version>4.3.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -164,6 +178,30 @@
 		</resources>
 
 		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>install-external</id>
+						<phase>clean</phase>
+						<configuration>
+							<file>${basedir}/lib/xchange-binance-4.3.3-SNAPSHOT.jar</file>
+							<repositoryLayout>default</repositoryLayout>
+							<groupId>org.knowm.xchange</groupId>
+							<artifactId>xchange-binance</artifactId>
+							<version>4.3.3-SNAPSHOT</version>
+							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
+						</configuration>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

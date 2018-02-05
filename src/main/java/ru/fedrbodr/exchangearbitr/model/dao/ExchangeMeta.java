@@ -12,17 +12,18 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Slf4j
 @ToString
-public class Exchange implements Serializable {
-	public static Exchange BITTREX = new Exchange("BITTREX", "https://bittrex.com", 1);
-	public static Exchange POLONIEX = new Exchange("POLONIEX", "https://poloniex.com/", 2);
-	public static Exchange COINEXCHANGE = new Exchange("COINEXCHANGE", "https://www.coinexchange.io", 3);
+public class ExchangeMeta implements Serializable {
+	public static ExchangeMeta BITTREX = new ExchangeMeta("BITTREX", "https://bittrex.com", 1);
+	public static ExchangeMeta POLONIEX = new ExchangeMeta("POLONIEX", "https://poloniex.com/", 2);
+	public static ExchangeMeta COINEXCHANGE = new ExchangeMeta("COINEXCHANGE", "https://www.coinexchange.io", 3);
+	public static ExchangeMeta BINANCE = new ExchangeMeta("BINANCE", "https://www.binance.com/", 4);
 
 	@Id
 	private int id;
 	private String exchangeName;
 	private String exchangeUrl;
 
-	public Exchange(String exchangeName, String exchangeUrl, int id) {
+	public ExchangeMeta(String exchangeName, String exchangeUrl, int id) {
 		this.exchangeName = exchangeName;
 		this.exchangeUrl = exchangeUrl;
 		this.id = id;

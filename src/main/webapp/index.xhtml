@@ -9,7 +9,7 @@
     <ui:composition template="/template/commonLayout.xhtml">
         <ui:define name="content">
         <h:form>
-            <p:poll interval="1" update="marketPositionsCompareTable"/>
+            <p:poll interval="2" update="marketPositionsCompareTable"/>
             <p:dataTable id="marketPositionsCompareTable" var="marketPositionFastCompare" value="#{exchangeSymbolsDifController.marketPositionFastCompareList}">
                 <p:column headerText="uniSymbol">
                     <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.uniSymbol.name}"/>

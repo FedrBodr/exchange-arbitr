@@ -14,14 +14,14 @@ import java.io.Serializable;
 public class MarketPositionFastPK implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "exchange_id")
-	private Exchange exchange;
+	private ExchangeMeta exchangeMeta;
 	@ManyToOne
 	@JoinColumn(name = "symbol_id")
-	private Symbol symbol;
+	private UniSymbol uniSymbol;
 
 
-	public MarketPositionFastPK(Exchange exchange, Symbol symbol) {
-		this.exchange = exchange;
-		this.symbol = symbol;
+	public MarketPositionFastPK(ExchangeMeta exchangeMeta, UniSymbol uniSymbol) {
+		this.exchangeMeta = exchangeMeta;
+		this.uniSymbol = uniSymbol;
 	}
 }

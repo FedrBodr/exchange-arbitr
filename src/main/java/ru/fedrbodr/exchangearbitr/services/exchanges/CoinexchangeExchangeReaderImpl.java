@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
-import ru.fedrbodr.exchangearbitr.model.dao.Exchange;
+import ru.fedrbodr.exchangearbitr.model.dao.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.model.dao.MarketPosition;
-import ru.fedrbodr.exchangearbitr.model.dao.Symbol;
+import ru.fedrbodr.exchangearbitr.model.dao.UniSymbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.MarketSummaryService;
 import ru.fedrbodr.exchangearbitr.utils.MarketNamesUtils;
@@ -35,7 +35,7 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
 	private MarketSummaryService marketSummaryService;
-	private Map<Integer, Symbol> coinexchangeIdToMarketSummaryMap;
+	private Map<Integer, UniSymbol> coinexchangeIdToMarketSummaryMap;
 
 	@PostConstruct
 	private void init(){
@@ -47,10 +47,10 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 			JSONArray markets = getNewJsonObject(" https://www.coinexchange.io/api/v1/getmarkets").getJSONArray("result");
 			markets.forEach(item -> {
 				JSONObject obj = (JSONObject) item;
-				Symbol symbol = marketSummaryService.getOrCreateNewSymbol(
+				UniSymbol uniSymbol = marketSummaryService.getOrCreateNewSymbol(
 						MarketNamesUtils.convertCoinexchangeToUniversalMarketName(obj.getString("BaseCurrencyCode"), obj.getString("MarketAssetCode")));
 				int coinexchangeMarketID = obj.getInt("MarketID");
-				coinexchangeIdToMarketSummaryMap.put(coinexchangeMarketID, symbol);
+				coinexchangeIdToMarketSummaryMap.put(coinexchangeMarketID, uniSymbol);
 			});
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
@@ -66,7 +66,7 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 		marketPositionsArray.forEach(item -> {
 			JSONObject jsonObject = (JSONObject) item;
 			MarketPosition marketPosition = new MarketPosition(
-					Exchange.COINEXCHANGE,
+					ExchangeMeta.COINEXCHANGE,
 					getUnifiedMarketSummary(jsonObject.getInt("MarketID")),
 					jsonObject.getBigDecimal("LastPrice"));
 
@@ -79,14 +79,14 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 		marketPositionRepository.flush();
 	}
 
-	private Symbol getUnifiedMarketSummary(int coinexchangeMarketID) {
-		Symbol symbol = coinexchangeIdToMarketSummaryMap.get(coinexchangeMarketID);
-		if(symbol ==null){
-			log.info("Found Market Summary at coinexchange for non existen symbol");
+	private UniSymbol getUnifiedMarketSummary(int coinexchangeMarketID) {
+		UniSymbol uniSymbol = coinexchangeIdToMarketSummaryMap.get(coinexchangeMarketID);
+		if(uniSymbol ==null){
+			log.info("Found Market Summary at coinexchange for non existen uniSymbol");
 			/* init all coinexchange markets summary again*/
 			this.init();
 		}
-		return symbol;
+		return uniSymbol;
 	}
 
 

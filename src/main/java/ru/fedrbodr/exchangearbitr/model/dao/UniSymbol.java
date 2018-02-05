@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Entity
 @Data
 @NoArgsConstructor
-public class Symbol implements Serializable {
+public class UniSymbol implements Serializable {
 	@Id
 	@GeneratedValue
 	private long id;
@@ -21,7 +21,7 @@ public class Symbol implements Serializable {
 	private String baseName;
 	private String quoteName;
 
-	public Symbol(String name, String baseName, String secondaryCurrencyName) {
+	public UniSymbol(String name, String baseName, String secondaryCurrencyName) {
 		this.name = name;
 		this.baseName = baseName;
 		this.quoteName = secondaryCurrencyName;
