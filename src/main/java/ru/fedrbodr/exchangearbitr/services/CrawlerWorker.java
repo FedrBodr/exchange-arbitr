@@ -3,7 +3,7 @@ package ru.fedrbodr.exchangearbitr.services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.fedrbodr.exchangearbitr.dao.ExchangeRepository;
 import ru.fedrbodr.exchangearbitr.model.dao.ExchangeMeta;
 
@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 
-@Service
+@Component
 @Slf4j
 public class CrawlerWorker implements Runnable {
 	public static final int REQUESTS_PAUSE = 2000;
@@ -37,6 +37,8 @@ public class CrawlerWorker implements Runnable {
 	@Autowired
 	private ExchangeRepository exchangeRepository;
 	private boolean doGrabbing = false;
+	Date startPreviousCall;
+	Date startPreviousBitrixCall;
 
 	@PostConstruct
 	private void init() throws NoSuchFieldException, IllegalAccessException {
@@ -52,12 +54,13 @@ public class CrawlerWorker implements Runnable {
 	public void run() {
 		Date start = new Date();
 		log.info("Before start NonStop iteration readAllExchangeSummaries of bittrexExchangeReader.readAndSaveMarketPositionsBySummaries");
-		Date startPreviousCall = new Date();
+		startPreviousCall = new Date();
+		startPreviousBitrixCall = new Date();
 		int threadNum = Runtime.getRuntime().availableProcessors()-1;
 
 		while(doGrabbing) {
 			try {
-				startPreviousCall = readAllExchangeSummaries(startPreviousCall, threadNum);
+				startPreviousCall = readAllExchangeSummaries(threadNum);
 			} catch (InterruptedException e) {
 				log.error("Maybe int arror on shut down and it is ok" + e.getMessage(), e);
 			}
@@ -69,16 +72,20 @@ public class CrawlerWorker implements Runnable {
 
 
 
-	private Date readAllExchangeSummaries(Date startPreviousCall, int threadCount) throws InterruptedException {
+	private Date readAllExchangeSummaries(int threadCount) throws InterruptedException {
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		List<FutureTask<Void>> taskList = new ArrayList<>();
 
 		addReadedTaskFutureTaskToTaskList(executor, taskList, bittrexExchangeReader);
 		addReadedTaskFutureTaskToTaskList(executor, taskList, poloniexExchangeReader);
 		addReadedTaskFutureTaskToTaskList(executor, taskList, coinexchangeExchangeReader);
-		long lastCallWas = System.currentTimeMillis() - startPreviousCall.getTime();
-		if( lastCallWas < BINANCE_ALL_TICKERS_PAUSE){
+		/*TODO refactor this to configarable limits for each exchange
+		* and start wright wiki or project documentation*/
+		long lastCallWas = System.currentTimeMillis() - startPreviousBitrixCall.getTime();
+		if( lastCallWas > BINANCE_ALL_TICKERS_PAUSE){
+			log.info("Call addReadedTaskFutureTaskToTaskList for binanceExchangeReader");
 			addReadedTaskFutureTaskToTaskList(executor, taskList, binanceExchangeReader);
+			startPreviousBitrixCall = new Date();
 		}
 
 

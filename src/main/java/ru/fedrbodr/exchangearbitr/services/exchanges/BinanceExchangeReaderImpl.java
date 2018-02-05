@@ -54,7 +54,7 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 					symbol.getQuoteAsset() + "-" + symbol.getBaseAsset(),
 					symbol.getBaseAsset(),
 					symbol.getQuoteAsset());
-			binanceSymbolToUniSymbolMap.put(uniSymbol.getBaseName()+uniSymbol.getQuoteName(), uniSymbol);
+			binanceSymbolToUniSymbolMap.put(symbol.getSymbol(), uniSymbol);
 		}
 		/*TODO refactor this with aop*/
 		log.info(BinanceExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
