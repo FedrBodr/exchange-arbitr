@@ -5,7 +5,7 @@
 .right{
     float: right;
 }
-.marginAuto{
+.middle{
     margin: auto;
 }
 /* start login page */
@@ -74,4 +74,8 @@
 .donateUpdate{
     text-align: center;
     margin-bottom: 3em;
+}
+/* start index page */
+.marketSymbolsCompareTable td:nth-child(1){
+    width: 82px;
 }

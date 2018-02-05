@@ -14,6 +14,15 @@ public class MarketPositionFastCompare {
 	private MarketPositionFast buyMarketPosition;
 	private MarketPositionFast sellMarketPosition;
 	private BigDecimal difference;
-	private float differencePercent;
+	private BigDecimal differencePercentCorrect;
+	private BigDecimal differencePercent;
+	private BigDecimal differencePercentToni;
 
+	public BigDecimal getDifferencePercentCorrect() {
+		return differencePercentCorrect;
+	}
+
+	public void setDifferencePercentCorrect(BigDecimal differencePercentCorrect) {
+		this.differencePercentCorrect = differencePercentCorrect;
+	}
 }

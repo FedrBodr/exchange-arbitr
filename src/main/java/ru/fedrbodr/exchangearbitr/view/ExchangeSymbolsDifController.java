@@ -12,7 +12,15 @@ public class ExchangeSymbolsDifController {
 	@Autowired
 	private MarketPositionFastService marketPositionFastService;
 
-	public List<MarketPositionFastCompare> getMarketPositionFastCompareList(){
-		return marketPositionFastService.getTopMarketPositionFastCompareList();
+	public List<MarketPositionFastCompare> getTopAfter12MarketPositionFastCompareList(){
+		return marketPositionFastService.getTopAfter12MarketPositionFastCompareList();
+	}
+
+	public List<MarketPositionFastCompare> getTopFullMarketPositionFastCompareList(){
+		return marketPositionFastService.getTopFullMarketPositionFastCompareList();
+	}
+
+	public List<MarketPositionFastCompare> getTopProblemMarketPositionFastCompareList(){
+		return marketPositionFastService.getTopProblemMarketPositionFastCompareList();
 	}
 }

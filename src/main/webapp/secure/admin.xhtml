@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:body>
     <ui:composition template="/template/commonLayout.xhtml">
         <ui:define name="content">
@@ -12,37 +12,47 @@
                     <p:commandButton update="adminPanel" value="Run" actionListener="#{adminController.startGrabbing}" style="margin-right: 25px;"/>
                     <p:commandButton update="adminPanel" value="Stop" action="#{adminController.stopGrabbing}"/>
                 </p:panel>
-                <p:poll interval="1" update="marketPositionsCompareTable"/>
-                <p:dataTable id="marketPositionsCompareTable" var="marketPositionFastCompare"
-                             value="#{exchangeSymbolsDifController.marketPositionFastCompareList}">
-                    <p:column headerText="uniSymbol">
+                <div class="middle">
+                    <p:commandButton value="Stop auto update" onclick="PF('poll').stop();"/><p:commandButton value="Start auto update" onclick="PF('poll').start();"/>
+                </div>
+                <p:poll interval="2" update="marketPositionsCompareTable" widgetVar="poll"/>
+                <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable"
+                             var="marketPositionFastCompare"
+                             value="#{exchangeSymbolsDifController.topFullMarketPositionFastCompareList}"
+                             widgetVar="carsTable"
+                >
+                    <f:facet name="header">
+                        all symbols / все пары тут и нерабочие с главной и те что в серединке которые я не выводил на index и ите что вывел на главной
+                    </f:facet>
+                    <p:column headerText="Symbol">
                         <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.uniSymbol.name}"/>
                     </p:column>
-
-                    <p:column headerText="difference">
-                        <h:outputText value="#{marketPositionFastCompare.difference}"/>
+                    <p:column headerText="(sell - buy)/sell * 100% ">
+                        <h:outputText value="#{marketPositionFastCompare.differencePercentCorrect}">
+                            <f:convertNumber minFractionDigits="12"/>
+                        </h:outputText>
                     </p:column>
-
-                    <p:column headerText="differencePercent">
-                        <h:outputText value="#{marketPositionFastCompare.differencePercent}"/>
+                    <p:column headerText="(Buy/Sell - 1)*100">
+                        <h:outputText value="#{marketPositionFastCompare.differencePercentToni}">
+                            <f:convertNumber minFractionDigits="12"/>
+                        </h:outputText>
                     </p:column>
-
                     <p:column headerText="Buy exchangeMeta">
                         <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.exchangeMeta.exchangeName}"/>
                     </p:column>
-
                     <p:column headerText="Buy lastPrice">
-                        <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.lastPrice}"/>
+                        <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.lastPrice}">
+                            <f:convertNumber minFractionDigits="12"/>
+                        </h:outputText>
                     </p:column>
-
                     <p:column headerText="Sell exchangeMeta">
-                        <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.exchangeMeta.exchangeName}"/>
+                        <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.marketPositionFastPK.exchangeMeta.exchangeName}"/>
                     </p:column>
-
                     <p:column headerText="Sell lastPrice">
-                        <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.lastPrice}"/>
+                        <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.lastPrice}">
+                            <f:convertNumber minFractionDigits="12"/>
+                        </h:outputText>
                     </p:column>
-
                     <p:column headerText="Update at">
                         <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.updatedAt}"/>
                     </p:column>
