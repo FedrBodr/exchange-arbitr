@@ -9,9 +9,4 @@ public interface MarketSummaryService {
 	 * */
 	UniSymbol getOrCreateNewSymbol(String symbolName, String baseCurrency, String marketCurrency);
 
-	/**
-	 * @param symbolName BTC-ETH format name!
-	 *
-	 * */
-	UniSymbol getOrCreateNewSymbol(String symbolName);
 }

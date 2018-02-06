@@ -60,9 +60,8 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 		JSONArray result = json.getJSONArray("result");
 		List<MarketPosition> marketPositions = new ArrayList<>();
 		for(int i = result.length()-1; i>0; i--) {
-			JSONObject marketPositionJsonObject = result.getJSONObject(i);
-			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
-			marketSummaryService.getOrCreateNewSymbol(market.getString("MarketName"));
+			JSONObject market = result.getJSONObject(i).getJSONObject("Market");
+			marketSummaryService.getOrCreateNewSymbol(market.getString("MarketName"), market.getString("BaseCurrency"), market.getString("MarketCurrency"));
 		}
 		/*TODO refactor this with aop*/
 		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
@@ -78,7 +77,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
 			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");
 
-			UniSymbol uniSymbol = marketSummaryService.getOrCreateNewSymbol(market.getString("MarketName"));
+			UniSymbol uniSymbol = marketSummaryService.getOrCreateNewSymbol(market.getString("MarketName"), market.getString("BaseCurrency"), market.getString("MarketCurrency"));
 			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.BITTREX, uniSymbol, summary.getBigDecimal("Last"));
 			marketPosition.setExchangeTimeStamp(convert(summary.getString("TimeStamp")));
 

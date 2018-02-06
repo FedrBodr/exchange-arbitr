@@ -15,17 +15,12 @@ public class MarketSummaryServiceImpl implements MarketSummaryService {
 
 	@Override
 	@Transactional
-	public UniSymbol getOrCreateNewSymbol(String marketName, String baseCurrency, String quoteCurrency) {
-		UniSymbol uniSymbol = marketSummaryRepository.findByName(marketName);
+	@Cacheable("symbolByNameBaseQuote")
+	public UniSymbol getOrCreateNewSymbol(String symbolName, String baseCurrency, String quoteCurrency) {
+		UniSymbol uniSymbol = marketSummaryRepository.findByName(symbolName);
 		if(uniSymbol == null){
-			uniSymbol = marketSummaryRepository.saveAndFlush(new UniSymbol(marketName, baseCurrency, quoteCurrency));
+			uniSymbol = marketSummaryRepository.saveAndFlush(new UniSymbol(symbolName, baseCurrency, quoteCurrency));
 		}
 		return uniSymbol;
-	}
-
-	@Override
-	@Cacheable("symbolByName")
-	public UniSymbol getOrCreateNewSymbol(String symbolName) {
-		return this.getOrCreateNewSymbol(symbolName, null, null);
 	}
 }

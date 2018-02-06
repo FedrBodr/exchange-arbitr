@@ -17,12 +17,17 @@ public class MarketPositionFastCompare {
 	private BigDecimal differencePercentCorrect;
 	private BigDecimal differencePercent;
 	private BigDecimal differencePercentToni;
+	private String buySymbolExchangeUrl;
+	private String sellSymbolExchangeUrl;
 
-	public BigDecimal getDifferencePercentCorrect() {
-		return differencePercentCorrect;
-	}
 
-	public void setDifferencePercentCorrect(BigDecimal differencePercentCorrect) {
+	public MarketPositionFastCompare(MarketPositionFast buyMarketPosition, MarketPositionFast sellMarketPosition, BigDecimal difference,
+									 BigDecimal differencePercentCorrect, BigDecimal differencePercent, BigDecimal differencePercentToni) {
+		this.buyMarketPosition = buyMarketPosition;
+		this.sellMarketPosition = sellMarketPosition;
+		this.difference = difference;
 		this.differencePercentCorrect = differencePercentCorrect;
+		this.differencePercent = differencePercent;
+		this.differencePercentToni = differencePercentToni;
 	}
 }

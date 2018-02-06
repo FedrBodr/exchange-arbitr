@@ -13,7 +13,6 @@ import ru.fedrbodr.exchangearbitr.model.dao.MarketPosition;
 import ru.fedrbodr.exchangearbitr.model.dao.UniSymbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.MarketSummaryService;
-import ru.fedrbodr.exchangearbitr.utils.MarketNamesUtils;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
 
 import javax.annotation.PostConstruct;
@@ -48,7 +47,9 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 			markets.forEach(item -> {
 				JSONObject obj = (JSONObject) item;
 				UniSymbol uniSymbol = marketSummaryService.getOrCreateNewSymbol(
-						MarketNamesUtils.convertCoinexchangeToUniversalMarketName(obj.getString("BaseCurrencyCode"), obj.getString("MarketAssetCode")));
+						obj.getString("BaseCurrencyCode")+ "-" + obj.getString("MarketAssetCode"),
+						obj.getString("BaseCurrencyCode"),
+						obj.getString("MarketAssetCode"));
 				int coinexchangeMarketID = obj.getInt("MarketID");
 				coinexchangeIdToMarketSummaryMap.put(coinexchangeMarketID, uniSymbol);
 			});

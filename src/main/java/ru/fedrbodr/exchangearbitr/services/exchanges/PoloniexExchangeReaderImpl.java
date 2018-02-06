@@ -11,7 +11,6 @@ import ru.fedrbodr.exchangearbitr.model.dao.MarketPosition;
 import ru.fedrbodr.exchangearbitr.model.dao.UniSymbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.MarketSummaryService;
-import ru.fedrbodr.exchangearbitr.utils.MarketNamesUtils;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
 
 import java.io.IOException;
@@ -20,7 +19,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
-
+/**
+ * Universal symbol format is BTC-BCN Poloniex is BTC_BCN
+ *
+ * */
 @Service
 public class PoloniexExchangeReaderImpl implements ExchangeReader {
 	@Autowired
@@ -37,7 +39,8 @@ public class PoloniexExchangeReaderImpl implements ExchangeReader {
 
 		while (marketNameIterator.hasNext()) {
 			String poloniexMarketName = marketNameIterator.next();
-			UniSymbol uniSymbol = marketSummaryService.getOrCreateNewSymbol(MarketNamesUtils.convertPoloniexToUniversalMarketName(poloniexMarketName));
+			String[] splitSybol = poloniexMarketName.split("_");
+			UniSymbol uniSymbol = marketSummaryService.getOrCreateNewSymbol(splitSybol[0]+"-"+splitSybol[1],splitSybol[0],splitSybol[1]);
 			JSONObject jsonObject = json.getJSONObject(poloniexMarketName);
 			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.POLONIEX, uniSymbol, jsonObject.getBigDecimal("last"));
 			marketPositions.add(marketPosition);
