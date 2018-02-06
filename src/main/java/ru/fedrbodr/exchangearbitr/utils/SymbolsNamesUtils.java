@@ -10,14 +10,8 @@ import java.security.InvalidParameterException;
 
 @Slf4j
 public class SymbolsNamesUtils {
-	public static String convertPoloniexToUniversalSymbol(String poloniexSymbol) {
-		return poloniexSymbol.replace("_","-");
-	}
 	public static String convertUniversalToPoloniexSymbol(String uniSymbol) {
 		return uniSymbol.replace("-","_");
-	}
-	public static String convertCoinexchangeToUniversalSymbol(String baseCurrencyCode, String marketAssetCode) {
-		return baseCurrencyCode + "-" + marketAssetCode;
 	}
 	/**
 	 * Be carreful it is used only for url by  sybol, in other api places Coinexchange sybol has only id - use CoinexchangeExchangeReaderImpl.coinexchangeIdToMarketSummaryMap
@@ -28,10 +22,11 @@ public class SymbolsNamesUtils {
 	}
 	/**
 	 * Be carreful it is used only for url by  sybol, in other api places Coinexchange sybol has only id - use CoinexchangeExchangeReaderImpl.coinexchangeIdToMarketSummaryMap
-	 * */
+	 *
+	 * @param uniSymbol*/
 	/*TODO if more similar formats like replace("-","_") in Binance and in Poloniex then refactor to symbolUnderLineFormat and etc*/
-	public static String convertUniversalToBinanceUrlSymbol(String uniSymbol) {
-		return uniSymbol.replace("-","_");
+	public static String convertUniversalToBinanceUrlSymbol(UniSymbol uniSymbol) {
+		return uniSymbol.getQuoteName() + "_" + uniSymbol.getBaseName();
 	}
 
 	public static String determineUrlToSymbolMarket(MarketPositionFast marketPosition) {
@@ -45,7 +40,7 @@ public class SymbolsNamesUtils {
 		}else if(exchangeMeta.equals(ExchangeMeta.COINEXCHANGE)){
 			urlToSymbolMarket = exchangeMeta.getSymbolMarketUrl()+ convertUniversalToCoinexchangeSymbolForUrl(uniSymbol);
 		}else if(exchangeMeta.equals(ExchangeMeta.BINANCE)){
-			urlToSymbolMarket = exchangeMeta.getSymbolMarketUrl()+ convertUniversalToBinanceUrlSymbol(uniSymbol.getName());
+			urlToSymbolMarket = exchangeMeta.getSymbolMarketUrl()+ convertUniversalToBinanceUrlSymbol(uniSymbol);
 		}
 
 		if(StringUtils.isEmpty(urlToSymbolMarket)){

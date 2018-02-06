@@ -10,7 +10,7 @@
         <ui:define name="content">
             <h:form>
                 <div class="middle">
-                <p:commandButton value="Stop auto update" onclick="PF('poll').stop();"/><p:commandButton value="Start auto update" onclick="PF('poll').start();"/>
+                    <p:commandButton value="Stop auto update" onclick="PF('poll').stop();"/><p:commandButton value="Start auto update" onclick="PF('poll').start();"/>
                 </div>
                 <p:poll interval="2" update="marketPositionsCompareTable" widgetVar="poll"/>
                 <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable"
