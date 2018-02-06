@@ -24,30 +24,25 @@
                     <p:column headerText="Symbol">
                         <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.uniSymbol.name}"/>
                     </p:column>
-                    <p:column headerText="(sell - buy)/sell * 100% ">
+                    <p:column headerText="Profit" >
                         <h:outputText value="#{marketPositionFastCompare.differencePercentCorrect}">
-                            <f:convertNumber minFractionDigits="12"/>
+                            <f:convertNumber minFractionDigits="2"/>
                         </h:outputText>
                     </p:column>
-                    <p:column headerText="(Buy/Sell - 1)*100">
-                        <h:outputText value="#{marketPositionFastCompare.differencePercentToni}">
-                            <f:convertNumber minFractionDigits="12"/>
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="Buy exchangeMeta">
+                    <p:column headerText="Buy exchange">
                         <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.exchangeMeta.exchangeName}"/>
                     </p:column>
                     <p:column headerText="Buy lastPrice">
                         <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.lastPrice}">
-                            <f:convertNumber minFractionDigits="12"/>
+                            <f:convertNumber minFractionDigits="8"/>
                         </h:outputText>
                     </p:column>
-                    <p:column headerText="Sell exchangeMeta">
+                    <p:column headerText="Sell exchange">
                         <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.marketPositionFastPK.exchangeMeta.exchangeName}"/>
                     </p:column>
                     <p:column headerText="Sell lastPrice">
                         <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.lastPrice}">
-                            <f:convertNumber minFractionDigits="12"/>
+                            <f:convertNumber minFractionDigits="8"/>
                         </h:outputText>
                     </p:column>
                     <p:column headerText="Update at">
