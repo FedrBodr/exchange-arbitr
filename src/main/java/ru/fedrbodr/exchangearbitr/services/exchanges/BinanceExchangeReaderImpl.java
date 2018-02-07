@@ -16,7 +16,7 @@ import ru.fedrbodr.exchangearbitr.model.dao.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.model.dao.MarketPosition;
 import ru.fedrbodr.exchangearbitr.model.dao.UniSymbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
-import ru.fedrbodr.exchangearbitr.services.MarketSummaryService;
+import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
 
 import javax.annotation.PostConstruct;
@@ -37,7 +37,7 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 	@Autowired
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
-	private MarketSummaryService marketSummaryService;
+	private SymbolService symbolService;
 
 	private Map<String, UniSymbol> binanceSymbolToUniSymbolMap;
 
@@ -50,7 +50,7 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 		BinanceExchangeInfo exchangeInfo = marketDataService.getExchangeInfo();
 		Symbol[] symbols = exchangeInfo.getSymbols();
 		for (Symbol symbol : symbols) {
-			UniSymbol uniSymbol = marketSummaryService.getOrCreateNewSymbol(
+			UniSymbol uniSymbol = symbolService.getOrCreateNewSymbol(
 					symbol.getQuoteAsset() + "-" + symbol.getBaseAsset(),
 					symbol.getBaseAsset(),
 					symbol.getQuoteAsset());
@@ -65,7 +65,7 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 		List<MarketPosition> marketPositionList = new ArrayList<>();
 		for (BinanceTicker24h binanceTicker24h : binanceTicker24hList) {
 			UniSymbol uniSymbol = binanceSymbolToUniSymbolMap.get(binanceTicker24h.getSymbol());
-			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.BINANCE, uniSymbol, binanceTicker24h.getLastPrice());
+			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.BINANCE, uniSymbol, binanceTicker24h.getLastPrice(), true);
 			marketPositionList.add(marketPosition);
 		}
 

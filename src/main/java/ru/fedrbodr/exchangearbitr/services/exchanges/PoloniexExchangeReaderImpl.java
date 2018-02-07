@@ -10,7 +10,7 @@ import ru.fedrbodr.exchangearbitr.model.dao.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.model.dao.MarketPosition;
 import ru.fedrbodr.exchangearbitr.model.dao.UniSymbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
-import ru.fedrbodr.exchangearbitr.services.MarketSummaryService;
+import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class PoloniexExchangeReaderImpl implements ExchangeReader {
 	@Autowired
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
-	private MarketSummaryService marketSummaryService;
+	private SymbolService symbolService;
 
 	public void readAndSaveMarketPositionsBySummaries() throws IOException, JSONException {
 		JSONObject json = getNewJsonObject("https://poloniex.com/public?command=returnTicker");
@@ -40,9 +40,10 @@ public class PoloniexExchangeReaderImpl implements ExchangeReader {
 		while (marketNameIterator.hasNext()) {
 			String poloniexMarketName = marketNameIterator.next();
 			String[] splitSybol = poloniexMarketName.split("_");
-			UniSymbol uniSymbol = marketSummaryService.getOrCreateNewSymbol(splitSybol[0]+"-"+splitSybol[1],splitSybol[0],splitSybol[1]);
+			UniSymbol uniSymbol = symbolService.getOrCreateNewSymbol(splitSybol[0]+"-"+splitSybol[1],splitSybol[0],splitSybol[1]);
 			JSONObject jsonObject = json.getJSONObject(poloniexMarketName);
-			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.POLONIEX, uniSymbol, jsonObject.getBigDecimal("last"));
+			/* TODO maybe true maybe not exactly but when i try to found active status for symbol - i did not found anything */
+			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.POLONIEX, uniSymbol, jsonObject.getBigDecimal("last"), true);
 			marketPositions.add(marketPosition);
 		}
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositions));

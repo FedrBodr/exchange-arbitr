@@ -27,12 +27,14 @@ public class MarketPosition {
 	@ManyToOne
 	@JoinColumn(name = "symbol_id")
 	private UniSymbol uniSymbol;
+	private boolean active;
 
-	public MarketPosition(ExchangeMeta exchangeMeta, UniSymbol uniSymbol, BigDecimal lastPrice) {
+	public MarketPosition(ExchangeMeta exchangeMeta, UniSymbol uniSymbol, BigDecimal lastPrice, boolean active) {
 		this.exchangeMeta = exchangeMeta;
 		this.lastPrice = lastPrice;
 		this.uniSymbol = uniSymbol;
 		this.createTime = new Date();
+		this.active = active;
 	}
 
 	@Override

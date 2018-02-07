@@ -2,7 +2,7 @@ package ru.fedrbodr.exchangearbitr.services;
 
 import ru.fedrbodr.exchangearbitr.model.dao.UniSymbol;
 
-public interface MarketSummaryService {
+public interface SymbolService {
 	/**
 	 * @param symbolName BTC-ETH format name!
 	 *

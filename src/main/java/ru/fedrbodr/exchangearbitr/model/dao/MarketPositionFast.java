@@ -31,12 +31,12 @@ public class MarketPositionFast implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	private Date updatedAt;
+	private boolean active;
 
 	public MarketPositionFast(MarketPosition marketPosition) {
-		marketPositionFastPK = new MarketPositionFastPK();
-		this.marketPositionFastPK.setExchangeMeta(marketPosition.getExchangeMeta());
-		this.marketPositionFastPK.setUniSymbol(marketPosition.getUniSymbol());
+		marketPositionFastPK = new MarketPositionFastPK(marketPosition.getExchangeMeta(), marketPosition.getUniSymbol());
 		this.lastPrice = marketPosition.getLastPrice();
 		this.exchangeTimeStamp = marketPosition.getExchangeTimeStamp();
+		this.active = marketPosition.isActive();
 	}
 }

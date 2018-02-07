@@ -156,12 +156,17 @@
 		<!-- Xchange api dependencies -->
 		<dependency>
 			<groupId>org.knowm.xchange</groupId>
+			<artifactId>xchange-core</artifactId>
+			<version>4.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.knowm.xchange</groupId>
 			<artifactId>xchange-binance</artifactId>
 			<version>4.3.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.knowm.xchange</groupId>
-			<artifactId>xchange-core</artifactId>
+			<artifactId>xchange-poloniex</artifactId>
 			<version>4.3.2</version>
 		</dependency>
 

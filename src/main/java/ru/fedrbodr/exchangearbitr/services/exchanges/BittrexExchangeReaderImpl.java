@@ -13,7 +13,7 @@ import ru.fedrbodr.exchangearbitr.model.dao.MarketPosition;
 import ru.fedrbodr.exchangearbitr.model.dao.MarketPositionFast;
 import ru.fedrbodr.exchangearbitr.model.dao.UniSymbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
-import ru.fedrbodr.exchangearbitr.services.MarketSummaryService;
+import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
 
 import javax.annotation.PostConstruct;
@@ -38,7 +38,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 	@Autowired
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
-	private MarketSummaryService marketSummaryService;
+	private SymbolService symbolService;
 	private static final ThreadLocal<DateFormat> dateFormat = new ThreadLocal<DateFormat>(){
 		@Override
 		protected DateFormat initialValue() {
@@ -61,7 +61,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 		List<MarketPosition> marketPositions = new ArrayList<>();
 		for(int i = result.length()-1; i>0; i--) {
 			JSONObject market = result.getJSONObject(i).getJSONObject("Market");
-			marketSummaryService.getOrCreateNewSymbol(market.getString("MarketName"), market.getString("BaseCurrency"), market.getString("MarketCurrency"));
+			symbolService.getOrCreateNewSymbol(market.getString("MarketName"), market.getString("BaseCurrency"), market.getString("MarketCurrency"));
 		}
 		/*TODO refactor this with aop*/
 		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
@@ -77,8 +77,8 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
 			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");
 
-			UniSymbol uniSymbol = marketSummaryService.getOrCreateNewSymbol(market.getString("MarketName"), market.getString("BaseCurrency"), market.getString("MarketCurrency"));
-			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.BITTREX, uniSymbol, summary.getBigDecimal("Last"));
+			UniSymbol uniSymbol = symbolService.getOrCreateNewSymbol(market.getString("MarketName"), market.getString("BaseCurrency"), market.getString("MarketCurrency"));
+			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.BITTREX, uniSymbol, summary.getBigDecimal("Last"), market.getBoolean("IsActive"));
 			marketPosition.setExchangeTimeStamp(convert(summary.getString("TimeStamp")));
 
 			marketPositionList.add(marketPosition);

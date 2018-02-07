@@ -15,6 +15,7 @@
                 <div class="middle">
                     <p:commandButton value="Stop auto update" onclick="PF('poll').stop();"/><p:commandButton value="Start auto update" onclick="PF('poll').start();"/>
                 </div>
+
                 <p:poll interval="2" update="marketPositionsCompareTable" widgetVar="poll"/>
                 <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable"
                              var="marketPositionFastCompare"
@@ -24,38 +25,7 @@
                     <f:facet name="header">
                         all symbols / все пары тут и нерабочие с главной и те что в серединке которые я не выводил на index и ите что вывел на главной
                     </f:facet>
-                    <p:column headerText="Symbol">
-                        <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.uniSymbol.name}"/>
-                    </p:column>
-                    <p:column headerText="(sell - buy)/sell * 100% ">
-                        <h:outputText value="#{marketPositionFastCompare.differencePercentCorrect}">
-                            <f:convertNumber minFractionDigits="12"/>
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="(Buy/Sell - 1)*100">
-                        <h:outputText value="#{marketPositionFastCompare.differencePercentToni}">
-                            <f:convertNumber minFractionDigits="12"/>
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="Buy exchangeMeta">
-                        <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK.exchangeMeta.exchangeName}"/>
-                    </p:column>
-                    <p:column headerText="Buy lastPrice">
-                        <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.lastPrice}">
-                            <f:convertNumber minFractionDigits="12"/>
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="Sell exchangeMeta">
-                        <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.marketPositionFastPK.exchangeMeta.exchangeName}"/>
-                    </p:column>
-                    <p:column headerText="Sell lastPrice">
-                        <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.lastPrice}">
-                            <f:convertNumber minFractionDigits="12"/>
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="Update at">
-                        <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.updatedAt}"/>
-                    </p:column>
+                    <ui:include src="/template/commonTableCollumns.xhtml" />
                 </p:dataTable>
             </h:form>
         </ui:define>

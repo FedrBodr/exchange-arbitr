@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Embeddable
 @NoArgsConstructor
 @Data
-public class MarketPositionFastPK implements Serializable{
+public class ExchangeUniSymbolPK implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "exchange_id")
 	private ExchangeMeta exchangeMeta;
@@ -19,7 +19,7 @@ public class MarketPositionFastPK implements Serializable{
 	@JoinColumn(name = "symbol_id")
 	private UniSymbol uniSymbol;
 
-	public MarketPositionFastPK(ExchangeMeta exchangeMeta, UniSymbol uniSymbol) {
+	public ExchangeUniSymbolPK(ExchangeMeta exchangeMeta, UniSymbol uniSymbol) {
 		this.exchangeMeta = exchangeMeta;
 		this.uniSymbol = uniSymbol;
 	}

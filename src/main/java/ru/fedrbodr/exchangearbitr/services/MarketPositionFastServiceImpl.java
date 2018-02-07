@@ -57,8 +57,7 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 					marketPositionSell,
 					marketPositionSell.getLastPrice().subtract(marketPositionBuy.getLastPrice()),
 					(marketPositionSell.getLastPrice().subtract(marketPositionBuy.getLastPrice())).
-							divide(marketPositionSell.getLastPrice(), 3, RoundingMode.HALF_UP).
-							multiply(new BigDecimal(100)),
+							divide(marketPositionSell.getLastPrice(), 3, RoundingMode.HALF_UP),
 					marketPositionBuy.getLastPrice().divide(marketPositionSell.getLastPrice(), 8, RoundingMode.HALF_UP).multiply(new BigDecimal(100)),
 					(marketPositionBuy.getLastPrice().divide(marketPositionSell.getLastPrice(), 8, RoundingMode.HALF_UP).subtract(new BigDecimal(-1))).subtract(new BigDecimal(100)));
 
