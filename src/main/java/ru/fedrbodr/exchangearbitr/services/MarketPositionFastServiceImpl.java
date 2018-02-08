@@ -7,7 +7,6 @@ import ru.fedrbodr.exchangearbitr.model.MarketPositionFastCompare;
 import ru.fedrbodr.exchangearbitr.model.dao.MarketPositionFast;
 import ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,23 +18,23 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 	@Override
 	public List<MarketPositionFastCompare> getTopAfter12MarketPositionFastCompareList() {
 		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.getTopAfter12MarketPositionFastCompareList();
-		return calculateAbdCompareDifferencesForWeb(topMarketPositionDif);
+		return calculateDifferencesForWeb(topMarketPositionDif);
 	}
 
 	@Override
 	public List<MarketPositionFastCompare> getTopFullMarketPositionFastCompareList() {
 		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.getTopFullMarketPositionFastCompareList();
 
-		return calculateAbdCompareDifferencesForWeb(topMarketPositionDif);
+		return calculateDifferencesForWeb(topMarketPositionDif);
 	}
 
 	@Override
 	public List<MarketPositionFastCompare> getTopProblemMarketPositionFastCompareList() {
 		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.getTopProblemMarketPositionFastCompareList();
-		return calculateAbdCompareDifferencesForWeb(topMarketPositionDif);
+		return calculateDifferencesForWeb(topMarketPositionDif);
 	}
 
-	private List<MarketPositionFastCompare> calculateAbdCompareDifferencesForWeb(List<Object[]> topMarketPositionDif) {
+	private List<MarketPositionFastCompare> calculateDifferencesForWeb(List<Object[]> topMarketPositionDif) {
 		List<MarketPositionFastCompare> marketPositionFastCompares = new ArrayList<>();
 
 		topMarketPositionDif.forEach(marketPositionDif -> {
@@ -55,11 +54,8 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 			MarketPositionFastCompare marketPositionFastCompare = new MarketPositionFastCompare(
 					marketPositionBuy,
 					marketPositionSell,
-					marketPositionSell.getLastPrice().subtract(marketPositionBuy.getLastPrice()),
-					(marketPositionSell.getLastPrice().subtract(marketPositionBuy.getLastPrice())).
-							divide(marketPositionSell.getLastPrice(), 3, RoundingMode.HALF_UP),
-					marketPositionBuy.getLastPrice().divide(marketPositionSell.getLastPrice(), 8, RoundingMode.HALF_UP).multiply(new BigDecimal(100)),
-					(marketPositionBuy.getLastPrice().divide(marketPositionSell.getLastPrice(), 8, RoundingMode.HALF_UP).subtract(new BigDecimal(-1))).subtract(new BigDecimal(100)));
+					(marketPositionSell.getAscPrice().subtract(marketPositionBuy.getBidPrice())).
+							divide(marketPositionSell.getAscPrice(), 3, RoundingMode.HALF_UP));
 
 			marketPositionFastCompare.setBuySymbolExchangeUrl(SymbolsNamesUtils.determineUrlToSymbolMarket(marketPositionBuy));
 			marketPositionFastCompare.setSellSymbolExchangeUrl(SymbolsNamesUtils.determineUrlToSymbolMarket(marketPositionSell));

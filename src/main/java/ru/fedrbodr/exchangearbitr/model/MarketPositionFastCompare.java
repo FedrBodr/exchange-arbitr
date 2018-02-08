@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 public class MarketPositionFastCompare {
 	private MarketPositionFast buyMarketPosition;
 	private MarketPositionFast sellMarketPosition;
-	private BigDecimal difference;
 	private BigDecimal differencePercentCorrect;
 	private BigDecimal differencePercent;
 	private BigDecimal differencePercentToni;
@@ -21,13 +20,10 @@ public class MarketPositionFastCompare {
 	private String sellSymbolExchangeUrl;
 
 
-	public MarketPositionFastCompare(MarketPositionFast buyMarketPosition, MarketPositionFast sellMarketPosition, BigDecimal difference,
-									 BigDecimal differencePercentCorrect, BigDecimal differencePercent, BigDecimal differencePercentToni) {
+	public MarketPositionFastCompare(MarketPositionFast buyMarketPosition, MarketPositionFast sellMarketPosition,
+									 BigDecimal differencePercentCorrect) {
 		this.buyMarketPosition = buyMarketPosition;
 		this.sellMarketPosition = sellMarketPosition;
-		this.difference = difference;
 		this.differencePercentCorrect = differencePercentCorrect;
-		this.differencePercent = differencePercent;
-		this.differencePercentToni = differencePercentToni;
 	}
 }

@@ -10,7 +10,6 @@ import ru.fedrbodr.exchangearbitr.dao.ExchangeMetaRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.model.dao.ExchangeMeta;
-import ru.fedrbodr.exchangearbitr.model.dao.ExchangeUniSymbolPK;
 import ru.fedrbodr.exchangearbitr.model.dao.MarketPosition;
 import ru.fedrbodr.exchangearbitr.model.dao.UniSymbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
@@ -84,11 +83,12 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 		marketPositionsArray.forEach(item -> {
 			JSONObject jsonObject = (JSONObject) item;
 			UniSymbol symbol = getUnifiedMarketSummary(jsonObject.getInt("MarketID"));
-			ExchangeUniSymbolPK exchangeUniSymbolPK = new ExchangeUniSymbolPK(ExchangeMeta.COINEXCHANGE, symbol);
 			MarketPosition marketPosition = new MarketPosition(
 					ExchangeMeta.COINEXCHANGE,
 					symbol,
 					jsonObject.getBigDecimal("LastPrice"),
+					jsonObject.getBigDecimal("BidPrice"),
+					jsonObject.getBigDecimal("AskPrice"),
 					isSymbolPairActive(symbol));
 
 			marketPositions.add(marketPosition);

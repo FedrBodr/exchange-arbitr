@@ -33,12 +33,14 @@ public class MarketPosition {
 	private UniSymbol uniSymbol;
 	private boolean active;
 
-	public MarketPosition(ExchangeMeta exchangeMeta, UniSymbol uniSymbol, BigDecimal lastPrice, boolean active) {
+	public MarketPosition(ExchangeMeta exchangeMeta, UniSymbol uniSymbol, BigDecimal lastPrice, BigDecimal bidPrice, BigDecimal ascPrice, boolean active) {
 		this.exchangeMeta = exchangeMeta;
 		this.lastPrice = lastPrice;
+		this.bidPrice = bidPrice;
+		this.ascPrice = ascPrice;
 		this.uniSymbol = uniSymbol;
-		this.createTime = new Date();
 		this.active = active;
+		this.createTime = new Date();
 	}
 
 	@Override
@@ -47,6 +49,8 @@ public class MarketPosition {
 				"id=" + id +
 				", exchangeId=" + exchangeMeta +
 				", lastPrice=" + String.format("%f" , lastPrice)+
+				", askPrice=" + String.format("%f" , ascPrice)+
+				", bidPrice=" + String.format("%f" , bidPrice)+
 				", exchangeTimeStamp=" + exchangeTimeStamp +
 				", createAt=" + createTime +
 				'}';

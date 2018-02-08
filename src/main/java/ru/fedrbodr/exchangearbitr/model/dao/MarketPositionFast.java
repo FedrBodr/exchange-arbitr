@@ -41,6 +41,8 @@ public class MarketPositionFast implements Serializable{
 	public MarketPositionFast(MarketPosition marketPosition) {
 		marketPositionFastPK = new MarketPositionFastPK(marketPosition.getExchangeMeta(), marketPosition.getUniSymbol());
 		this.lastPrice = marketPosition.getLastPrice();
+		this.bidPrice = marketPosition.getBidPrice();
+		this.ascPrice = marketPosition.getAscPrice();
 		this.exchangeTimeStamp = marketPosition.getExchangeTimeStamp();
 		this.active = marketPosition.isActive();
 	}

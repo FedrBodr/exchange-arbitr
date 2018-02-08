@@ -67,8 +67,12 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 		List<MarketPosition> marketPositionList = new ArrayList<>();
 		for (BinanceTicker24h binanceTicker24h : binanceTicker24hList) {
 			UniSymbol uniSymbol = binanceSymbolToUniSymbolMap.get(binanceToUniCurrencyName(binanceTicker24h.getSymbol()));
-			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.BINANCE, uniSymbol, binanceTicker24h.getLastPrice(), true);
-			marketPositionList.add(marketPosition);
+
+			marketPositionList.add(
+					new MarketPosition(ExchangeMeta.BINANCE, uniSymbol,
+							binanceTicker24h.getLastPrice(), binanceTicker24h.getBidPrice(), binanceTicker24h.getAskPrice(),
+							true)
+			);
 		}
 
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));

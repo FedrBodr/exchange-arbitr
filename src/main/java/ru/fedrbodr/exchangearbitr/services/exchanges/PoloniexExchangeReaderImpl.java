@@ -65,8 +65,10 @@ public class PoloniexExchangeReaderImpl implements ExchangeReader {
 			String[] splitSybol = poloniexMarketName.split("_");
 			UniSymbol uniSymbol = symbolService.getOrCreateNewSymbol(splitSybol[0],splitSybol[1]);
 			JSONObject jsonObject = json.getJSONObject(poloniexMarketName);
-			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.POLONIEX, uniSymbol, jsonObject.getBigDecimal("last"), isSymbolPairActive(uniSymbol));
-			marketPositions.add(marketPosition);
+
+			marketPositions.add(new MarketPosition(ExchangeMeta.POLONIEX, uniSymbol,
+					jsonObject.getBigDecimal("last"), jsonObject.getBigDecimal("lowestAsk"), jsonObject.getBigDecimal("highestBid"),
+					isSymbolPairActive(uniSymbol)));
 		}
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositions));
 		marketPositionFastRepository.flush();

@@ -98,6 +98,8 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 					ExchangeMeta.BITTREX,
 					uniSymbol,
 					summary.getBigDecimal("Last"),
+					summary.getBigDecimal("Bid"),
+					summary.getBigDecimal("Ask"),
 					isSymbolPairActive(market.getString("BaseCurrency"),market.getString("MarketCurrency")));
 			marketPosition.setExchangeTimeStamp(convert(summary.getString("TimeStamp")));
 
