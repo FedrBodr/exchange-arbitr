@@ -7,21 +7,19 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.ExchangeMetaRepository;
-import ru.fedrbodr.exchangearbitr.dao.ExchangeUniSymbolMetaRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
-import ru.fedrbodr.exchangearbitr.model.dao.*;
+import ru.fedrbodr.exchangearbitr.model.dao.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.model.dao.ExchangeUniSymbolPK;
+import ru.fedrbodr.exchangearbitr.model.dao.MarketPosition;
+import ru.fedrbodr.exchangearbitr.model.dao.UniSymbol;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
 
@@ -33,18 +31,14 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 	@Autowired
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
-	private ExchangeUniSymbolMetaRepository exchangeUniSymbolMetaRepository;
-	@Autowired
 	private SymbolService symbolService;
 	private Map<Integer, UniSymbol> coinexchangeIdToMarketSummaryMap;
 	@Autowired
 	private ExchangeMetaRepository exchangeRepository;
-	private boolean doGrabbing = false;
-	Date startPreviousCall;
-	Date startPreviousBitrixCall;
+	private Map<String, Boolean> currencyActivityMap;
 
 	@PostConstruct
-	private void init(){
+	private void init() {
 		/* TODO move preinit to more convenient place ? */
 		exchangeRepository.save(ExchangeMeta.BITTREX);
 		exchangeRepository.save(ExchangeMeta.COINEXCHANGE);
@@ -55,17 +49,23 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 
 		log.info(CoinexchangeExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
-		coinexchangeIdToMarketSummaryMap = new ConcurrentHashMap<>();
+		coinexchangeIdToMarketSummaryMap = new HashMap<>();
+		currencyActivityMap = new HashMap<>();
 		try {
-			JSONArray markets = getNewJsonObject(" https://www.coinexchange.io/api/v1/getmarkets").getJSONArray("result");
+			JSONArray currencies = getNewJsonObject("https://www.coinexchange.io/api/v1/getcurrencies").getJSONArray("result");
+			for (Object currency : currencies) {
+				JSONObject currencyJsonObj = (JSONObject) currency;
+				currencyActivityMap.put(currencyJsonObj.getString("TickerCode"), "online".equals(currencyJsonObj.getString("WalletStatus")));
+			}
+
+
+			JSONArray markets = getNewJsonObject("https://www.coinexchange.io/api/v1/getmarkets").getJSONArray("result");
 			markets.forEach(item -> {
 				JSONObject obj = (JSONObject) item;
 				/* IT IS CORECT NAMES FORMAT like in org.knowm.xchange.currency.Currency*/
 				UniSymbol uniSymbol = symbolService.getOrCreateNewSymbol(
 						obj.getString("BaseCurrencyCode"),
 						obj.getString("MarketAssetCode"));
-
-				exchangeUniSymbolMetaRepository.save(new ExchangeUniSymbolMeta(ExchangeMeta.COINEXCHANGE, uniSymbol, obj.getBoolean("Active")));
 
 				int coinexchangeMarketID = obj.getInt("MarketID");
 				coinexchangeIdToMarketSummaryMap.put(coinexchangeMarketID, uniSymbol);
@@ -78,7 +78,7 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 	}
 
 	public void readAndSaveMarketPositionsBySummaries() throws IOException, JSONException {
-		JSONArray marketPositionsArray = getNewJsonObject(" https://www.coinexchange.io/api/v1/getmarketsummaries").getJSONArray("result");
+		JSONArray marketPositionsArray = getNewJsonObject("https://www.coinexchange.io/api/v1/getmarketsummaries").getJSONArray("result");
 		List<MarketPosition> marketPositions = new ArrayList<>();
 
 		marketPositionsArray.forEach(item -> {
@@ -89,7 +89,7 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 					ExchangeMeta.COINEXCHANGE,
 					symbol,
 					jsonObject.getBigDecimal("LastPrice"),
-					exchangeUniSymbolMetaRepository.findByExchangeUniSymbolPK(exchangeUniSymbolPK).isAcvtive());
+					isSymbolPairActive(symbol));
 
 			marketPositions.add(marketPosition);
 		});
@@ -100,9 +100,17 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 		marketPositionRepository.flush();
 	}
 
+	private boolean isSymbolPairActive(UniSymbol symbol) {
+		if (currencyActivityMap.get(symbol.getQuoteName()) != null && currencyActivityMap.get(symbol.getQuoteName())
+				&& currencyActivityMap.get(symbol.getBaseName()) != null && currencyActivityMap.get(symbol.getBaseName())) {
+			return true;
+		}
+		return false;
+	}
+
 	private UniSymbol getUnifiedMarketSummary(int coinexchangeMarketID) {
 		UniSymbol uniSymbol = coinexchangeIdToMarketSummaryMap.get(coinexchangeMarketID);
-		if(uniSymbol ==null){
+		if (uniSymbol == null) {
 			log.info("Found Market Summary at coinexchange for non existen uniSymbol");
 			/* init all coinexchange markets summary again*/
 			this.init();

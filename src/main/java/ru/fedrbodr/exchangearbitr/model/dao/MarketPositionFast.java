@@ -22,6 +22,11 @@ public class MarketPositionFast implements Serializable{
 	protected MarketPositionFastPK marketPositionFastPK;
 	@Column(precision = 14, scale = 8)
 	private BigDecimal lastPrice;
+	@Column(precision = 14, scale = 8)
+	private BigDecimal bidPrice;
+	@Column(precision = 14, scale = 8)
+	private BigDecimal ascPrice;
+	/* TODO think twice when i will review maybe it is not needed(only one exchange return time in ticker23) */
 	private Date exchangeTimeStamp;
 	@Column(nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)

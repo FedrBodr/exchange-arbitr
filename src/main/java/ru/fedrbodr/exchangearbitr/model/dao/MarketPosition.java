@@ -20,6 +20,10 @@ public class MarketPosition {
 	private ExchangeMeta exchangeMeta;
 	@Column(precision = 14, scale = 8)
 	private BigDecimal lastPrice;
+	@Column(precision = 14, scale = 8)
+	private BigDecimal bidPrice;
+	@Column(precision = 14, scale = 8)
+	private BigDecimal ascPrice;
 	@Column()
 	private Date exchangeTimeStamp;
 	@Column(nullable = false)

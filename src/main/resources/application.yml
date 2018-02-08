@@ -24,4 +24,6 @@ spring:
   datasource:
     username: exchange_fedr
     password: profit3001PUSHKA
+  jpa:
+    hibernate.ddl-auto: create-drop
 ---

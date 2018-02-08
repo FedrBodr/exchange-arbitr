@@ -17,10 +17,10 @@ import java.io.Serializable;
 public class ExchangeUniSymbolMeta implements Serializable {
 	@EmbeddedId
 	protected ExchangeUniSymbolPK exchangeUniSymbolPK;
-	private boolean acvtive;
+	private boolean active;
 
-	public ExchangeUniSymbolMeta(ExchangeMeta exchangeMeta, UniSymbol uniSymbol, boolean acvtive) {
+	public ExchangeUniSymbolMeta(ExchangeMeta exchangeMeta, UniSymbol uniSymbol, boolean active) {
 		this.exchangeUniSymbolPK = new ExchangeUniSymbolPK(exchangeMeta,uniSymbol);
-		this.acvtive = acvtive;
+		this.active = active;
 	}
 }

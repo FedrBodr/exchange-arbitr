@@ -170,6 +170,11 @@
 			<version>4.3.2</version>
 		</dependency>
 		<dependency>
+			<groupId>org.knowm.xchange</groupId>
+			<artifactId>xchange-bittrex</artifactId>
+			<version>4.3.2</version>
+		</dependency>
+		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.2</version>
@@ -183,7 +188,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>${project.artifactId}</finalName>
+		<finalName>ROOT</finalName>
 
 		<resources>
 			<resource>

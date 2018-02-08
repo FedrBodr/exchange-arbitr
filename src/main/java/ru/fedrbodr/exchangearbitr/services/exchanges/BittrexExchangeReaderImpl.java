@@ -4,6 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.knowm.xchange.ExchangeFactory;
+import org.knowm.xchange.bittrex.BittrexExchange;
+import org.knowm.xchange.bittrex.dto.marketdata.BittrexCurrency;
+import org.knowm.xchange.bittrex.service.BittrexMarketDataServiceRaw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
@@ -21,9 +25,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
 import static ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils.bittrexToUniCurrencyName;
@@ -40,6 +42,10 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
 	private SymbolService symbolService;
+	private BittrexMarketDataServiceRaw bittrexMarketDataServiceRaw = (BittrexMarketDataServiceRaw)
+			(ExchangeFactory.INSTANCE.createExchange(BittrexExchange.class.getName())).getMarketDataService();
+	private Map<String, BittrexCurrency> currencyMap;
+
 	private static final ThreadLocal<DateFormat> dateFormat = new ThreadLocal<DateFormat>(){
 		@Override
 		protected DateFormat initialValue() {
@@ -57,9 +63,14 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 		/*TODO refactor this with aop for all init methods*/
 		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
+		currencyMap = new HashMap<>();
+		BittrexCurrency[] bittrexCurrencies = bittrexMarketDataServiceRaw.getBittrexCurrencies();
+		for (BittrexCurrency bittrexCurrency : bittrexCurrencies) {
+			currencyMap.put(bittrexCurrency.getCurrency(), bittrexCurrency);
+		}
+
 		JSONObject json = getNewJsonObject("https://bittrex.com/api/v2.0/pub/Markets/GetMarketSummaries");
 		JSONArray result = json.getJSONArray("result");
-		List<MarketPosition> marketPositions = new ArrayList<>();
 		for(int i = result.length()-1; i>0; i--) {
 			JSONObject market = result.getJSONObject(i).getJSONObject("Market");
 			symbolService.getOrCreateNewSymbol(
@@ -83,8 +94,11 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 			UniSymbol uniSymbol = symbolService.getOrCreateNewSymbol(
 					bittrexToUniCurrencyName(market.getString("BaseCurrency")),
 					bittrexToUniCurrencyName(market.getString("MarketCurrency")));
-
-			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.BITTREX, uniSymbol, summary.getBigDecimal("Last"), market.getBoolean("IsActive"));
+			MarketPosition marketPosition = new MarketPosition(
+					ExchangeMeta.BITTREX,
+					uniSymbol,
+					summary.getBigDecimal("Last"),
+					isSymbolPairActive(market.getString("BaseCurrency"),market.getString("MarketCurrency")));
 			marketPosition.setExchangeTimeStamp(convert(summary.getString("TimeStamp")));
 
 			marketPositionList.add(marketPosition);
@@ -94,5 +108,17 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 		marketPositionFastRepository.flush();
 		marketPositionRepository.save(marketPositionList);
 		marketPositionRepository.flush();
+	}
+
+	/*Instead currencyMap can used market.getBoolean("IsActive") but now this as is maybe refactor to universal solution*/
+	private boolean isSymbolPairActive(String baseName, String quoteName) {
+		BittrexCurrency baseSymbol = currencyMap.get(baseName);
+		BittrexCurrency quoteSymbol = currencyMap.get(quoteName);
+
+		if(baseSymbol.isActive() && quoteSymbol.isActive()){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }
