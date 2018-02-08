@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 
+import static ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils.binanceToUniCurrencyName;
+
 /**
  * Bittrex ExchangeMeta markect names  format now is main inner format ETH-BTC
  * */
@@ -38,22 +40,22 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
 	private SymbolService symbolService;
-
+/** Used because in binance all symbols are concatenated without delimiters*/
 	private Map<String, UniSymbol> binanceSymbolToUniSymbolMap;
 
 	@PostConstruct
 	private void init() throws IOException {
 		/*TODO refactor this with aop for all init methods*/
 		log.info(BinanceExchangeReaderImpl.class.getSimpleName() + " initialisation start");
+
 		Date starDate = new Date();
 		binanceSymbolToUniSymbolMap = new HashMap<>();
 		BinanceExchangeInfo exchangeInfo = marketDataService.getExchangeInfo();
-		Symbol[] symbols = exchangeInfo.getSymbols();
-		for (Symbol symbol : symbols) {
+		Symbol[] bynanceSymbols = exchangeInfo.getSymbols();
+		for (Symbol symbol : bynanceSymbols) {
 			UniSymbol uniSymbol = symbolService.getOrCreateNewSymbol(
-					symbol.getQuoteAsset() + "-" + symbol.getBaseAsset(),
-					symbol.getBaseAsset(),
-					symbol.getQuoteAsset());
+					binanceToUniCurrencyName(symbol.getBaseAsset()),
+					binanceToUniCurrencyName(symbol.getQuoteAsset()));
 			binanceSymbolToUniSymbolMap.put(symbol.getSymbol(), uniSymbol);
 		}
 		/*TODO refactor this with aop*/
@@ -64,7 +66,7 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 		List<BinanceTicker24h> binanceTicker24hList = marketDataService.ticker24h();
 		List<MarketPosition> marketPositionList = new ArrayList<>();
 		for (BinanceTicker24h binanceTicker24h : binanceTicker24hList) {
-			UniSymbol uniSymbol = binanceSymbolToUniSymbolMap.get(binanceTicker24h.getSymbol());
+			UniSymbol uniSymbol = binanceSymbolToUniSymbolMap.get(binanceToUniCurrencyName(binanceTicker24h.getSymbol()));
 			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.BINANCE, uniSymbol, binanceTicker24h.getLastPrice(), true);
 			marketPositionList.add(marketPosition);
 		}

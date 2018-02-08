@@ -16,7 +16,8 @@ public class SymbolServiceImpl implements SymbolService {
 	@Override
 	@Transactional
 	@Cacheable("symbolByNameBaseQuote")
-	public UniSymbol getOrCreateNewSymbol(String symbolName, String baseCurrency, String quoteCurrency) {
+	public UniSymbol getOrCreateNewSymbol(String baseCurrency, String quoteCurrency) {
+		String symbolName = baseCurrency + "-" + quoteCurrency;
 		UniSymbol uniSymbol = uniSymbolRepository.findByName(symbolName);
 		if(uniSymbol == null){
 			uniSymbol = uniSymbolRepository.saveAndFlush(new UniSymbol(symbolName, baseCurrency, quoteCurrency));

@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.fedrbodr.exchangearbitr.dao.ExchangeMetaRepository;
 import ru.fedrbodr.exchangearbitr.dao.ExchangeUniSymbolMetaRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
@@ -36,10 +37,22 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 	@Autowired
 	private SymbolService symbolService;
 	private Map<Integer, UniSymbol> coinexchangeIdToMarketSummaryMap;
+	@Autowired
+	private ExchangeMetaRepository exchangeRepository;
+	private boolean doGrabbing = false;
+	Date startPreviousCall;
+	Date startPreviousBitrixCall;
 
 	@PostConstruct
 	private void init(){
+		/* TODO move preinit to more convenient place ? */
+		exchangeRepository.save(ExchangeMeta.BITTREX);
+		exchangeRepository.save(ExchangeMeta.COINEXCHANGE);
+		exchangeRepository.save(ExchangeMeta.POLONIEX);
+		exchangeRepository.save(ExchangeMeta.BINANCE);
+		exchangeRepository.flush();
 		/*TODO refactor this with aop for all init methods*/
+
 		log.info(CoinexchangeExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
 		coinexchangeIdToMarketSummaryMap = new ConcurrentHashMap<>();
@@ -49,7 +62,6 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 				JSONObject obj = (JSONObject) item;
 				/* IT IS CORECT NAMES FORMAT like in org.knowm.xchange.currency.Currency*/
 				UniSymbol uniSymbol = symbolService.getOrCreateNewSymbol(
-						obj.getString("BaseCurrencyCode")+ "-" + obj.getString("MarketAssetCode"),
 						obj.getString("BaseCurrencyCode"),
 						obj.getString("MarketAssetCode"));
 

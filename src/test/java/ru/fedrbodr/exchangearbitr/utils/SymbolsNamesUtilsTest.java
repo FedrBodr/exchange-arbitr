@@ -71,6 +71,15 @@ public class SymbolsNamesUtilsTest {
 		assertThat(loggingEvent.getFormattedMessage(), is("Can not determine url to symbol market for exchange FED"));
 	}
 
+	@Test
+	public void binanceCurrencyConvertNameTest() {
+		String knownBinanceBitcoinCachShortName = "BCC";
+		String uniBitcoinCachShortName = "BCH";
+
+		assertEquals("BCC", SymbolsNamesUtils.uniToBinanceCurrencyName(uniBitcoinCachShortName));
+		assertEquals("BCH", SymbolsNamesUtils.binanceToUniCurrencyName(knownBinanceBitcoinCachShortName));
+	}
+
 	private MarketPositionFast getSampleMarketPositionFor(ExchangeMeta exchangeMeta) {
 		MarketPositionFast marketPosition = new MarketPositionFast();
 		MarketPositionFastPK marketPositionPK = new MarketPositionFastPK(exchangeMeta, uniSymbol);

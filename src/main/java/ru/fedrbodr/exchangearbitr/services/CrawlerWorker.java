@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import ru.fedrbodr.exchangearbitr.dao.ExchangeRepository;
-import ru.fedrbodr.exchangearbitr.model.dao.ExchangeMeta;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,21 +31,9 @@ public class CrawlerWorker implements Runnable {
 	@Autowired
 	@Qualifier("coinexchangeExchangeReaderImpl")
 	private ExchangeReader coinexchangeExchangeReader;
-	@Autowired
-	private ExchangeRepository exchangeRepository;
 	private boolean doGrabbing = false;
-	Date startPreviousCall;
-	Date startPreviousBitrixCall;
-
-	@PostConstruct
-	private void init() throws NoSuchFieldException, IllegalAccessException {
-		/* TODO move preinit to more convenient place ? */
-		exchangeRepository.save(ExchangeMeta.BITTREX);
-		exchangeRepository.save(ExchangeMeta.COINEXCHANGE);
-		exchangeRepository.save(ExchangeMeta.POLONIEX);
-		exchangeRepository.save(ExchangeMeta.BINANCE);
-		exchangeRepository.flush();
-	}
+	private Date startPreviousCall;
+	private Date startPreviousBitrixCall;
 
 	@Override
 	public void run() {

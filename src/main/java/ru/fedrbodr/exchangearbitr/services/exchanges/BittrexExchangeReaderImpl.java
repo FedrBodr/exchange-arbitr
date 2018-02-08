@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
+import static ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils.bittrexToUniCurrencyName;
 
 /**
  * Bittrex ExchangeMeta markect names  format now is main inner format ETH-BTC
@@ -61,7 +62,9 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 		List<MarketPosition> marketPositions = new ArrayList<>();
 		for(int i = result.length()-1; i>0; i--) {
 			JSONObject market = result.getJSONObject(i).getJSONObject("Market");
-			symbolService.getOrCreateNewSymbol(market.getString("MarketName"), market.getString("BaseCurrency"), market.getString("MarketCurrency"));
+			symbolService.getOrCreateNewSymbol(
+					bittrexToUniCurrencyName(market.getString("BaseCurrency")),
+					bittrexToUniCurrencyName(market.getString("MarketCurrency")));
 		}
 		/*TODO refactor this with aop*/
 		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
@@ -77,7 +80,10 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
 			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");
 
-			UniSymbol uniSymbol = symbolService.getOrCreateNewSymbol(market.getString("MarketName"), market.getString("BaseCurrency"), market.getString("MarketCurrency"));
+			UniSymbol uniSymbol = symbolService.getOrCreateNewSymbol(
+					bittrexToUniCurrencyName(market.getString("BaseCurrency")),
+					bittrexToUniCurrencyName(market.getString("MarketCurrency")));
+
 			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.BITTREX, uniSymbol, summary.getBigDecimal("Last"), market.getBoolean("IsActive"));
 			marketPosition.setExchangeTimeStamp(convert(summary.getString("TimeStamp")));
 

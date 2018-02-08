@@ -40,7 +40,7 @@ public class PoloniexExchangeReaderImpl implements ExchangeReader {
 		while (marketNameIterator.hasNext()) {
 			String poloniexMarketName = marketNameIterator.next();
 			String[] splitSybol = poloniexMarketName.split("_");
-			UniSymbol uniSymbol = symbolService.getOrCreateNewSymbol(splitSybol[0]+"-"+splitSybol[1],splitSybol[0],splitSybol[1]);
+			UniSymbol uniSymbol = symbolService.getOrCreateNewSymbol(splitSybol[0],splitSybol[1]);
 			JSONObject jsonObject = json.getJSONObject(poloniexMarketName);
 			/* TODO maybe true maybe not exactly but when i try to found active status for symbol - i did not found anything */
 			MarketPosition marketPosition = new MarketPosition(ExchangeMeta.POLONIEX, uniSymbol, jsonObject.getBigDecimal("last"), true);

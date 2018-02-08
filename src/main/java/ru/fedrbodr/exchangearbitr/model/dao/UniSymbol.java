@@ -9,6 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
 
+/**
+ * Reference currency names look there org.knowm.xchange.currency.Currency
+ *
+ * */
 @Entity
 @Data
 @NoArgsConstructor
