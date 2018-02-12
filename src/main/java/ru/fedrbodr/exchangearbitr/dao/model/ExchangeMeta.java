@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr.model.dao;
+package ru.fedrbodr.exchangearbitr.dao.model;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,7 @@ public class ExchangeMeta implements Serializable {
 	public static ExchangeMeta POLONIEX = new ExchangeMeta(2, "POLONIEX", "https://poloniex.com/", "https://poloniex.com/exchange/#");
 	/** be careful with https://www.coinexchange.io/market/ as params need syboli in this format LTC/BTC*/
 	public static ExchangeMeta COINEXCHANGE = new ExchangeMeta(3, "COINEXCHANGE", "https://www.coinexchange.io", "https://www.coinexchange.io/market/");
-	public static ExchangeMeta BINANCE = new ExchangeMeta(4, "BINANCE", "https://www.binance.com/", "https://www.binance.com/trade.html?symbol=");
+	public static ExchangeMeta BINANCE = new ExchangeMeta(4, "BINANCE", "https://www.binance.com/", "https://www.binance.com/trade.html?symbolPair=");
 
 	@Id
 	private int id;

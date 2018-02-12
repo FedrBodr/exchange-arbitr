@@ -1,6 +1,12 @@
 package ru.fedrbodr.exchangearbitr.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.h2.server.web.WebServlet;
+import org.knowm.xchange.ExchangeFactory;
+import org.knowm.xchange.binance.BinanceExchange;
+import org.knowm.xchange.bittrex.BittrexExchange;
+import org.knowm.xchange.poloniex.PoloniexExchange;
+import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -8,10 +14,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableCaching
 @EnableAsync
+@Slf4j
 public class VariousAppConfig {
 	@Bean
 	public ServletRegistrationBean h2servletRegistration(){
@@ -27,5 +39,23 @@ public class VariousAppConfig {
 		executor.setMaxPoolSize(10);
 		executor.setQueueCapacity(25);
 		return executor;
+	}
+
+	@Bean
+	public Map<Integer, MarketDataService> exchangeIdToMarketDataService() {
+		Map<Integer, MarketDataService> exchangeIdToMarketDataService;
+		log.info("Before start initMarketDataServices");
+
+		Date start = new Date();
+		exchangeIdToMarketDataService = new HashMap<>();
+		exchangeIdToMarketDataService.put(
+				ExchangeMeta.BITTREX.getId(), ExchangeFactory.INSTANCE.createExchange(BittrexExchange.class.getName()).getMarketDataService());
+		exchangeIdToMarketDataService.put(
+				ExchangeMeta.BINANCE.getId(), ExchangeFactory.INSTANCE.createExchange(BinanceExchange.class.getName()).getMarketDataService());
+		exchangeIdToMarketDataService.put(
+				ExchangeMeta.POLONIEX.getId(), ExchangeFactory.INSTANCE.createExchange(PoloniexExchange.class.getName()).getMarketDataService());
+		/* TODO REALIZE IN XCHANGE Coinexchange Exchange */
+		log.info("After stop initMarketDataServices. time in  seconds: {}", (start.getTime() - new Date().getTime()) / 1000);
+		return exchangeIdToMarketDataService;
 	}
 }

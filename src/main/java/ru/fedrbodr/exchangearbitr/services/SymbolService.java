@@ -1,9 +1,9 @@
 package ru.fedrbodr.exchangearbitr.services;
 
-import ru.fedrbodr.exchangearbitr.model.dao.UniSymbol;
+import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
 
 public interface SymbolService {
 	/**  */
-	UniSymbol getOrCreateNewSymbol(String baseCurrency, String marketCurrency);
+	SymbolPair getOrCreateNewSymbol(String baseCurrency, String marketCurrency);
 
 }

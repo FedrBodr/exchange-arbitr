@@ -13,7 +13,7 @@
     <c:set var="sellMarketPK" value="#{marketPositionFastCompare.sellMarketPosition.marketPositionFastPK}" />
 
     <p:column headerText="Symbol">
-        <h:outputText value="#{buyMarketPK.uniSymbol.name}"/>
+        <h:outputText value="#{buyMarketPK.symbolPair.name}"/>
     </p:column>
     <p:column headerText="Profit" >
         <h:outputText value="#{marketPositionFastCompare.differencePercentCorrect}">
@@ -27,11 +27,11 @@
             #{buyMarketPK.exchangeMeta.exchangeName}
         </h:outputLink>
     </p:column>
-    <p:column headerText="Active">
+    <p:column headerText="Wallet active">
         <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.active}"/>
     </p:column>
     <p:column headerText="Buy lastPrice">
-        <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.lastPrice}">
+        <h:outputText value="#{marketPositionFastCompare.buyMarketPosition.bidPrice}">
             <f:convertNumber minFractionDigits="8"/>
         </h:outputText>
     </p:column>
@@ -40,11 +40,11 @@
             #{sellMarketPK.exchangeMeta.exchangeName}
         </h:outputLink>
     </p:column>
-    <p:column headerText="Active">
+    <p:column headerText="Wallet active">
         <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.active}"/>
     </p:column>
     <p:column headerText="Sell lastPrice">
-        <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.lastPrice}">
+        <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.askPrice}">
             <f:convertNumber minFractionDigits="8"/>
         </h:outputText>
     </p:column>

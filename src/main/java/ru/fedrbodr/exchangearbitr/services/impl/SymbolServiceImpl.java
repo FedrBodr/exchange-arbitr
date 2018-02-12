@@ -4,25 +4,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.fedrbodr.exchangearbitr.dao.UniSymbolRepository;
-import ru.fedrbodr.exchangearbitr.model.dao.UniSymbol;
+import ru.fedrbodr.exchangearbitr.dao.SymbolPairRepository;
+import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 
 @Service
 public class SymbolServiceImpl implements SymbolService {
 	@Autowired
-	private UniSymbolRepository uniSymbolRepository;
+	private SymbolPairRepository symbolPairRepository;
 
 	@Override
 	@Transactional
 	@Cacheable("symbolByNameBaseQuote")
-	public UniSymbol getOrCreateNewSymbol(String baseCurrency, String quoteCurrency) {
+	public SymbolPair getOrCreateNewSymbol(String baseCurrency, String quoteCurrency) {
 		String symbolName = baseCurrency + "-" + quoteCurrency;
-		UniSymbol uniSymbol = uniSymbolRepository.findByName(symbolName);
-		if(uniSymbol == null){
-			uniSymbol = uniSymbolRepository.saveAndFlush(new UniSymbol(symbolName, baseCurrency, quoteCurrency));
+		SymbolPair symbolPair = symbolPairRepository.findByName(symbolName);
+		if(symbolPair == null){
+			symbolPair = symbolPairRepository.saveAndFlush(new SymbolPair(symbolName, baseCurrency, quoteCurrency));
 		}
-		return uniSymbol;
+		return symbolPair;
 	}
 
 

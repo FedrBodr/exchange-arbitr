@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr.services.exchanges;
+package ru.fedrbodr.exchangearbitr.services.exchangereaders;
 
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -12,10 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
-import ru.fedrbodr.exchangearbitr.model.dao.ExchangeMeta;
-import ru.fedrbodr.exchangearbitr.model.dao.MarketPosition;
-import ru.fedrbodr.exchangearbitr.model.dao.MarketPositionFast;
-import ru.fedrbodr.exchangearbitr.model.dao.UniSymbol;
+import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.model.MarketPosition;
+import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
@@ -85,18 +84,18 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 		JSONObject json = getNewJsonObject("https://bittrex.com/api/v2.0/pub/Markets/GetMarketSummaries");
 		JSONArray result = json.getJSONArray("result");
 		List<MarketPosition> marketPositionList = new ArrayList<>();
-		List<MarketPositionFast> marketPositionFastList = new ArrayList<>();
+
 		for(int i = result.length()-1; i>0; i--) {
 			JSONObject marketPositionJsonObject = result.getJSONObject(i);
 			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
 			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");
 
-			UniSymbol uniSymbol = symbolService.getOrCreateNewSymbol(
+			SymbolPair symbolPair = symbolService.getOrCreateNewSymbol(
 					bittrexToUniCurrencyName(market.getString("BaseCurrency")),
 					bittrexToUniCurrencyName(market.getString("MarketCurrency")));
 			MarketPosition marketPosition = new MarketPosition(
 					ExchangeMeta.BITTREX,
-					uniSymbol,
+					symbolPair,
 					summary.getBigDecimal("Last"),
 					summary.getBigDecimal("Bid"),
 					summary.getBigDecimal("Ask"),

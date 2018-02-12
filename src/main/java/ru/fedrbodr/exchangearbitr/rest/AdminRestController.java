@@ -6,14 +6,14 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.fedrbodr.exchangearbitr.services.CrawlerWorker;
+import ru.fedrbodr.exchangearbitr.services.worker.MarketsSummariesWorker;
 
 @RestController
 @Slf4j
 public class AdminRestController {
 
 	@Autowired
-	private CrawlerWorker crawlerWorker;
+	private MarketsSummariesWorker marketsSummariesWorker;
 	@Autowired
 	private TaskExecutor taskExecutor;
 	@RequestMapping("/hello")
@@ -24,15 +24,15 @@ public class AdminRestController {
 	@RequestMapping("/start-grabbing")
 	@Secured("ADMIN")
 	public String startGrabbing() {
-		crawlerWorker.setDoGrabbing(true);
-		taskExecutor.execute(crawlerWorker);
+		marketsSummariesWorker.setDoGrabbing(true);
+		taskExecutor.execute(marketsSummariesWorker);
 		return "ok";
 	}
 
 	@RequestMapping("/stop-grabbing")
 	@Secured("ADMIN")
 	public String stopGrabbing() {
-		crawlerWorker.setDoGrabbing(false);
+		marketsSummariesWorker.setDoGrabbing(false);
 		return "ok";
 	}
 

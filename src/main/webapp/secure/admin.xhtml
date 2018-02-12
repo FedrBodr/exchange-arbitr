@@ -8,10 +8,21 @@
             <h:form>
                 <p:panel header="Admin Zone, be carrefully" id="adminPanel" style="text-align: center">
 
-                    Crawling status <p:outputLabel value="#{adminController.crawlingStatus}"/> <br/><br/><br/>
-                    <p:commandButton update="adminPanel" value="Run" actionListener="#{adminController.startGrabbing}" style="margin-right: 25px;"/>
-                    <p:commandButton update="adminPanel" value="Stop" action="#{adminController.stopGrabbing}"/>
+                    MarketsSummaries crawling status <p:outputLabel value="#{adminController.marketsSummariesCrawlingStatus}"/> <br/>
+                    OrderBooks crawling status <p:outputLabel value="#{adminController.orderBooksCrawlingStatus}"/> <br/><br/>
+
+                    <p:commandButton update="adminPanel" value="RunAll" action="#{adminController.startAllGrabbing}" style="margin-right: 25px;"/>
+                    <p:commandButton update="adminPanel" value="StopAll" action="#{adminController.stopAllGrabbing}"/>
+                    <br/>
+
+                    <p:commandButton update="adminPanel" value="Run Market Summaries Grabbing" action="#{adminController.startMarketSummariesGrabbing}" style="margin-right: 25px;"/>
+                    <p:commandButton update="adminPanel" value="Stop Market Summaries Grabbing" action="#{adminController.stopMarketSummariesGrabbing}"/>
+                    <br/>
+
+                    <p:commandButton update="adminPanel" value="Run Order Books Grabbing" action="#{adminController.startOrderBooksGrabbing}" style="margin-right: 25px;"/>
+                    <p:commandButton update="adminPanel" value="Stop Order Books Grabbing" action="#{adminController.stopOrderBooksGrabbing}"/>
                 </p:panel>
+                <br/>
                 <div class="middle">
                     <p:commandButton value="Stop auto update" onclick="PF('poll').stop();"/><p:commandButton value="Start auto update" onclick="PF('poll').start();"/>
                 </div>

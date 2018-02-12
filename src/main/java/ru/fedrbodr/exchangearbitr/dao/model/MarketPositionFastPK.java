@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr.model.dao;
+package ru.fedrbodr.exchangearbitr.dao.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,16 +11,16 @@ import java.io.Serializable;
 @Embeddable
 @NoArgsConstructor
 @Data
-public class ExchangeUniSymbolPK implements Serializable{
+public class MarketPositionFastPK implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "exchange_id")
 	private ExchangeMeta exchangeMeta;
 	@ManyToOne
 	@JoinColumn(name = "symbol_id")
-	private UniSymbol uniSymbol;
+	private SymbolPair symbolPair;
 
-	public ExchangeUniSymbolPK(ExchangeMeta exchangeMeta, UniSymbol uniSymbol) {
+	public MarketPositionFastPK(ExchangeMeta exchangeMeta, SymbolPair symbolPair) {
 		this.exchangeMeta = exchangeMeta;
-		this.uniSymbol = uniSymbol;
+		this.symbolPair = symbolPair;
 	}
 }

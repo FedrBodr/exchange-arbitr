@@ -1,10 +1,12 @@
 package ru.fedrbodr.exchangearbitr.services;
 
+import org.knowm.xchange.dto.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.fedrbodr.exchangearbitr.dao.LimitOrderRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepositoryCustom;
+import ru.fedrbodr.exchangearbitr.dao.model.MarketPositionFast;
 import ru.fedrbodr.exchangearbitr.model.MarketPositionFastCompare;
-import ru.fedrbodr.exchangearbitr.model.dao.MarketPositionFast;
 import ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils;
 
 import java.math.RoundingMode;
@@ -15,6 +17,9 @@ import java.util.List;
 public class MarketPositionFastServiceImpl implements MarketPositionFastService {
 	@Autowired
 	private MarketPositionFastRepositoryCustom marketPositionFastRepositoryCustom;
+	@Autowired
+	private LimitOrderRepository limitOrderRepository;
+
 	@Override
 	public List<MarketPositionFastCompare> getTopAfter12MarketPositionFastCompareList() {
 		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.getTopAfter12MarketPositionFastCompareList();
@@ -43,6 +48,8 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 			MarketPositionFast marketPositionFastToCompare =(MarketPositionFast) marketPositionDif[1];
 			MarketPositionFast marketPositionBuy;
 			MarketPositionFast marketPositionSell;
+
+
 			if(marketPositionFast.getLastPrice().compareTo(marketPositionFastToCompare.getLastPrice()) < 1){
 				marketPositionBuy = marketPositionFast;
 				marketPositionSell = marketPositionFastToCompare;
@@ -54,8 +61,21 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 			MarketPositionFastCompare marketPositionFastCompare = new MarketPositionFastCompare(
 					marketPositionBuy,
 					marketPositionSell,
-					(marketPositionSell.getAscPrice().subtract(marketPositionBuy.getBidPrice())).
-							divide(marketPositionSell.getAscPrice(), 3, RoundingMode.HALF_UP));
+					(marketPositionSell.getAskPrice().subtract(marketPositionBuy.getBidPrice())).
+							divide(marketPositionSell.getAskPrice(), 3, RoundingMode.HALF_UP));
+
+			marketPositionFastCompare.setSellOrders(limitOrderRepository.
+					findByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(
+							marketPositionSell.getMarketPositionFastPK().getExchangeMeta(),
+							marketPositionSell.getMarketPositionFastPK().getSymbolPair(),
+							Order.OrderType.ASK));
+
+			marketPositionFastCompare.setBuyOrders(limitOrderRepository.
+					findByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(
+							marketPositionBuy.getMarketPositionFastPK().getExchangeMeta(),
+							marketPositionBuy.getMarketPositionFastPK().getSymbolPair(),
+							Order.OrderType.BID));
+
 
 			marketPositionFastCompare.setBuySymbolExchangeUrl(SymbolsNamesUtils.determineUrlToSymbolMarket(marketPositionBuy));
 			marketPositionFastCompare.setSellSymbolExchangeUrl(SymbolsNamesUtils.determineUrlToSymbolMarket(marketPositionSell));

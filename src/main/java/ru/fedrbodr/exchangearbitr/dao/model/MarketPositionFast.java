@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr.model.dao;
+package ru.fedrbodr.exchangearbitr.dao.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,12 +20,12 @@ public class MarketPositionFast implements Serializable{
 
 	@EmbeddedId
 	protected MarketPositionFastPK marketPositionFastPK;
-	@Column(precision = 14, scale = 8)
+	@Column(precision = 15, scale = 8)
 	private BigDecimal lastPrice;
-	@Column(precision = 14, scale = 8)
+	@Column(precision = 15, scale = 8)
 	private BigDecimal bidPrice;
-	@Column(precision = 14, scale = 8)
-	private BigDecimal ascPrice;
+	@Column(precision = 15, scale = 8)
+	private BigDecimal askPrice;
 	/* TODO think twice when i will review maybe it is not needed(only one exchange return time in ticker23) */
 	private Date exchangeTimeStamp;
 	@Column(nullable = false, updatable = false)
@@ -39,10 +39,10 @@ public class MarketPositionFast implements Serializable{
 	private boolean active;
 
 	public MarketPositionFast(MarketPosition marketPosition) {
-		marketPositionFastPK = new MarketPositionFastPK(marketPosition.getExchangeMeta(), marketPosition.getUniSymbol());
+		marketPositionFastPK = new MarketPositionFastPK(marketPosition.getExchangeMeta(), marketPosition.getSymbolPair());
 		this.lastPrice = marketPosition.getLastPrice();
 		this.bidPrice = marketPosition.getBidPrice();
-		this.ascPrice = marketPosition.getAscPrice();
+		this.askPrice = marketPosition.getAskPrice();
 		this.exchangeTimeStamp = marketPosition.getExchangeTimeStamp();
 		this.active = marketPosition.isActive();
 	}

@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr.services.exchanges;
+package ru.fedrbodr.exchangearbitr.services.exchangereaders;
 
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.ExchangeMetaRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
-import ru.fedrbodr.exchangearbitr.model.dao.ExchangeMeta;
-import ru.fedrbodr.exchangearbitr.model.dao.MarketPosition;
-import ru.fedrbodr.exchangearbitr.model.dao.UniSymbol;
+import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.model.MarketPosition;
+import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
@@ -31,7 +31,7 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
 	private SymbolService symbolService;
-	private Map<Integer, UniSymbol> coinexchangeIdToMarketSummaryMap;
+	private Map<Integer, SymbolPair> coinexchangeIdToMarketSummaryMap;
 	@Autowired
 	private ExchangeMetaRepository exchangeRepository;
 	private Map<String, Boolean> currencyActivityMap;
@@ -62,12 +62,12 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 			markets.forEach(item -> {
 				JSONObject obj = (JSONObject) item;
 				/* IT IS CORECT NAMES FORMAT like in org.knowm.xchange.currency.Currency*/
-				UniSymbol uniSymbol = symbolService.getOrCreateNewSymbol(
+				SymbolPair symbolPair = symbolService.getOrCreateNewSymbol(
 						obj.getString("BaseCurrencyCode"),
 						obj.getString("MarketAssetCode"));
 
 				int coinexchangeMarketID = obj.getInt("MarketID");
-				coinexchangeIdToMarketSummaryMap.put(coinexchangeMarketID, uniSymbol);
+				coinexchangeIdToMarketSummaryMap.put(coinexchangeMarketID, symbolPair);
 			});
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
@@ -82,14 +82,14 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 
 		marketPositionsArray.forEach(item -> {
 			JSONObject jsonObject = (JSONObject) item;
-			UniSymbol symbol = getUnifiedMarketSummary(jsonObject.getInt("MarketID"));
+			SymbolPair symbolPair = getUnifiedMarketSummary(jsonObject.getInt("MarketID"));
 			MarketPosition marketPosition = new MarketPosition(
 					ExchangeMeta.COINEXCHANGE,
-					symbol,
+					symbolPair,
 					jsonObject.getBigDecimal("LastPrice"),
 					jsonObject.getBigDecimal("BidPrice"),
 					jsonObject.getBigDecimal("AskPrice"),
-					isSymbolPairActive(symbol));
+					isSymbolPairActive(symbolPair));
 
 			marketPositions.add(marketPosition);
 		});
@@ -100,22 +100,22 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 		marketPositionRepository.flush();
 	}
 
-	private boolean isSymbolPairActive(UniSymbol symbol) {
-		if (currencyActivityMap.get(symbol.getQuoteName()) != null && currencyActivityMap.get(symbol.getQuoteName())
-				&& currencyActivityMap.get(symbol.getBaseName()) != null && currencyActivityMap.get(symbol.getBaseName())) {
+	private boolean isSymbolPairActive(SymbolPair symbolPair) {
+		if (currencyActivityMap.get(symbolPair.getQuoteName()) != null && currencyActivityMap.get(symbolPair.getQuoteName())
+				&& currencyActivityMap.get(symbolPair.getBaseName()) != null && currencyActivityMap.get(symbolPair.getBaseName())) {
 			return true;
 		}
 		return false;
 	}
 
-	private UniSymbol getUnifiedMarketSummary(int coinexchangeMarketID) {
-		UniSymbol uniSymbol = coinexchangeIdToMarketSummaryMap.get(coinexchangeMarketID);
-		if (uniSymbol == null) {
-			log.info("Found Market Summary at coinexchange for non existen uniSymbol");
+	private SymbolPair getUnifiedMarketSummary(int coinexchangeMarketID) {
+		SymbolPair symbolPair = coinexchangeIdToMarketSummaryMap.get(coinexchangeMarketID);
+		if (symbolPair == null) {
+			log.info("Found Market Summary at coinexchange for non existen symbolPair");
 			/* init all coinexchange markets summary again*/
 			this.init();
 		}
-		return uniSymbol;
+		return symbolPair;
 	}
 
 
