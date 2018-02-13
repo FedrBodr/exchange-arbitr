@@ -34,6 +34,13 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 	}
 
 	@Override
+	public List<MarketPositionFastCompare> getTop30FullMarketPositionFastCompareList() {
+		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.getTopFullMarketPositionFastCompareList();
+
+		return calculateDifferencesForWeb(topMarketPositionDif);
+	}
+
+	@Override
 	public List<MarketPositionFastCompare> getTopProblemMarketPositionFastCompareList() {
 		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.getTopProblemMarketPositionFastCompareList();
 		return calculateDifferencesForWeb(topMarketPositionDif);
@@ -66,14 +73,14 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 
 			marketPositionFastCompare.setSellOrders(limitOrderRepository.
 					findByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(
-							marketPositionSell.getMarketPositionFastPK().getExchangeMeta(),
-							marketPositionSell.getMarketPositionFastPK().getSymbolPair(),
+							marketPositionBuy.getMarketPositionFastPK().getExchangeMeta(),
+							marketPositionBuy.getMarketPositionFastPK().getSymbolPair(),
 							Order.OrderType.ASK));
 
 			marketPositionFastCompare.setBuyOrders(limitOrderRepository.
 					findByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(
-							marketPositionBuy.getMarketPositionFastPK().getExchangeMeta(),
-							marketPositionBuy.getMarketPositionFastPK().getSymbolPair(),
+							marketPositionSell.getMarketPositionFastPK().getExchangeMeta(),
+							marketPositionSell.getMarketPositionFastPK().getSymbolPair(),
 							Order.OrderType.BID));
 
 

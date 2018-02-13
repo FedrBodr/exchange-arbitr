@@ -10,5 +10,8 @@ public interface MarketPositionFastRepositoryCustom {
 	List<Object[]> getTopFullMarketPositionFastCompareList();
 
 	@Transactional
+	List<Object[]> getTop30FullMarketPositionFastCompareList();
+
+	@Transactional
 	List<Object[]> getTopProblemMarketPositionFastCompareList();
 }

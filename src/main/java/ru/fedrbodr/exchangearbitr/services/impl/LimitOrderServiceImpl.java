@@ -35,14 +35,16 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 				OrderBook orderBook = marketDataService.getOrderBook(
 						SymbolsNamesUtils.getCurrencyPair(symbolPair.getBaseName(), symbolPair.getQuoteName()),
 						100);
-				Date orderReadedTimeStamp = new Date();
-				List<UniLimitOrder> uniAsks = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.getAsks(), exchangeMeta, symbolPair, orderReadedTimeStamp);
+				Date orderReadingTimeStamp = new Date();
+				List<UniLimitOrder> uniAsks = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.getAsks(), exchangeMeta, symbolPair, orderReadingTimeStamp);
 				limitOrderRepository.save(uniAsks);
-				List<UniLimitOrder> uniBids = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.getBids(), exchangeMeta, symbolPair, orderReadedTimeStamp);
+				List<UniLimitOrder> uniBids = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.getBids(), exchangeMeta, symbolPair, orderReadingTimeStamp);
 				limitOrderRepository.save(uniBids);
 				limitOrderRepository.flush();
 			}else{
-				log.error("Can not found MarketDataService for exchangeMeta : " + exchangeMeta.getExchangeName());
+				/* TODO uncomment after COINEXCHANGE added
+
+				log.error("BE CAREFUL Can not found MarketDataService for exchangeMeta : " + exchangeMeta.getExchangeName());*/
 			}
 
 		} catch (IOException e) {

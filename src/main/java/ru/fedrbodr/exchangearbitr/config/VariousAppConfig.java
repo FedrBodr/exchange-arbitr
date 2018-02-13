@@ -54,6 +54,8 @@ public class VariousAppConfig {
 				ExchangeMeta.BINANCE.getId(), ExchangeFactory.INSTANCE.createExchange(BinanceExchange.class.getName()).getMarketDataService());
 		exchangeIdToMarketDataService.put(
 				ExchangeMeta.POLONIEX.getId(), ExchangeFactory.INSTANCE.createExchange(PoloniexExchange.class.getName()).getMarketDataService());
+		exchangeIdToMarketDataService.put(
+				ExchangeMeta.POLONIEX.getId(), ExchangeFactory.INSTANCE.createExchange(PoloniexExchange.class.getName()).getMarketDataService());
 		/* TODO REALIZE IN XCHANGE Coinexchange Exchange */
 		log.info("After stop initMarketDataServices. time in  seconds: {}", (start.getTime() - new Date().getTime()) / 1000);
 		return exchangeIdToMarketDataService;

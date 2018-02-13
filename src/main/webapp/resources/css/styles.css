@@ -79,3 +79,13 @@
 .marketSymbolsCompareTable td:nth-child(1){
     width: 82px;
 }
+.ordersWrapper{
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+.sellOrderBook {
+    margin-right: 1em;
+}
+.ui-widget {
+    font-size: 0.8em;
+}

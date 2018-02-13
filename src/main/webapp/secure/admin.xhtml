@@ -15,28 +15,32 @@
                     <p:commandButton update="adminPanel" value="StopAll" action="#{adminController.stopAllGrabbing}"/>
                     <br/>
 
-                    <p:commandButton update="adminPanel" value="Run Market Summaries Grabbing" action="#{adminController.startMarketSummariesGrabbing}" style="margin-right: 25px;"/>
+                    <p:commandButton update="adminPanel" value="Run Market Summaries Grabbing" action="#{adminController.startMarketSummariesGrabbing}"
+                                     style="margin-right: 25px;"/>
                     <p:commandButton update="adminPanel" value="Stop Market Summaries Grabbing" action="#{adminController.stopMarketSummariesGrabbing}"/>
                     <br/>
 
-                    <p:commandButton update="adminPanel" value="Run Order Books Grabbing" action="#{adminController.startOrderBooksGrabbing}" style="margin-right: 25px;"/>
+                    <p:commandButton update="adminPanel" value="Run Order Books Grabbing" action="#{adminController.startOrderBooksGrabbing}"
+                                     style="margin-right: 25px;"/>
                     <p:commandButton update="adminPanel" value="Stop Order Books Grabbing" action="#{adminController.stopOrderBooksGrabbing}"/>
                 </p:panel>
                 <br/>
                 <div class="middle">
-                    <p:commandButton value="Stop auto update" onclick="PF('poll').stop();"/><p:commandButton value="Start auto update" onclick="PF('poll').start();"/>
+                    <p:commandButton value="Stop auto update" onclick="PF('poll').stop();"/><p:commandButton value="Start auto update"
+                                                                                                             onclick="PF('poll').start();"/>
                 </div>
 
-                <p:poll interval="2" update="marketPositionsCompareTable" widgetVar="poll"/>
-                <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable"
+                <!-- <p:poll interval="2" update="marketPositionsCompareTable" widgetVar="poll"/>-->
+                <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable" rows="30"
                              var="marketPositionFastCompare"
-                             value="#{exchangeSymbolsDifController.topFullMarketPositionFastCompareList}"
-                             widgetVar="carsTable"
+                             value="#{indexController.adminMarketPositionCompareList}"
+
                 >
                     <f:facet name="header">
                         all symbols / все пары тут и нерабочие с главной и те что в серединке которые я не выводил на index и ите что вывел на главной
                     </f:facet>
-                    <ui:include src="/template/commonTableCollumns.xhtml" />
+
+                    <ui:include src="/template/commonTableCollumns.xhtml"/>
                 </p:dataTable>
             </h:form>
         </ui:define>

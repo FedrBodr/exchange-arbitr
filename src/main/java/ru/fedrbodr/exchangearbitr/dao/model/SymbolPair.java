@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * <p>
@@ -34,5 +35,20 @@ public class SymbolPair implements Serializable {
 		this.name = name;
 		this.baseName = baseName;
 		this.quoteName = secondaryCurrencyName;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		SymbolPair that = (SymbolPair) o;
+		return Objects.equals(name, that.name);
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(super.hashCode(), name);
 	}
 }

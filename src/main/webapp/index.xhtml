@@ -10,15 +10,12 @@
     <ui:composition template="/template/commonLayout.xhtml">
         <ui:define name="content">
             <h:form>
-                <div class="middle">
-                    <p:commandButton value="Stop auto update" onclick="PF('poll').stop();"/><p:commandButton value="Start auto update" onclick="PF('poll').start();"/>
-                </div>
-                <p:poll interval="2" update="marketPositionsCompareTable" widgetVar="poll"/>
                 <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable"
                              var="marketPositionFastCompare"
-                             value="#{exchangeSymbolsDifController.topAfter12MarketPositionFastCompareList}"
-                             widgetVar="carsTable"
+                             value="#{indexController.topAfter12MarketPositionFastCompareList}"
+                             filteredValue="#{indexController.filteredCompareList}"
                 >
+
                     <f:facet name="header">
                         presumably working symbols / предположительно рабочие пары
                     </f:facet>
@@ -28,15 +25,13 @@
             </h:form>
 
             <h:form>
-                <p:commandButton value="Stop auto update" onclick="PF('problemPoll').stop();"/><p:button value="Start auto update" onclick="PF('problemPoll').start();"/>
-                <p:poll interval="2" update="marketProblemPositionsCompareTable" widgetVar="problemPoll"/>
                 <p:dataTable id="marketProblemPositionsCompareTable" styleClass="marketSymbolsCompareTable"
                              var="marketPositionFastCompare"
-                             value="#{exchangeSymbolsDifController.topProblemMarketPositionFastCompareList}"
-                             widgetVar="carsTable"
+                             value="#{indexController.topProblemMarketPositionFastCompareList}"
+
                 >
                     <f:facet name="header">
-                        Problem symbols / скорее всего битые пары по стаканам
+                        Problem symbols / скорее всего битые пары
                     </f:facet>
 
                     <ui:include src="/template/commonTableCollumns.xhtml" />

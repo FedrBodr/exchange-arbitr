@@ -7,6 +7,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 @NoArgsConstructor
@@ -22,5 +23,21 @@ public class MarketPositionFastPK implements Serializable{
 	public MarketPositionFastPK(ExchangeMeta exchangeMeta, SymbolPair symbolPair) {
 		this.exchangeMeta = exchangeMeta;
 		this.symbolPair = symbolPair;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		MarketPositionFastPK that = (MarketPositionFastPK) o;
+		return Objects.equals(exchangeMeta, that.exchangeMeta) &&
+				Objects.equals(symbolPair, that.symbolPair);
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(super.hashCode(), exchangeMeta, symbolPair);
 	}
 }

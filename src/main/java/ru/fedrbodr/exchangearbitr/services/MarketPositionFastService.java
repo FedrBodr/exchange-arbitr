@@ -9,5 +9,7 @@ public interface MarketPositionFastService {
 
 	List<MarketPositionFastCompare> getTopFullMarketPositionFastCompareList();
 
+	List<MarketPositionFastCompare> getTop30FullMarketPositionFastCompareList();
+
 	List<MarketPositionFastCompare> getTopProblemMarketPositionFastCompareList();
 }
