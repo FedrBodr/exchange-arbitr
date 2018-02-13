@@ -8,7 +8,7 @@ import ru.fedrbodr.exchangearbitr.services.MarketPositionFastService;
 import java.util.List;
 
 @Controller
-public class IndexController {
+public class WebDataController {
 	@Autowired
 	private MarketPositionFastService marketPositionFastService;
 

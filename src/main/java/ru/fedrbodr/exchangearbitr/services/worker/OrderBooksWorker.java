@@ -54,9 +54,8 @@ public class OrderBooksWorker implements Runnable {
 		log.info("After stop OrderBooksWorker.run total time in  seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
 	}
 
-
-	private void readAndSaveOrderBooksByTopMarketPositions(int threadCount) throws InterruptedException {
-		Date start = new Date();
+	public void readAndSaveOrderBooksByTopMarketPositions(int threadCount) throws InterruptedException {
+ 		Date start = new Date();
 		log.info("Before start readAndSaveOrderBooksByTopMarketPositions");
 		List<MarketPositionFastCompare> marketPositionCompareList = marketPositionFastService.getTop30FullMarketPositionFastCompareList();
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
@@ -85,12 +84,13 @@ public class OrderBooksWorker implements Runnable {
 		log.info("After stop readAndSaveOrderBooksByTopMarketPositions total time in  seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
 	}
 
+	List<MarketPositionFastPK> alreadyLoadedOrdersBySymbolAndExchangeList;
 	private void addOrdersReaderFutureTaskToTaskList(ExecutorService executor, List<FutureTask<Void>> taskList, MarketPositionFastCompare marketPositionFastCompare) {
 		SymbolPair symbolPair = marketPositionFastCompare.getBuyMarketPosition().getMarketPositionFastPK().getSymbolPair();
 		ExchangeMeta buyExchangeMeta = marketPositionFastCompare.getBuyMarketPosition().getMarketPositionFastPK().getExchangeMeta();
 		ExchangeMeta sellExchangeMeta = marketPositionFastCompare.getSellMarketPosition().getMarketPositionFastPK().getExchangeMeta();
 		/* Do not be surprised MarketPositionFastPK is suitable for check exchangeMeta and symbolPair uniqueness */
-		List<MarketPositionFastPK> alreadyLoadedOrdersBySymbolAndExchangeList = new ArrayList<>();
+		alreadyLoadedOrdersBySymbolAndExchangeList = new ArrayList<>();
 
 
 		FutureTask<Void> exchangeReaderTask = new FutureTask<>(() -> {

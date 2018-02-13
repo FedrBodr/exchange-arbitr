@@ -18,15 +18,22 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.xchange.custom.CoinexchangeMarketDataService;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 @Configuration
 @EnableCaching
 @EnableAsync
 @Slf4j
 public class VariousAppConfig {
+	@PostConstruct
+	public void init(){
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT+3"));
+	}
+
 	@Bean
 	public ServletRegistrationBean h2servletRegistration(){
 		ServletRegistrationBean registrationBean = new ServletRegistrationBean( new WebServlet());

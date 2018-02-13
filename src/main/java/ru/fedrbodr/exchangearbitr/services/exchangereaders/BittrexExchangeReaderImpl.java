@@ -85,7 +85,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 		JSONArray result = json.getJSONArray("result");
 		List<MarketPosition> marketPositionList = new ArrayList<>();
 
-		for(int i = result.length()-1; i>0; i--) {
+		for(int i = result.length()-1; i>-1; i--) {
 			JSONObject marketPositionJsonObject = result.getJSONObject(i);
 			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
 			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");

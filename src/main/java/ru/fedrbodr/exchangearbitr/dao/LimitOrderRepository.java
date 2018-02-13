@@ -10,8 +10,11 @@ import ru.fedrbodr.exchangearbitr.dao.model.UniLimitOrder;
 
 import java.util.List;
 
+import static ru.fedrbodr.exchangearbitr.config.CachingConfig.ORDER_LIST_CACHE;
+
 public interface LimitOrderRepository extends JpaRepository<UniLimitOrder, Long>, CrudRepository<UniLimitOrder, Long> {
-	@Cacheable("orderListCache")
+	@Cacheable(ORDER_LIST_CACHE)
 	List<UniLimitOrder> findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(
 			ExchangeMeta exchangeMeta, SymbolPair symbolPair, Order.OrderType type);
+
 }

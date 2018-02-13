@@ -12,8 +12,8 @@
             <h:form>
                 <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable"
                              var="marketPositionFastCompare"
-                             value="#{indexController.topAfter12MarketPositionFastCompareList}"
-                             filteredValue="#{indexController.filteredCompareList}"
+                             value="#{webDataController.topAfter12MarketPositionFastCompareList}"
+                             filteredValue="#{webDataController.filteredCompareList}"
                 >
 
                     <f:facet name="header">
@@ -27,7 +27,7 @@
             <h:form>
                 <p:dataTable id="marketProblemPositionsCompareTable" styleClass="marketSymbolsCompareTable"
                              var="marketPositionFastCompare"
-                             value="#{indexController.topProblemMarketPositionFastCompareList}"
+                             value="#{webDataController.topProblemMarketPositionFastCompareList}"
 
                 >
                     <f:facet name="header">

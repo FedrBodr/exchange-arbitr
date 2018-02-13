@@ -100,7 +100,7 @@ public class MarketsSummariesWorker implements Runnable {
 			try {
 				exchangeReader.readAndSaveMarketPositionsBySummaries();
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error("Error occurred while readAndSaveMarketPositionsBySummaries ");
 			}
 			return null;
 		});
