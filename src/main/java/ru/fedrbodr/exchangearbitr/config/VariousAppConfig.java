@@ -7,6 +7,7 @@ import org.knowm.xchange.binance.BinanceExchange;
 import org.knowm.xchange.bittrex.BittrexExchange;
 import org.knowm.xchange.poloniex.PoloniexExchange;
 import org.knowm.xchange.service.marketdata.MarketDataService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.xchange.custom.CoinexchangeMarketDataService;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -41,6 +43,9 @@ public class VariousAppConfig {
 		return executor;
 	}
 
+	@Autowired
+	private CoinexchangeMarketDataService coinexchangeMarketDataService;
+
 	@Bean
 	public Map<Integer, MarketDataService> exchangeIdToMarketDataService() {
 		Map<Integer, MarketDataService> exchangeIdToMarketDataService;
@@ -55,7 +60,7 @@ public class VariousAppConfig {
 		exchangeIdToMarketDataService.put(
 				ExchangeMeta.POLONIEX.getId(), ExchangeFactory.INSTANCE.createExchange(PoloniexExchange.class.getName()).getMarketDataService());
 		exchangeIdToMarketDataService.put(
-				ExchangeMeta.POLONIEX.getId(), ExchangeFactory.INSTANCE.createExchange(PoloniexExchange.class.getName()).getMarketDataService());
+				ExchangeMeta.COINEXCHANGE.getId(), coinexchangeMarketDataService);
 		/* TODO REALIZE IN XCHANGE Coinexchange Exchange */
 		log.info("After stop initMarketDataServices. time in  seconds: {}", (start.getTime() - new Date().getTime()) / 1000);
 		return exchangeIdToMarketDataService;

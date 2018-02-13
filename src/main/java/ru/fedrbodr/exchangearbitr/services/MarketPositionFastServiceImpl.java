@@ -72,13 +72,13 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 							divide(marketPositionSell.getAskPrice(), 3, RoundingMode.HALF_UP));
 
 			marketPositionFastCompare.setSellOrders(limitOrderRepository.
-					findByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(
+					findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(
 							marketPositionBuy.getMarketPositionFastPK().getExchangeMeta(),
 							marketPositionBuy.getMarketPositionFastPK().getSymbolPair(),
 							Order.OrderType.ASK));
 
 			marketPositionFastCompare.setBuyOrders(limitOrderRepository.
-					findByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(
+					findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(
 							marketPositionSell.getMarketPositionFastPK().getExchangeMeta(),
 							marketPositionSell.getMarketPositionFastPK().getSymbolPair(),
 							Order.OrderType.BID));

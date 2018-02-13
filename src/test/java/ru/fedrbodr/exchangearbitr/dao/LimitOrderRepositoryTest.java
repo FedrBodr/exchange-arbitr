@@ -50,7 +50,7 @@ public class LimitOrderRepositoryTest {
 		entityManager.flush();
 		// when
 		List<UniLimitOrder> limitOrderList = limitOrderRepository.
-				findByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(POLONIEX_EXCHANGE_META, symbolPair, Order.OrderType.ASK);
+				findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(POLONIEX_EXCHANGE_META, symbolPair, Order.OrderType.ASK);
 		// get second
 		UniLimitOrder order = limitOrderList.get(1);
 		// then

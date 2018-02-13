@@ -38,7 +38,7 @@ public class UniLimitOrder implements Serializable {
 	@Column(precision = 17, scale = 8)
 	private BigDecimal originalAmount;
 	private Date timeStamp;
-	@Column(precision = 17, scale = 8)
+	@Column(precision = 18, scale = 8)
 	private BigDecimal originalSum;
 	@Column(precision = 15, scale = 8)
 	private BigDecimal finalSum;

@@ -15,6 +15,7 @@ import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
+import ru.fedrbodr.exchangearbitr.xchange.custom.CoinexchangeMarketDataService;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -31,7 +32,9 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
 	private SymbolService symbolService;
-	private Map<Integer, SymbolPair> coinexchangeIdToMarketSummaryMap;
+	@Autowired
+	private CoinexchangeMarketDataService marketDataService;
+
 	@Autowired
 	private ExchangeMetaRepository exchangeRepository;
 	private Map<String, Boolean> currencyActivityMap;
@@ -45,10 +48,8 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 		exchangeRepository.save(ExchangeMeta.BINANCE);
 		exchangeRepository.flush();
 		/*TODO refactor this with aop for all init methods*/
-
 		log.info(CoinexchangeExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
-		coinexchangeIdToMarketSummaryMap = new HashMap<>();
 		currencyActivityMap = new HashMap<>();
 		try {
 			JSONArray currencies = getNewJsonObject("https://www.coinexchange.io/api/v1/getcurrencies").getJSONArray("result");
@@ -56,19 +57,6 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 				JSONObject currencyJsonObj = (JSONObject) currency;
 				currencyActivityMap.put(currencyJsonObj.getString("TickerCode"), "online".equals(currencyJsonObj.getString("WalletStatus")));
 			}
-
-
-			JSONArray markets = getNewJsonObject("https://www.coinexchange.io/api/v1/getmarkets").getJSONArray("result");
-			markets.forEach(item -> {
-				JSONObject obj = (JSONObject) item;
-				/* IT IS CORECT NAMES FORMAT like in org.knowm.xchange.currency.Currency*/
-				SymbolPair symbolPair = symbolService.getOrCreateNewSymbol(
-						obj.getString("BaseCurrencyCode"),
-						obj.getString("MarketAssetCode"));
-
-				int coinexchangeMarketID = obj.getInt("MarketID");
-				coinexchangeIdToMarketSummaryMap.put(coinexchangeMarketID, symbolPair);
-			});
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 		}
@@ -109,7 +97,7 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 	}
 
 	private SymbolPair getUnifiedMarketSummary(int coinexchangeMarketID) {
-		SymbolPair symbolPair = coinexchangeIdToMarketSummaryMap.get(coinexchangeMarketID);
+		SymbolPair symbolPair = (SymbolPair) marketDataService.getCoinexchangeIdToMarketSummaryMap().get(coinexchangeMarketID);
 		if (symbolPair == null) {
 			log.info("Found Market Summary at coinexchange for non existen symbolPair");
 			/* init all coinexchange markets summary again*/

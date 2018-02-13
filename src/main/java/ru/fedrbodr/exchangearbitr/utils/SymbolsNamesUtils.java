@@ -27,7 +27,7 @@ public class SymbolsNamesUtils {
 	}
 
 	/**
-	 * Be carreful it is used only for url by  sybol, in other api places Coinexchange sybol has only id - use CoinexchangeExchangeReaderImpl.coinexchangeIdToMarketSummaryMap
+	 * Be carreful it is used only for url by  sybol, in other api places Coinexchange sybol has only id - use CoinexchangeExchangeReaderImpl.coinexchangeIdToSymbolPair
 	 *
 	 * @param symbolPair
 	 */
@@ -36,7 +36,7 @@ public class SymbolsNamesUtils {
 	}
 
 	/**
-	 * Be carreful it is used only for url by  sybol, in other api places Coinexchange sybol has only id - use CoinexchangeExchangeReaderImpl.coinexchangeIdToMarketSummaryMap
+	 * Be carreful it is used only for url by  sybol, in other api places Coinexchange sybol has only id - use CoinexchangeExchangeReaderImpl.coinexchangeIdToSymbolPair
 	 *
 	 * @param symbolPair
 	 */
