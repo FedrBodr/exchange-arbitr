@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 public class OrderBooksWorker implements Runnable {
-	public static final int RUN_MIN_PAUSE = 4000;
+	public static final int RUN_MIN_PAUSE = 30000;
 
 	private boolean doGrabbing = false;
 
