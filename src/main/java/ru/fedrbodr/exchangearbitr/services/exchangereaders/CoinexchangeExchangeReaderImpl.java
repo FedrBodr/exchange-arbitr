@@ -75,8 +75,8 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 					ExchangeMeta.COINEXCHANGE,
 					symbolPair,
 					jsonObject.getBigDecimal("LastPrice"),
-					jsonObject.getBigDecimal("BidPrice"),
 					jsonObject.getBigDecimal("AskPrice"),
+					jsonObject.getBigDecimal("BidPrice"),
 					isSymbolPairActive(symbolPair));
 
 			marketPositions.add(marketPosition);

@@ -104,7 +104,7 @@
     </p:column>
     <p:column headerText="Profit" >
         <h:outputText value="#{marketPositionFastCompare.differencePercentCorrect}">
-            <f:convertNumber pattern="#0.00%" />
+            <f:convertNumber pattern="#0.0%" />
         </h:outputText>
     </p:column>
     <p:column headerText="Buy exchange" filterBy="#{buyMarketPK.exchangeMeta.exchangeName}" filterMatchMode="contains">

@@ -15,7 +15,7 @@ public class CachingConfig {
 	public static final String ORDER_LIST_CACHE = "orderListCache";
 
 	@CacheEvict(allEntries = true, value = {ORDER_LIST_CACHE})
-	@Scheduled(fixedDelay = 1 * 60 * 1000 ,  initialDelay = 4000)
+	@Scheduled(fixedDelay = 1 * 60 * 1000 ,  initialDelay = 60 * 1000)
 	public void reportCacheEvict() {
 		System.out.println("Flush Cache " + new Date());
 	}
