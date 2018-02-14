@@ -76,7 +76,7 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
-		marketPositionRepository.save(marketPositionList);
-		marketPositionRepository.flush();
+		/*marketPositionRepository.save(marketPositionList);
+		marketPositionRepository.flush();*/
 	}
 }

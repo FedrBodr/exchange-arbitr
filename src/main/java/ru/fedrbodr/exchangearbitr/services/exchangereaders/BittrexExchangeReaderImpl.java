@@ -107,8 +107,8 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
-		marketPositionRepository.save(marketPositionList);
-		marketPositionRepository.flush();
+		/*marketPositionRepository.save(marketPositionList);
+		marketPositionRepository.flush();*/
 	}
 
 	/*Instead currencyMap can used market.getBoolean("IsActive") but now this as is maybe refactor to universal solution*/

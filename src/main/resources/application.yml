@@ -25,5 +25,5 @@ spring:
     username: exchange_fedr
     password: profit3001PUSHKA
   jpa:
-    hibernate.ddl-auto: create-drop
+    hibernate.ddl-auto: update
 ---
