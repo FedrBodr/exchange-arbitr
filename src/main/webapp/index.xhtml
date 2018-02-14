@@ -12,7 +12,7 @@
             <h:form>
                 <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable"
                              var="marketPositionFastCompare"
-                             value="#{webDataController.topAfter12MarketPositionFastCompareList}"
+                             value="#{webDataController.topAfter10MarketPositionFastCompareList}"
                              filteredValue="#{webDataController.filteredCompareList}"
                 >
 
@@ -20,24 +20,8 @@
                         presumably working symbols / предположительно рабочие пары
                     </f:facet>
 
-                    <ui:include src="/template/commonTableCollumns.xhtml" />
+                    <ui:include src="/template/commonTableCollumns.xhtml"/>
                 </p:dataTable>
-            </h:form>
-
-            <h:form>
-                <p:dataTable id="marketProblemPositionsCompareTable" styleClass="marketSymbolsCompareTable"
-                             var="marketPositionFastCompare"
-                             value="#{webDataController.topProblemMarketPositionFastCompareList}"
-
-                >
-                    <f:facet name="header">
-                        Problem symbols / скорее всего битые пары
-                    </f:facet>
-
-                    <ui:include src="/template/commonTableCollumns.xhtml" />
-
-                </p:dataTable>
-
             </h:form>
         </ui:define>
     </ui:composition>

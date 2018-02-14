@@ -14,12 +14,8 @@ public class WebDataController {
 
 	private List<MarketPositionFastCompare> filteredCompareList;
 
-	public List<MarketPositionFastCompare> getTopAfter12MarketPositionFastCompareList(){
-		return marketPositionFastService.getTopAfter12MarketPositionFastCompareList();
-	}
-
-	public List<MarketPositionFastCompare> getTopProblemMarketPositionFastCompareList(){
-		return marketPositionFastService.getTopProblemMarketPositionFastCompareList();
+	public List<MarketPositionFastCompare> getTopAfter10MarketPositionFastCompareList(){
+		return marketPositionFastService.getTopAfter10MarketPositionFastCompareList();
 	}
 
 	public List<MarketPositionFastCompare> getAdminMarketPositionCompareList(){

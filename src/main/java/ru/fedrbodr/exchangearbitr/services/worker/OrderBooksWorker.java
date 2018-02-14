@@ -57,7 +57,7 @@ public class OrderBooksWorker implements Runnable {
 	public void readAndSaveOrderBooksByTopMarketPositions(int threadCount) throws InterruptedException {
  		Date start = new Date();
 		log.info("Before start readAndSaveOrderBooksByTopMarketPositions");
-		List<MarketPositionFastCompare> marketPositionCompareList = marketPositionFastService.getTop30FullMarketPositionFastCompareList();
+		List<MarketPositionFastCompare> marketPositionCompareList = marketPositionFastService.getTop30MarketPositionFastCompareList();
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		List<FutureTask<Void>> taskList = new ArrayList<>();
 

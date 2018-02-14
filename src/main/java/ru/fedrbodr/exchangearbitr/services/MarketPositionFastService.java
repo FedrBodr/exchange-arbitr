@@ -5,11 +5,9 @@ import ru.fedrbodr.exchangearbitr.model.MarketPositionFastCompare;
 import java.util.List;
 
 public interface MarketPositionFastService {
-	List<MarketPositionFastCompare> getTopAfter12MarketPositionFastCompareList();
+	List<MarketPositionFastCompare> getTopAfter10MarketPositionFastCompareList();
 
 	List<MarketPositionFastCompare> getTopFullMarketPositionFastCompareList();
 
-	List<MarketPositionFastCompare> getTop30FullMarketPositionFastCompareList();
-
-	List<MarketPositionFastCompare> getTopProblemMarketPositionFastCompareList();
+	List<MarketPositionFastCompare> getTop30MarketPositionFastCompareList();
 }

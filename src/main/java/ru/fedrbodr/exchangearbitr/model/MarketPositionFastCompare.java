@@ -20,6 +20,7 @@ public class MarketPositionFastCompare {
 	private String sellSymbolExchangeUrl;
 	private List<UniLimitOrder> sellOrders;
 	private List<UniLimitOrder> buyOrders;
+	private List<DepositProfit> depositProfitList;
 
 
 	public MarketPositionFastCompare(MarketPositionFast buyMarketPosition, MarketPositionFast sellMarketPosition,
@@ -27,13 +28,5 @@ public class MarketPositionFastCompare {
 		this.buyMarketPosition = buyMarketPosition;
 		this.sellMarketPosition = sellMarketPosition;
 		this.differencePercentCorrect = differencePercentCorrect;
-	}
-
-	public void setSellOrders(List<UniLimitOrder> sellOrders) {
-		this.sellOrders = sellOrders;
-	}
-
-	public void setBuyOrders(List<UniLimitOrder> buyOrders) {
-		this.buyOrders = buyOrders;
 	}
 }

@@ -1,17 +1,12 @@
 package ru.fedrbodr.exchangearbitr.dao;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 public interface MarketPositionFastRepositoryCustom {
-	List getTopAfter12MarketPositionFastCompareList();
+	List getTopAfter10MarketPositionFastCompareList();
 
-	@Transactional
 	List<Object[]> getTopFullMarketPositionFastCompareList();
 
-	@Transactional
-	List<Object[]> getTop30FullMarketPositionFastCompareList();
+	List<Object[]> getTop30MarketPositionFastCompareList();
 
-	@Transactional
-	List<Object[]> getTopProblemMarketPositionFastCompareList();
 }

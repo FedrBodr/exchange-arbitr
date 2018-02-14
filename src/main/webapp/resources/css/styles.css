@@ -89,3 +89,9 @@
 .ui-widget {
     font-size: 0.8em;
 }
+/* START profits table styles */
+.profitsTableWrapper {
+    width: 45%;
+    margin: auto;
+    margin-bottom: 0.9em;
+}

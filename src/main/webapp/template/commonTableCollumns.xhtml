@@ -9,102 +9,142 @@
 >
 <body>
 <ui:composition>
-    <c:set var="buyMarketPK" value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK}" />
-    <c:set var="sellMarketPK" value="#{marketPositionFastCompare.sellMarketPosition.marketPositionFastPK}" />
+    <c:set var="buyMarketPK" value="#{marketPositionFastCompare.buyMarketPosition.marketPositionFastPK}"/>
+    <c:set var="sellMarketPK" value="#{marketPositionFastCompare.sellMarketPosition.marketPositionFastPK}"/>
 
-    <!-- START ORDERS SUBTABLE COLLUMNS -->
+    <!-- START orders and profits subtable collumns -->
     <p:rowExpansion>
-        <div class="ordersWrapper">
-            <div class="sellOrderBook">
-                <p:dataTable var="sellOrder"
-                             value="#{marketPositionFastCompare.sellOrders}"
-                             rows="30">
+        <div class="expansionWrapper">
+            <div class="profitsTableWrapper">
+                <p:dataTable var="profit"
+                             value="#{marketPositionFastCompare.depositProfitList}">
                     <f:facet name="header">
-                        Sell orders / Предложения продажи #{buyMarketPK.exchangeMeta.exchangeName}
+                        Profits by depos / Профиты по депозитам
                     </f:facet>
-                    <p:column headerText="id" style="width:18px">
-                        <h:outputText value="#{sellOrder.uniLimitOrderPk.id}"/>
-                    </p:column>
-                    <p:column headerText="Price">
-                        <h:outputText value="#{sellOrder.limitPrice}">
-                            <f:convertNumber minFractionDigits="8"/>
+                    <p:column headerText="Deposit">
+                        <h:outputText value="#{profit.deposit}" >
+                            <f:convertNumber minFractionDigits="8" locale="en"/>
                         </h:outputText>
                     </p:column>
-                    <p:column headerText="#{buyMarketPK.symbolPair.quoteName}">
-                        <h:outputText value="#{sellOrder.originalAmount}">
-                            <f:convertNumber minFractionDigits="8"/>
+
+                    <p:column headerText="Average Sell Price">
+                        <h:outputText value="#{profit.averageSellStackPrice}">
+                            <f:convertNumber minFractionDigits="8" locale="en"/>
                         </h:outputText>
                     </p:column>
-                    <p:column headerText="#{buyMarketPK.symbolPair.quoteName} sum">
-                        <h:outputText value="#{sellOrder.originalSum}">
-                            <f:convertNumber minFractionDigits="8"/>
+
+                    <p:column headerText="Average Buy Price">
+                        <h:outputText value="#{profit.averageBuyStackPrice}">
+                            <f:convertNumber minFractionDigits="8" locale="en"/>
                         </h:outputText>
                     </p:column>
-                    <p:column headerText="#{buyMarketPK.symbolPair.baseName} sum">
-                        <h:outputText value="#{sellOrder.finalSum}">
-                            <f:convertNumber minFractionDigits="8"/>
+
+                    <p:column headerText="Final coin amount">
+                        <h:outputText value="#{profit.finalCoinsAmount}">
+                            <f:convertNumber minFractionDigits="8" locale="en"/>
                         </h:outputText>
                     </p:column>
-                    <p:column headerText="Update at" style="width:63px">
-                        <h:outputText value="#{sellOrder.timeStamp}">
-                            <f:convertDateTime pattern="HH:mm:ss" />
+
+                    <p:column headerText="Profit by deposit">
+                        <h:outputText value="#{profit.profit}">
+                            <f:convertNumber pattern="#0.0%" locale="en"/>
                         </h:outputText>
                     </p:column>
+
                 </p:dataTable>
             </div>
+            <div class="ordersWrapper">
+                <div class="sellOrderBook">
+                    <p:dataTable var="sellOrder"
+                                 value="#{marketPositionFastCompare.sellOrders}"
+                                 rows="30">
+                        <f:facet name="header">
+                            Sell orders / Предложения продажи #{buyMarketPK.exchangeMeta.exchangeName}
+                        </f:facet>
+                        <p:column headerText="id" style="width:18px">
+                            <h:outputText value="#{sellOrder.uniLimitOrderPk.id}"/>
+                        </p:column>
+                        <p:column headerText="Price">
+                            <h:outputText value="#{sellOrder.limitPrice}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{buyMarketPK.symbolPair.quoteName}">
+                            <h:outputText value="#{sellOrder.originalAmount}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{buyMarketPK.symbolPair.quoteName} sum">
+                            <h:outputText value="#{sellOrder.originalSum}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{buyMarketPK.symbolPair.baseName} sum">
+                            <h:outputText value="#{sellOrder.finalSum}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Update at" style="width:63px">
+                            <h:outputText value="#{sellOrder.timeStamp}">
+                                <f:convertDateTime pattern="HH:mm:ss"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
 
-            <div class="buyOrderBook">
-                <p:dataTable var="buyOrder"
-                             value="#{marketPositionFastCompare.buyOrders}" rows="30">
-                    <f:facet name="header">
-                        Buy orders / Запросы покупи на #{sellMarketPK.exchangeMeta.exchangeName}
-                    </f:facet>
-                    <p:column headerText="id" style="width:18px">
-                        <h:outputText value="#{buyOrder.uniLimitOrderPk.id}"/>
-                    </p:column>
-                    <p:column headerText="Price">
-                        <h:outputText value="#{buyOrder.limitPrice}">
-                            <f:convertNumber minFractionDigits="8"/>
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="#{buyMarketPK.symbolPair.quoteName}">
-                        <h:outputText value="#{buyOrder.originalAmount}">
-                            <f:convertNumber minFractionDigits="8"/>
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="#{buyMarketPK.symbolPair.baseName} sum">
-                        <h:outputText value="#{buyOrder.finalSum}">
-                            <f:convertNumber minFractionDigits="8"/>
-                        </h:outputText>
-                    </p:column>
+                <div class="buyOrderBook">
+                    <p:dataTable var="buyOrder"
+                                 value="#{marketPositionFastCompare.buyOrders}" rows="30">
+                        <f:facet name="header">
+                            Buy orders / Запросы покупи на #{sellMarketPK.exchangeMeta.exchangeName}
+                        </f:facet>
+                        <p:column headerText="id" style="width:18px">
+                            <h:outputText value="#{buyOrder.uniLimitOrderPk.id}"/>
+                        </p:column>
+                        <p:column headerText="Price">
+                            <h:outputText value="#{buyOrder.limitPrice}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{buyMarketPK.symbolPair.quoteName}">
+                            <h:outputText value="#{buyOrder.originalAmount}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{buyMarketPK.symbolPair.baseName} sum">
+                            <h:outputText value="#{buyOrder.finalSum}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
 
-                    <p:column headerText="#{buyMarketPK.symbolPair.quoteName} sum">
-                        <h:outputText value="#{buyOrder.originalSum}">
-                            <f:convertNumber minFractionDigits="8"/>
-                        </h:outputText>
-                    </p:column>
+                        <p:column headerText="#{buyMarketPK.symbolPair.quoteName} sum">
+                            <h:outputText value="#{buyOrder.originalSum}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
 
-                    <p:column headerText="Update at" style="width:63px">
-                        <h:outputText value="#{buyOrder.timeStamp}">
-                            <f:convertDateTime pattern="HH:mm:ss" />
-                        </h:outputText>
-                    </p:column>
-                </p:dataTable>
+                        <p:column headerText="Update at" style="width:63px">
+                            <h:outputText value="#{buyOrder.timeStamp}">
+                                <f:convertDateTime pattern="HH:mm:ss"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
             </div>
         </div>
     </p:rowExpansion>
 
-    <!-- START COLLUMNS -->
+    <!-- START collumns of main table -->
 
     <p:column style="width:16px">
-        <p:rowToggler />
+        <p:rowToggler/>
     </p:column>
     <p:column headerText="Symbol">
         <h:outputText value="#{buyMarketPK.symbolPair.name}"/>
     </p:column>
-    <p:column headerText="Profit" >
+    <p:column headerText="Maybe profit">
         <h:outputText value="#{marketPositionFastCompare.differencePercentCorrect}">
-            <f:convertNumber pattern="#0.0%" />
+            <f:convertNumber pattern="#0.0%"/>
         </h:outputText>
     </p:column>
     <p:column headerText="Buy exchange" filterBy="#{buyMarketPK.exchangeMeta.exchangeName}" filterMatchMode="contains">
@@ -121,7 +161,7 @@
         </h:outputText>
     </p:column>
     <p:column headerText="Sell exchange" filterBy="#{sellMarketPK.exchangeMeta.exchangeName}" filterMatchMode="contains">
-        <h:outputLink value="#{marketPositionFastCompare.sellSymbolExchangeUrl}"  target="_blank">
+        <h:outputLink value="#{marketPositionFastCompare.sellSymbolExchangeUrl}" target="_blank">
             #{sellMarketPK.exchangeMeta.exchangeName}
         </h:outputLink>
     </p:column>
@@ -135,7 +175,7 @@
     </p:column>
     <p:column headerText="Update at">
         <h:outputText value="#{marketPositionFastCompare.sellMarketPosition.updatedAt}">
-            <f:convertDateTime pattern="HH:mm:ss" />
+            <f:convertDateTime pattern="HH:mm:ss"/>
         </h:outputText>
     </p:column>
 

@@ -2,16 +2,23 @@ package ru.fedrbodr.exchangearbitr.services;
 
 import org.knowm.xchange.dto.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.LimitOrderRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepositoryCustom;
 import ru.fedrbodr.exchangearbitr.dao.model.MarketPositionFast;
+import ru.fedrbodr.exchangearbitr.dao.model.UniLimitOrder;
+import ru.fedrbodr.exchangearbitr.model.DepositProfit;
 import ru.fedrbodr.exchangearbitr.model.MarketPositionFastCompare;
 import ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+
+import static ru.fedrbodr.exchangearbitr.config.CachingConfig.TOP_30_COMPARE_LIST;
+import static ru.fedrbodr.exchangearbitr.config.CachingConfig.TOP_AFTER_10_COMPARE_LIST;
 
 @Service
 public class MarketPositionFastServiceImpl implements MarketPositionFastService {
@@ -21,8 +28,9 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 	private LimitOrderRepository limitOrderRepository;
 
 	@Override
-	public List<MarketPositionFastCompare> getTopAfter12MarketPositionFastCompareList() {
-		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.getTopAfter12MarketPositionFastCompareList();
+	@Cacheable(TOP_AFTER_10_COMPARE_LIST)
+	public List<MarketPositionFastCompare> getTopAfter10MarketPositionFastCompareList() {
+		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.getTopAfter10MarketPositionFastCompareList();
 		return calculateDifferencesForWeb(topMarketPositionDif);
 	}
 
@@ -34,15 +42,9 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 	}
 
 	@Override
-	public List<MarketPositionFastCompare> getTop30FullMarketPositionFastCompareList() {
-		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.getTopFullMarketPositionFastCompareList();
-
-		return calculateDifferencesForWeb(topMarketPositionDif);
-	}
-
-	@Override
-	public List<MarketPositionFastCompare> getTopProblemMarketPositionFastCompareList() {
-		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.getTopProblemMarketPositionFastCompareList();
+	@Cacheable(TOP_30_COMPARE_LIST)
+	public List<MarketPositionFastCompare> getTop30MarketPositionFastCompareList() {
+		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.getTop30MarketPositionFastCompareList();
 		return calculateDifferencesForWeb(topMarketPositionDif);
 	}
 
@@ -57,7 +59,7 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 			MarketPositionFast marketPositionSell;
 
 
-			if(marketPositionFast.getLastPrice().compareTo(marketPositionFastToCompare.getLastPrice()) < 1){
+			if(marketPositionFast.getAskPrice().compareTo(marketPositionFastToCompare.getBidPrice()) > 1){
 				marketPositionBuy = marketPositionFast;
 				marketPositionSell = marketPositionFastToCompare;
 
@@ -69,7 +71,7 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 					marketPositionBuy,
 					marketPositionSell,
 					(marketPositionSell.getAskPrice().subtract(marketPositionBuy.getBidPrice())).
-							divide(marketPositionSell.getAskPrice(), 3, RoundingMode.HALF_UP));
+							divide(marketPositionSell.getAskPrice(), 8, RoundingMode.HALF_DOWN));
 
 			marketPositionFastCompare.setSellOrders(limitOrderRepository.
 					findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(
@@ -83,6 +85,7 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 							marketPositionSell.getMarketPositionFastPK().getSymbolPair(),
 							Order.OrderType.BID));
 
+			calcAddProfitsList(marketPositionFastCompare);
 
 			marketPositionFastCompare.setBuySymbolExchangeUrl(SymbolsNamesUtils.determineUrlToSymbolMarket(marketPositionBuy));
 			marketPositionFastCompare.setSellSymbolExchangeUrl(SymbolsNamesUtils.determineUrlToSymbolMarket(marketPositionSell));
@@ -93,4 +96,62 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 
 		return marketPositionFastCompares;
 	}
+
+	private void calcAddProfitsList(MarketPositionFastCompare marketPositionFastCompare) {
+		if(marketPositionFastCompare.getBuyOrders() != null && marketPositionFastCompare.getSellOrders() != null) {
+			List<DepositProfit> depositProfitList = new ArrayList<>();
+			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.01)));
+			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.1)));
+			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.5)));
+			marketPositionFastCompare.setDepositProfitList(depositProfitList);
+		}
+	}
+
+	private DepositProfit calculateAddProfitByGlassesByDeposit(MarketPositionFastCompare marketPositionFastCompare, BigDecimal baseDepositAmount) {
+		List<UniLimitOrder> sellOrders = marketPositionFastCompare.getSellOrders();
+		List<UniLimitOrder> buyOrders = marketPositionFastCompare.getBuyOrders();
+
+		UniLimitOrder sellOrderForCalc = null;
+		for (UniLimitOrder sellOrder : sellOrders) {
+			if(sellOrder.getFinalSum().compareTo(baseDepositAmount) >= 0 ){
+				sellOrderForCalc = sellOrder;
+				break;
+			}
+		}
+		/* not found compatible glass depth wor tge deposit return*/
+		if(sellOrderForCalc == null){
+			return null;
+		}
+
+		BigDecimal averageSellStackPrice = sellOrderForCalc.getFinalSum().divide(sellOrderForCalc.getOriginalSum(),12, RoundingMode.HALF_UP);
+		BigDecimal coinsForTransferAmount = baseDepositAmount.divide(averageSellStackPrice, 8, RoundingMode.HALF_DOWN);
+
+		UniLimitOrder buyOrderForCalc = null;
+		for (UniLimitOrder buyOrder : buyOrders) {
+			if(buyOrder.getOriginalSum().compareTo(coinsForTransferAmount) >= 0 ){
+				buyOrderForCalc = buyOrder;
+				break;
+			}
+		}
+		/* not found compatible glass depth wor tge deposit return*/
+		if(buyOrderForCalc == null){
+			return null;
+		}
+
+		BigDecimal averageBuyStackPrice = buyOrderForCalc.getFinalSum().divide(buyOrderForCalc.getOriginalSum(), 12, RoundingMode.HALF_UP);
+
+		BigDecimal finalCoinsAmount = averageBuyStackPrice.multiply(coinsForTransferAmount);
+
+		BigDecimal depoProfit = finalCoinsAmount.subtract(baseDepositAmount).divide(baseDepositAmount, 3, RoundingMode.HALF_DOWN);
+
+		DepositProfit depositProfit = new DepositProfit();
+		depositProfit.setDeposit(baseDepositAmount);
+		depositProfit.setAverageSellStackPrice(averageSellStackPrice);
+		depositProfit.setAverageBuyStackPrice(averageBuyStackPrice);
+		depositProfit.setFinalCoinsAmount(finalCoinsAmount);
+		depositProfit.setProfit(depoProfit);
+		return depositProfit;
+	}
+
+
 }
