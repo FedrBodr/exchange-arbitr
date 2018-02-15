@@ -27,7 +27,7 @@ import static ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils.binanceToUniCur
 
 /**
  * Bittrex ExchangeMeta markect names  format now is main inner format ETH-BTC
- * */
+ */
 @Service
 @Slf4j
 public class BinanceExchangeReaderImpl implements ExchangeReader {
@@ -39,7 +39,9 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
 	private SymbolService symbolService;
-/** Used because in binance all symbols are concatenated without delimiters*/
+	/**
+	 * Used because in binance all symbols are concatenated without delimiters
+	 */
 	private Map<String, SymbolPair> binanceSymbolToUniSymbolMap;
 
 	@PostConstruct
@@ -53,8 +55,8 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 		org.knowm.xchange.binance.dto.meta.exchangeinfo.Symbol[] bynanceSymbols = exchangeInfo.getSymbols();
 		for (org.knowm.xchange.binance.dto.meta.exchangeinfo.Symbol symbol : bynanceSymbols) {
 			SymbolPair uniSymbolPair = symbolService.getOrCreateNewSymbol(
-					binanceToUniCurrencyName(symbol.getBaseAsset()),
-					binanceToUniCurrencyName(symbol.getQuoteAsset()));
+					binanceToUniCurrencyName(symbol.getQuoteAsset()),
+					binanceToUniCurrencyName(symbol.getBaseAsset()));
 			binanceSymbolToUniSymbolMap.put(symbol.getSymbol(), uniSymbolPair);
 		}
 		/*TODO refactor this with aop*/
@@ -62,6 +64,8 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 	}
 
 	public void readAndSaveMarketPositionsBySummaries() throws IOException, JSONException, ParseException {
+		Date starDate = new Date();
+		log.info(BinanceExchangeReaderImpl.class.getSimpleName() + " readAndSaveMarketPositionsBySummaries start");
 		List<BinanceTicker24h> binanceTicker24hList = marketDataService.ticker24h();
 		List<MarketPosition> marketPositionList = new ArrayList<>();
 		for (BinanceTicker24h binanceTicker24h : binanceTicker24hList) {
@@ -78,5 +82,8 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 		marketPositionFastRepository.flush();
 		/*marketPositionRepository.save(marketPositionList);
 		marketPositionRepository.flush();*/
+		log.info(BinanceExchangeReaderImpl.class.getSimpleName() + " readAndSaveMarketPositionsBySummaries end, execution time: {}",
+				new Date().getTime() - starDate.getTime());
+
 	}
 }
