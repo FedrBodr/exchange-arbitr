@@ -97,8 +97,10 @@
 }
 /* START main table stylesheet */
 .notActiveWallet{
-    background-color: #e1a021;
+    background-color: #A09BE7;
+    background-image: none;
 }
 .lieProfitByGlasses{
-    background-color: #e11715;
+    background-color: #E6FFAD;
+    background-image: none;
 }

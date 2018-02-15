@@ -65,6 +65,7 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 	}
 
 	public void readAndSaveMarketPositionsBySummaries() throws IOException, JSONException, ParseException {
+		/*TODO refactor this with aop for all init methods*/
 		Date starDate = new Date();
 		log.info(BinanceExchangeReaderImpl.class.getSimpleName() + " readAndSaveMarketPositionsBySummaries start");
 		List<BinanceTicker24h> binanceTicker24hList = marketDataService.ticker24h();

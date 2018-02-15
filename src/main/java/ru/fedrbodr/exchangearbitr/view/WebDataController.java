@@ -14,6 +14,8 @@ public class WebDataController {
 
 	private List<MarketPositionFastCompare> filteredCompareList;
 
+	private MarketPositionFastCompare marketPositionFastSelected;
+
 	public List<MarketPositionFastCompare> getTopAfter10MarketPositionFastCompareList(){
 		return marketPositionFastService.getTopAfter10MarketPositionFastCompareList();
 	}
@@ -32,5 +34,13 @@ public class WebDataController {
 
 	public void setFilteredCompareList(List<MarketPositionFastCompare> filteredCompareList) {
 		this.filteredCompareList = filteredCompareList;
+	}
+
+	public MarketPositionFastCompare getMarketPositionFastSelected() {
+		return marketPositionFastSelected;
+	}
+
+	public void setMarketPositionFastSelected(MarketPositionFastCompare marketPositionFastSelected) {
+		this.marketPositionFastSelected = marketPositionFastSelected;
 	}
 }

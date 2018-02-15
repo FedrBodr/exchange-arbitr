@@ -64,7 +64,6 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 			MarketPositionFast marketPositionBuy;
 			MarketPositionFast marketPositionSell;
 
-
 			if(marketPositionFast.getAskPrice().compareTo(marketPositionFastToCompare.getBidPrice()) > 1){
 				marketPositionBuy = marketPositionFast;
 				marketPositionSell = marketPositionFastToCompare;
@@ -93,7 +92,7 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 
 			calcAddProfitsList(marketPositionFastCompare);
 
-			marketPositionFastCompare.setLieProfitByGlasses(LieProfitByGlasses(marketPositionFastCompare));
+			marketPositionFastCompare.setLieProfitByGlasses(isLieProfitByGlasses(marketPositionFastCompare));
 
 			marketPositionFastCompare.setBuySymbolExchangeUrl(SymbolsNamesUtils.determineUrlToSymbolMarket(marketPositionBuy));
 			marketPositionFastCompare.setSellSymbolExchangeUrl(SymbolsNamesUtils.determineUrlToSymbolMarket(marketPositionSell));
@@ -105,8 +104,14 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 		return marketPositionFastCompares;
 	}
 
-	private boolean LieProfitByGlasses(MarketPositionFastCompare marketPositionFastCompare) {
-		return false;
+	private boolean isLieProfitByGlasses(MarketPositionFastCompare marketPositionFastCompare) {
+		boolean isLieProfitByGlasses = true;
+		for (DepositProfit depositProfit : marketPositionFastCompare.getDepositProfitList()) {
+			if(depositProfit != null && depositProfit.getProfit().compareTo(BigDecimal.ZERO)>=0){
+				isLieProfitByGlasses = false;
+			}
+		}
+		return isLieProfitByGlasses;
 	}
 
 	private void calcAddProfitsList(MarketPositionFastCompare marketPositionFastCompare) {

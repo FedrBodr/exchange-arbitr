@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MarketPositionFastCompare {
+	private int id;
 	private MarketPositionFast buyMarketPosition;
 	private MarketPositionFast sellMarketPosition;
 	private BigDecimal differencePercentCorrect;
@@ -29,9 +30,5 @@ public class MarketPositionFastCompare {
 		this.buyMarketPosition = buyMarketPosition;
 		this.sellMarketPosition = sellMarketPosition;
 		this.differencePercentCorrect = differencePercentCorrect;
-	}
-
-	public void setLieProfitByGlasses(boolean lieProfitByGlasses) {
-		this.lieProfitByGlasses = lieProfitByGlasses;
 	}
 }
