@@ -21,6 +21,7 @@ public class MarketPositionFastCompare {
 	private List<UniLimitOrder> sellOrders;
 	private List<UniLimitOrder> buyOrders;
 	private List<DepositProfit> depositProfitList;
+	private boolean lieProfitByGlasses;
 
 
 	public MarketPositionFastCompare(MarketPositionFast buyMarketPosition, MarketPositionFast sellMarketPosition,
@@ -28,5 +29,9 @@ public class MarketPositionFastCompare {
 		this.buyMarketPosition = buyMarketPosition;
 		this.sellMarketPosition = sellMarketPosition;
 		this.differencePercentCorrect = differencePercentCorrect;
+	}
+
+	public void setLieProfitByGlasses(boolean lieProfitByGlasses) {
+		this.lieProfitByGlasses = lieProfitByGlasses;
 	}
 }

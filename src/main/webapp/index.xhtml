@@ -14,12 +14,18 @@
                              var="marketPositionFastCompare"
                              value="#{webDataController.topAfter10MarketPositionFastCompareList}"
                              filteredValue="#{webDataController.filteredCompareList}"
+                             rowStyleClass="#{marketPositionFastCompare.sellMarketPosition.active eq false or
+                                                marketPositionFastCompare.buyMarketPosition.active eq false ? 'notActiveWallet' : null}
+                                            #{marketPositionFastCompare.lieProfitByGlasses ? 'lieProfitByGlasses' : null}"
                 >
-
                     <f:facet name="header">
                         presumably working symbols / предположительно рабочие пары
                     </f:facet>
-
+                    <p:column headerText="Maybe profit">
+                        <h:outputText value="#{}">
+                            <f:convertNumber pattern="#0.0%"/>
+                        </h:outputText>
+                    </p:column>
                     <ui:include src="/template/commonTableCollumns.xhtml"/>
                 </p:dataTable>
             </h:form>
@@ -27,3 +33,4 @@
     </ui:composition>
 </h:body>
 </html>
+

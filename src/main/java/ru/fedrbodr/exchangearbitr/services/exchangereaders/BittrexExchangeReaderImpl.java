@@ -38,7 +38,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 	@Autowired
 	private SymbolService symbolService;
 	@Autowired
-	private Map<Integer, MarketDataService> exchangeIdToMarketDataService;
+	private Map<ExchangeMeta, MarketDataService> exchangeIdToMarketDataServiceMap;
 	private BittrexMarketDataServiceRaw bittrexMarketDataServiceRaw;
 	private Map<String, BittrexCurrency> currencyMap;
 
@@ -60,7 +60,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
 		currencyMap = new HashMap<>();
-		bittrexMarketDataServiceRaw = (BittrexMarketDataServiceRaw) exchangeIdToMarketDataService.get(ExchangeMeta.BINANCE);
+		bittrexMarketDataServiceRaw = (BittrexMarketDataServiceRaw) exchangeIdToMarketDataServiceMap.get(ExchangeMeta.BITTREX);
 
 		BittrexCurrency[] bittrexCurrencies = bittrexMarketDataServiceRaw.getBittrexCurrencies();
 		for (BittrexCurrency bittrexCurrency : bittrexCurrencies) {

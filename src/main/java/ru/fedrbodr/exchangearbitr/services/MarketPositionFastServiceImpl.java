@@ -17,8 +17,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.fedrbodr.exchangearbitr.config.CachingConfig.TOP_30_COMPARE_LIST;
-import static ru.fedrbodr.exchangearbitr.config.CachingConfig.TOP_AFTER_10_COMPARE_LIST;
+import static ru.fedrbodr.exchangearbitr.config.CachingConfig.*;
 
 @Service
 public class MarketPositionFastServiceImpl implements MarketPositionFastService {
@@ -30,21 +29,28 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 	@Override
 	@Cacheable(TOP_AFTER_10_COMPARE_LIST)
 	public List<MarketPositionFastCompare> getTopAfter10MarketPositionFastCompareList() {
-		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.getTopAfter10MarketPositionFastCompareList();
+		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.selectTopAfter10MarketPositionFastCompareList();
+		return calculateDifferencesForWeb(topMarketPositionDif);
+	}
+
+	@Override
+	@Cacheable(TOP_PROBLEM_AFTER_10_COMPARE_LIST)
+	public List<MarketPositionFastCompare> getTopProblemAfter10MarketPositionFastCompareList() {
+		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.selectTopProblemMarketPositionFastCompareList();
 		return calculateDifferencesForWeb(topMarketPositionDif);
 	}
 
 	@Override
 	public List<MarketPositionFastCompare> getTopFullMarketPositionFastCompareList() {
-		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.getTopFullMarketPositionFastCompareList();
+		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.selectFullMarketPositionFastCompareList();
 
 		return calculateDifferencesForWeb(topMarketPositionDif);
 	}
 
 	@Override
-	@Cacheable(TOP_30_COMPARE_LIST)
-	public List<MarketPositionFastCompare> getTop30MarketPositionFastCompareList() {
-		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.getTop30MarketPositionFastCompareList();
+	@Cacheable(TOP_COMPARE_LIST)
+	public List<MarketPositionFastCompare> getTopMarketPositionFastCompareList() {
+		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.selectTopMarketPositionFastCompareList();
 		return calculateDifferencesForWeb(topMarketPositionDif);
 	}
 
@@ -87,6 +93,8 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 
 			calcAddProfitsList(marketPositionFastCompare);
 
+			marketPositionFastCompare.setLieProfitByGlasses(LieProfitByGlasses(marketPositionFastCompare));
+
 			marketPositionFastCompare.setBuySymbolExchangeUrl(SymbolsNamesUtils.determineUrlToSymbolMarket(marketPositionBuy));
 			marketPositionFastCompare.setSellSymbolExchangeUrl(SymbolsNamesUtils.determineUrlToSymbolMarket(marketPositionSell));
 
@@ -95,6 +103,10 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 		});
 
 		return marketPositionFastCompares;
+	}
+
+	private boolean LieProfitByGlasses(MarketPositionFastCompare marketPositionFastCompare) {
+		return false;
 	}
 
 	private void calcAddProfitsList(MarketPositionFastCompare marketPositionFastCompare) {

@@ -23,14 +23,14 @@ import java.util.Map;
 public class LimitOrderServiceImpl implements LimitOrderService {
 
 	@Autowired
-	private Map<Integer, MarketDataService> exchangeIdToMarketDataService;
+	private Map<ExchangeMeta, MarketDataService> exchangeIdToMarketDataServiceMap;
 	@Autowired
 	private LimitOrderRepository limitOrderRepository;
 
 	@Override
 	public void readConvertCalcAndSaveUniOrders(SymbolPair symbolPair, ExchangeMeta exchangeMeta) {
 		try {
-			MarketDataService marketDataService = exchangeIdToMarketDataService.get(exchangeMeta.getId());
+			MarketDataService marketDataService = exchangeIdToMarketDataServiceMap.get(exchangeMeta);
 			if(marketDataService!=null) {
 				OrderBook orderBook = marketDataService.getOrderBook(
 						SymbolsNamesUtils.getCurrencyPair(symbolPair.getBaseName(), symbolPair.getQuoteName()),

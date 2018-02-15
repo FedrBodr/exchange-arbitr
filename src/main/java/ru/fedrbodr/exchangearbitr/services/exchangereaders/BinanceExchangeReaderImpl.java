@@ -32,7 +32,7 @@ import static ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils.binanceToUniCur
 public class BinanceExchangeReaderImpl implements ExchangeReader {
 	private BinanceMarketDataService marketDataService;
 	@Autowired
-	private Map<Integer, MarketDataService> exchangeIdToMarketDataService;
+	private Map<ExchangeMeta, MarketDataService> exchangeIdToMarketDataServiceMap;
 	@Autowired
 	private MarketPositionRepository marketPositionRepository;
 	@Autowired
@@ -46,7 +46,7 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 
 	@PostConstruct
 	private void init() throws IOException {
-		marketDataService = (BinanceMarketDataService) exchangeIdToMarketDataService.get(ExchangeMeta.BINANCE);
+		marketDataService = (BinanceMarketDataService) exchangeIdToMarketDataServiceMap.get(ExchangeMeta.BINANCE);
 		/*TODO refactor this with aop for all init methods*/
 		log.info(BinanceExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 

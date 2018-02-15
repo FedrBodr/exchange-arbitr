@@ -55,20 +55,20 @@ public class VariousAppConfig {
 	private CoinexchangeMarketDataService coinexchangeMarketDataService;
 
 	@Bean
-	public Map<Integer, MarketDataService> exchangeIdToMarketDataServiceMap() {
-		Map<Integer, MarketDataService> exchangeIdToMarketDataService;
+	public Map<ExchangeMeta, MarketDataService> exchangeIdToMarketDataServiceMap() {
+		Map<ExchangeMeta, MarketDataService> exchangeIdToMarketDataService;
 		log.info("Before start initMarketDataServices");
 
 		Date start = new Date();
 		exchangeIdToMarketDataService = new HashMap<>();
 		exchangeIdToMarketDataService.put(
-				ExchangeMeta.BITTREX.getId(), ExchangeFactory.INSTANCE.createExchange(BittrexExchange.class.getName()).getMarketDataService());
+				ExchangeMeta.BITTREX, ExchangeFactory.INSTANCE.createExchange(BittrexExchange.class.getName()).getMarketDataService());
 		exchangeIdToMarketDataService.put(
-				ExchangeMeta.BINANCE.getId(), ExchangeFactory.INSTANCE.createExchange(BinanceExchange.class.getName()).getMarketDataService());
+				ExchangeMeta.BINANCE, ExchangeFactory.INSTANCE.createExchange(BinanceExchange.class.getName()).getMarketDataService());
 		exchangeIdToMarketDataService.put(
-				ExchangeMeta.POLONIEX.getId(), ExchangeFactory.INSTANCE.createExchange(PoloniexExchange.class.getName()).getMarketDataService());
+				ExchangeMeta.POLONIEX, ExchangeFactory.INSTANCE.createExchange(PoloniexExchange.class.getName()).getMarketDataService());
 		exchangeIdToMarketDataService.put(
-				ExchangeMeta.COINEXCHANGE.getId(), coinexchangeMarketDataService);
+				ExchangeMeta.COINEXCHANGE, coinexchangeMarketDataService);
 		/* TODO REALIZE IN XCHANGE Coinexchange Exchange */
 		log.info("After stop initMarketDataServices. time in  seconds: {}", (start.getTime() - new Date().getTime()) / 1000);
 		return exchangeIdToMarketDataService;

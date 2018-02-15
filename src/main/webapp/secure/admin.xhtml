@@ -30,8 +30,7 @@
                                                                                                              onclick="PF('poll').start();"/>
                 </div>
 
-                <!-- <p:poll interval="2" update="marketPositionsCompareTable" widgetVar="poll"/>-->
-                <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable" rows="30"
+                <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable" rows="40"
                              var="marketPositionFastCompare"
                              value="#{webDataController.adminMarketPositionCompareList}"
 
@@ -40,6 +39,17 @@
                         all symbols / все пары тут и нерабочие с главной и те что в серединке которые я не выводил на index и ите что вывел на главной
                     </f:facet>
 
+                    <ui:include src="/template/commonTableCollumns.xhtml"/>
+                </p:dataTable>
+
+                <p:dataTable id="notTrueMarketPositionsCompareTable" styleClass="marketSymbolsCompareTable"
+                             var="marketPositionFastCompare"
+                             value="#{webDataController.topProblemAfter10MarketPositionFastCompareList}"
+                             filteredValue="#{webDataController.filteredCompareList}"
+                >
+                    <f:facet name="header">
+                        presumably working symbols / предположительно рабочие пары
+                    </f:facet>
                     <ui:include src="/template/commonTableCollumns.xhtml"/>
                 </p:dataTable>
             </h:form>

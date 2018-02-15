@@ -95,3 +95,10 @@
     margin: auto;
     margin-bottom: 0.9em;
 }
+/* START main table stylesheet */
+.notActiveWallet{
+    background-color: #e1a021;
+}
+.lieProfitByGlasses{
+    background-color: #e11715;
+}

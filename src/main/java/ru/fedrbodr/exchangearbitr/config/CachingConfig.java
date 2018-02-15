@@ -12,7 +12,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 public class CachingConfig {
 	public static final String ORDER_LIST_CACHE = "orderListCache";
 	public static final String TOP_AFTER_10_COMPARE_LIST = "topAfter12CompareListCache";
-	public static final String TOP_30_COMPARE_LIST = "top30CompareListCache";
+	public static final String TOP_PROBLEM_AFTER_10_COMPARE_LIST = "topProblemAfter12CompareListCache";
+	public static final String TOP_COMPARE_LIST = "top30CompareListCache";
 
 	@CacheEvict(allEntries = true, value = {ORDER_LIST_CACHE})
 	@Scheduled(fixedDelay = 30 * 1000, initialDelay = 60 * 1000)
@@ -22,13 +23,21 @@ public class CachingConfig {
 
 	@CacheEvict(allEntries = true, value = {TOP_AFTER_10_COMPARE_LIST})
 	@Scheduled(fixedDelay = 2 * 1000, initialDelay = 30 * 1000)
-	public void topAfter12CompareListCacheEvict() {
+	public void topAfter10CompareListCacheEvict() {
 
 	}
 
-	@CacheEvict(allEntries = true, value = {TOP_30_COMPARE_LIST})
+	@CacheEvict(allEntries = true, value = {TOP_PROBLEM_AFTER_10_COMPARE_LIST})
 	@Scheduled(fixedDelay = 2 * 1000, initialDelay = 30 * 1000)
-	public void top30CompareListCacheEvict() {
+	public void topProblemAfter10CompareListCacheEvict() {
 
 	}
+
+	@CacheEvict(allEntries = true, value = {TOP_COMPARE_LIST})
+	@Scheduled(fixedDelay = 2 * 1000, initialDelay = 30 * 1000)
+	public void topCompareListCacheEvict() {
+
+	}
+
+
 }

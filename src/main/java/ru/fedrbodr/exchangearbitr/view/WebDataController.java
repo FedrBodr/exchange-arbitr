@@ -18,6 +18,10 @@ public class WebDataController {
 		return marketPositionFastService.getTopAfter10MarketPositionFastCompareList();
 	}
 
+	public List<MarketPositionFastCompare> getTopProblemAfter10MarketPositionFastCompareList(){
+		return marketPositionFastService.getTopProblemAfter10MarketPositionFastCompareList();
+	}
+
 	public List<MarketPositionFastCompare> getAdminMarketPositionCompareList(){
 		return marketPositionFastService.getTopFullMarketPositionFastCompareList();
 	}
