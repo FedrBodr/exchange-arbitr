@@ -8,12 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.ExchangeMetaRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
-import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.model.MarketPosition;
 import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
-import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
 import ru.fedrbodr.exchangearbitr.xchange.custom.CoinexchangeMarketDataService;
 
@@ -27,14 +25,9 @@ import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
 @Slf4j
 public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 	@Autowired
-	private MarketPositionRepository marketPositionRepository;
-	@Autowired
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
-	private SymbolService symbolService;
-	@Autowired
 	private CoinexchangeMarketDataService marketDataService;
-
 	@Autowired
 	private ExchangeMetaRepository exchangeRepository;
 	private Map<String, Boolean> currencyActivityMap;
@@ -84,8 +77,6 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositions));
 		marketPositionFastRepository.flush();
-		/*marketPositionRepository.save(marketPositions);
-		marketPositionRepository.flush();*/
 	}
 
 	private boolean isSymbolPairActive(SymbolPair symbolPair) {

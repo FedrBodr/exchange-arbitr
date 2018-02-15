@@ -4,14 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.knowm.xchange.ExchangeFactory;
-import org.knowm.xchange.bittrex.BittrexExchange;
 import org.knowm.xchange.bittrex.dto.marketdata.BittrexCurrency;
 import org.knowm.xchange.bittrex.service.BittrexMarketDataServiceRaw;
+import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
-import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.model.MarketPosition;
 import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
@@ -36,13 +34,12 @@ import static ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils.bittrexToUniCur
 @Slf4j
 public class BittrexExchangeReaderImpl implements ExchangeReader {
 	@Autowired
-	private MarketPositionRepository marketPositionRepository;
-	@Autowired
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
 	private SymbolService symbolService;
-	private BittrexMarketDataServiceRaw bittrexMarketDataServiceRaw = (BittrexMarketDataServiceRaw)
-			(ExchangeFactory.INSTANCE.createExchange(BittrexExchange.class.getName())).getMarketDataService();
+	@Autowired
+	private Map<Integer, MarketDataService> exchangeIdToMarketDataService;
+	private BittrexMarketDataServiceRaw bittrexMarketDataServiceRaw;
 	private Map<String, BittrexCurrency> currencyMap;
 
 	private static final ThreadLocal<DateFormat> dateFormat = new ThreadLocal<DateFormat>(){
@@ -63,6 +60,8 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
 		currencyMap = new HashMap<>();
+		bittrexMarketDataServiceRaw = (BittrexMarketDataServiceRaw) exchangeIdToMarketDataService.get(ExchangeMeta.BINANCE);
+
 		BittrexCurrency[] bittrexCurrencies = bittrexMarketDataServiceRaw.getBittrexCurrencies();
 		for (BittrexCurrency bittrexCurrency : bittrexCurrencies) {
 			currencyMap.put(bittrexCurrency.getCurrency(), bittrexCurrency);
@@ -107,8 +106,6 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
-		/*marketPositionRepository.save(marketPositionList);
-		marketPositionRepository.flush();*/
 	}
 
 	/*Instead currencyMap can used market.getBoolean("IsActive") but now this as is maybe refactor to universal solution*/

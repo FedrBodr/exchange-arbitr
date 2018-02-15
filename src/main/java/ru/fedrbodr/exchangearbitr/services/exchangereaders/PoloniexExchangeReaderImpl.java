@@ -72,8 +72,6 @@ public class PoloniexExchangeReaderImpl implements ExchangeReader {
 		}
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositions));
 		marketPositionFastRepository.flush();
-		/*marketPositionRepository.save(marketPositions);
-		marketPositionRepository.flush();*/
 	}
 
 	private boolean isSymbolPairActive(SymbolPair symbolPair) {

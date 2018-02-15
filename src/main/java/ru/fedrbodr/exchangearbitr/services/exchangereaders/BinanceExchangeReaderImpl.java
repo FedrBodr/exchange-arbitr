@@ -2,11 +2,10 @@ package ru.fedrbodr.exchangearbitr.services.exchangereaders;
 
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
-import org.knowm.xchange.ExchangeFactory;
-import org.knowm.xchange.binance.BinanceExchange;
 import org.knowm.xchange.binance.dto.marketdata.BinanceTicker24h;
 import org.knowm.xchange.binance.dto.meta.exchangeinfo.BinanceExchangeInfo;
 import org.knowm.xchange.binance.service.BinanceMarketDataService;
+import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
@@ -31,8 +30,9 @@ import static ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils.binanceToUniCur
 @Service
 @Slf4j
 public class BinanceExchangeReaderImpl implements ExchangeReader {
-	private final BinanceMarketDataService marketDataService = (BinanceMarketDataService) ExchangeFactory.INSTANCE.createExchange(BinanceExchange.class.getName()).getMarketDataService();
-
+	private BinanceMarketDataService marketDataService;
+	@Autowired
+	private Map<Integer, MarketDataService> exchangeIdToMarketDataService;
 	@Autowired
 	private MarketPositionRepository marketPositionRepository;
 	@Autowired
@@ -46,6 +46,7 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 
 	@PostConstruct
 	private void init() throws IOException {
+		marketDataService = (BinanceMarketDataService) exchangeIdToMarketDataService.get(ExchangeMeta.BINANCE);
 		/*TODO refactor this with aop for all init methods*/
 		log.info(BinanceExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 
@@ -80,8 +81,6 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
-		/*marketPositionRepository.save(marketPositionList);
-		marketPositionRepository.flush();*/
 		log.info(BinanceExchangeReaderImpl.class.getSimpleName() + " readAndSaveMarketPositionsBySummaries end, execution time: {}",
 				new Date().getTime() - starDate.getTime());
 

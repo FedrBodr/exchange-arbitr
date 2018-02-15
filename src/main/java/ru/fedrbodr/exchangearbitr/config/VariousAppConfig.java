@@ -55,7 +55,7 @@ public class VariousAppConfig {
 	private CoinexchangeMarketDataService coinexchangeMarketDataService;
 
 	@Bean
-	public Map<Integer, MarketDataService> exchangeIdToMarketDataService() {
+	public Map<Integer, MarketDataService> exchangeIdToMarketDataServiceMap() {
 		Map<Integer, MarketDataService> exchangeIdToMarketDataService;
 		log.info("Before start initMarketDataServices");
 
