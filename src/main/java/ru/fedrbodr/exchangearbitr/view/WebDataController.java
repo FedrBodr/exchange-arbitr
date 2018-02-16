@@ -21,11 +21,11 @@ public class WebDataController {
 	}
 
 	public List<MarketPositionFastCompare> getTopProblemAfter10MarketPositionFastCompareList(){
-		return marketPositionFastService.getTopProblemAfter10MarketPositionFastCompareList();
+		return marketPositionFastService.getTopProblemAfterMarketPositionFastCompareList();
 	}
 
 	public List<MarketPositionFastCompare> getAdminMarketPositionCompareList(){
-		return marketPositionFastService.getTopFullMarketPositionFastCompareList();
+		return marketPositionFastService.getTopMarketPositionFastCompareList();
 	}
 
 	public List<MarketPositionFastCompare> getFilteredCompareList() {

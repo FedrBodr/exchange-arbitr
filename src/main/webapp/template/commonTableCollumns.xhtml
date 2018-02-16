@@ -146,6 +146,11 @@
             <f:convertNumber pattern="#0.0%"/>
         </h:outputText>
     </p:column>
+    <p:column headerText="Profit by 0.01">
+        <h:outputText value="#{marketPositionFastCompare.depositProfitList[0].getProfit()}">
+            <f:convertNumber pattern="#0.0%"/>
+        </h:outputText>
+    </p:column>
     <p:column headerText="Buy exchange" filterBy="#{buyMarketPK.exchangeMeta.exchangeName}" filterMatchMode="contains">
         <h:outputLink value="#{marketPositionFastCompare.buySymbolExchangeUrl}" target="_blank">
             #{buyMarketPK.exchangeMeta.exchangeName}

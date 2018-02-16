@@ -22,7 +22,6 @@ import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
 @Configuration
 @EnableCaching
@@ -31,7 +30,7 @@ import java.util.TimeZone;
 public class VariousAppConfig {
 	@PostConstruct
 	public void init(){
-		TimeZone.setDefault(TimeZone.getTimeZone("GMT+3"));
+		/*TimeZone.setDefault(TimeZone.getTimeZone("GMT+3"));*/
 
 	}
 

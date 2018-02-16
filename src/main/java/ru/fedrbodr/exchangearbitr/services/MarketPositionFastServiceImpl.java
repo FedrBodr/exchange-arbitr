@@ -1,5 +1,7 @@
 package ru.fedrbodr.exchangearbitr.services;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.PredicateUtils;
 import org.knowm.xchange.dto.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,6 +17,7 @@ import ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static ru.fedrbodr.exchangearbitr.config.CachingConfig.*;
@@ -35,7 +38,7 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 
 	@Override
 	@Cacheable(TOP_PROBLEM_AFTER_10_COMPARE_LIST)
-	public List<MarketPositionFastCompare> getTopProblemAfter10MarketPositionFastCompareList() {
+	public List<MarketPositionFastCompare> getTopProblemAfterMarketPositionFastCompareList() {
 		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.selectTopProblemMarketPositionFastCompareList();
 		return calculateDifferencesForWeb(topMarketPositionDif);
 	}
@@ -100,6 +103,18 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 			marketPositionFastCompares.add(marketPositionFastCompare);
 
 		});
+// || o1.getDepositProfitList().get(0) == null && o2.getDepositProfitList().get(0)==null
+		Collections.sort(marketPositionFastCompares, (o1, o2) -> {
+			if(CollectionUtils.isEmpty(o1.getDepositProfitList()) && CollectionUtils.isEmpty(o2.getDepositProfitList())) {
+				return 0;
+			}
+			if(CollectionUtils.isEmpty(o1.getDepositProfitList()))
+				return 1;
+			if(CollectionUtils.isEmpty(o2.getDepositProfitList()))
+				return -1;
+
+			return o2.getDepositProfitList().get(0).getProfit().compareTo(o1.getDepositProfitList().get(0).getProfit());
+		});
 
 		return marketPositionFastCompares;
 	}
@@ -117,9 +132,16 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 	private void calcAddProfitsList(MarketPositionFastCompare marketPositionFastCompare) {
 		if(marketPositionFastCompare.getBuyOrders() != null && marketPositionFastCompare.getSellOrders() != null) {
 			List<DepositProfit> depositProfitList = new ArrayList<>();
-			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.01)));
-			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.1)));
-			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.5)));
+			DepositProfit depositProfit001 = calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.01));
+			DepositProfit depositProfit01 = calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.1));
+			DepositProfit depositProfit025 = calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.25));
+			DepositProfit depositProfit05 = calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.5));
+			depositProfitList.add(depositProfit001);
+			depositProfitList.add(depositProfit01);
+			depositProfitList.add(depositProfit025);
+			depositProfitList.add(depositProfit05);
+
+			CollectionUtils.filter(depositProfitList, PredicateUtils.notNullPredicate());
 			marketPositionFastCompare.setDepositProfitList(depositProfitList);
 		}
 	}
