@@ -7,6 +7,7 @@ import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.binance.BinanceExchange;
 import org.knowm.xchange.bittrex.BittrexExchange;
 import org.knowm.xchange.hitbtc.v2.HitbtcExchange;
+import org.knowm.xchange.kucoin.KucoinExchange;
 import org.knowm.xchange.poloniex.PoloniexExchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -67,6 +68,8 @@ public class VariousAppConfig {
 				ExchangeMeta.POLONIEX, ExchangeFactory.INSTANCE.createExchange(PoloniexExchange.class.getName()));
 		exchangeMetaToExchangeMap.put(
 				ExchangeMeta.HITBTC, ExchangeFactory.INSTANCE.createExchange(HitbtcExchange.class.getName()));
+		exchangeMetaToExchangeMap.put(
+				ExchangeMeta.KUCOIN, ExchangeFactory.INSTANCE.createExchange(KucoinExchange.class.getName()));
 
 		/* TODO REALIZE IN XCHANGE Coinexchange Exchange */
 		log.info("After stop initMarketDataServices. time in  seconds: {}", (start.getTime() - new Date().getTime()) / 1000);
@@ -85,14 +88,19 @@ public class VariousAppConfig {
 	@Autowired
 	@Qualifier("hitBtcExchangeReaderImpl")
 	private ExchangeReader hitBtcExchangeReaderImpl;
+	@Autowired
+	@Qualifier("kucoinExchangeReaderImpl")
+	private ExchangeReader kucoinExchangeReaderImpl;
 
 	@Bean
 	public Map<ExchangeMeta, ExchangeReader> exchangeMetaToExchangeSummariesReaderMap() {
 		Map<ExchangeMeta, ExchangeReader> exchangeMetaToExchangeSummariesReaderMap = new HashMap<>();
+		/*BINANCE NOT NEEDAD in this place*/
 		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.BITTREX, bittrexExchangeReader);
 		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.POLONIEX, poloniexExchangeReader);
 		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.COINEXCHANGE, coinexchangeExchangeReader);
 		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.HITBTC, hitBtcExchangeReaderImpl);
+		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.KUCOIN, kucoinExchangeReaderImpl);
 
 		return exchangeMetaToExchangeSummariesReaderMap;
 	}

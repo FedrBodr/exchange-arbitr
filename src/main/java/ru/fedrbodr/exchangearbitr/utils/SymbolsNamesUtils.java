@@ -59,6 +59,8 @@ public class SymbolsNamesUtils {
 			urlToSymbolMarket = exchangeMeta.getSymbolMarketUrl() + convertUniversalToBinanceUrlSymbol(symbolPair);
 		} else if (exchangeMeta.equals(ExchangeMeta.HITBTC)) {
 			urlToSymbolMarket = exchangeMeta.getSymbolMarketUrl() + convertUniversalToHitBtcUrlSymbol(symbolPair);
+		} else if (exchangeMeta.equals(ExchangeMeta.KUCOIN)) {
+			urlToSymbolMarket = exchangeMeta.getSymbolMarketUrl() + convertUniversalToKucoinUrlSymbol(symbolPair);
 		}
 
 		if (StringUtils.isEmpty(urlToSymbolMarket)) {
@@ -66,6 +68,10 @@ public class SymbolsNamesUtils {
 					new InvalidParameterException());
 		}
 		return urlToSymbolMarket;
+	}
+
+	private static String convertUniversalToKucoinUrlSymbol(SymbolPair symbolPair) {
+		return symbolPair.getQuoteName() + "-" + symbolPair.getBaseName();
 	}
 
 	private static String convertUniversalToHitBtcUrlSymbol(SymbolPair symbolPair) {
