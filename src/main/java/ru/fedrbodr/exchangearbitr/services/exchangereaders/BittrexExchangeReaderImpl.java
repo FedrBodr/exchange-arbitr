@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.knowm.xchange.Exchange;
 import org.knowm.xchange.bittrex.dto.marketdata.BittrexCurrency;
 import org.knowm.xchange.bittrex.service.BittrexMarketDataServiceRaw;
-import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
@@ -38,7 +38,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 	@Autowired
 	private SymbolService symbolService;
 	@Autowired
-	private Map<ExchangeMeta, MarketDataService> exchangeIdToMarketDataServiceMap;
+	private Map<ExchangeMeta, Exchange> exchangeMetaToExchangeMap;
 	private BittrexMarketDataServiceRaw bittrexMarketDataServiceRaw;
 	private Map<String, BittrexCurrency> currencyMap;
 
@@ -60,7 +60,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
 		currencyMap = new HashMap<>();
-		bittrexMarketDataServiceRaw = (BittrexMarketDataServiceRaw) exchangeIdToMarketDataServiceMap.get(ExchangeMeta.BITTREX);
+		bittrexMarketDataServiceRaw = (BittrexMarketDataServiceRaw) (exchangeMetaToExchangeMap.get(ExchangeMeta.BITTREX).getMarketDataService());
 
 		BittrexCurrency[] bittrexCurrencies = bittrexMarketDataServiceRaw.getBittrexCurrencies();
 		for (BittrexCurrency bittrexCurrency : bittrexCurrencies) {

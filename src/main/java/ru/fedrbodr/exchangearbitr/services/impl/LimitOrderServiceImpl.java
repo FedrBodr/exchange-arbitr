@@ -1,6 +1,7 @@
 package ru.fedrbodr.exchangearbitr.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.knowm.xchange.Exchange;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +24,14 @@ import java.util.Map;
 public class LimitOrderServiceImpl implements LimitOrderService {
 
 	@Autowired
-	private Map<ExchangeMeta, MarketDataService> exchangeIdToMarketDataServiceMap;
+	private Map<ExchangeMeta, Exchange> exchangeMetaToExchangeMap;
 	@Autowired
 	private LimitOrderRepository limitOrderRepository;
 
 	@Override
 	public void readConvertCalcAndSaveUniOrders(SymbolPair symbolPair, ExchangeMeta exchangeMeta) {
 		try {
-			MarketDataService marketDataService = exchangeIdToMarketDataServiceMap.get(exchangeMeta);
+			MarketDataService marketDataService = exchangeMetaToExchangeMap.get(exchangeMeta).getMarketDataService();
 			if(marketDataService!=null) {
 				OrderBook orderBook = marketDataService.getOrderBook(
 						SymbolsNamesUtils.getCurrencyPair(symbolPair.getBaseName(), symbolPair.getQuoteName()),

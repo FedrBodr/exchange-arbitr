@@ -4,12 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
@@ -20,21 +19,14 @@ import java.util.concurrent.TimeUnit;
 public class MarketsSummariesWorker implements Runnable {
 	public static final int REQUESTS_PAUSE = 2000;
 	public static final int BINANCE_ALL_TICKERS_PAUSE = 20000;
-	@Autowired
-	@Qualifier("bittrexExchangeReaderImpl")
-	private ExchangeReader bittrexExchangeReader;
-	@Autowired
-	@Qualifier("poloniexExchangeReaderImpl")
-	private ExchangeReader poloniexExchangeReader;
-	@Autowired
-	@Qualifier("binanceExchangeReaderImpl")
-	private ExchangeReader binanceExchangeReader;
-	@Autowired
-	@Qualifier("coinexchangeExchangeReaderImpl")
-	private ExchangeReader coinexchangeExchangeReader;
 	private boolean doGrabbing = false;
 	private Date startPreviousCall;
 	private Date startPreviousBitrixCall;
+	@Autowired
+	private Map<ExchangeMeta, ExchangeReader> exchangeMetaToExchangeSummariesReaderMap;
+	@Autowired
+	@Qualifier("binanceExchangeReaderImpl")
+	private ExchangeReader binanceExchangeReader;
 
 	public MarketsSummariesWorker() {
 		startPreviousCall = new Date();
@@ -65,9 +57,11 @@ public class MarketsSummariesWorker implements Runnable {
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		List<FutureTask<Void>> taskList = new ArrayList<>();
 
-		addReaderTaskFutureTaskToTaskList(executor, taskList, bittrexExchangeReader);
-		addReaderTaskFutureTaskToTaskList(executor, taskList, poloniexExchangeReader);
-		addReaderTaskFutureTaskToTaskList(executor, taskList, coinexchangeExchangeReader);
+		Collection<ExchangeReader> values = exchangeMetaToExchangeSummariesReaderMap.values();
+		for (ExchangeReader value : values) {
+			addReaderTaskFutureTaskToTaskList(executor, taskList, value);
+		}
+
 		/*TODO refactor this to configarable limits for each exchange
 		* and start wright wiki or project documentation*/
 		long lastCallWas = System.currentTimeMillis() - startPreviousBitrixCall.getTime();
@@ -75,7 +69,6 @@ public class MarketsSummariesWorker implements Runnable {
 			addReaderTaskFutureTaskToTaskList(executor, taskList, binanceExchangeReader);
 			startPreviousBitrixCall = new Date();
 		}
-
 
 		executor.shutdown();
 

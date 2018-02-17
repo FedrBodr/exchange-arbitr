@@ -101,6 +101,10 @@
     background-image: none;
 }
 .lieProfitByGlasses{
-    background-color: #E6FFAD;
+    background-color: #eff138a6;
+    background-image: none;
+}
+.publicVisible{
+    background-color: rgba(231, 120, 241, 0.65);
     background-image: none;
 }

@@ -151,8 +151,8 @@
             <f:convertNumber pattern="#0.0%"/>
         </h:outputText>
     </p:column>
-    <p:column headerText="Buy exchange" filterBy="#{buyMarketPK.exchangeMeta.exchangeName}" filterMatchMode="contains">
-        <h:outputLink value="#{marketPositionFastCompare.buySymbolExchangeUrl}" target="_blank">
+    <p:column headerText="Buy exchange, link to pair" filterBy="#{buyMarketPK.exchangeMeta.exchangeName}" filterMatchMode="contains">
+        <h:outputLink value="#{marketPositionFastCompare.buySymbolExchangeUrl}#{buyMarketPK.exchangeMeta.refParam}" target="_blank">
             #{buyMarketPK.exchangeMeta.exchangeName}
         </h:outputLink>
     </p:column>
@@ -164,8 +164,8 @@
             <f:convertNumber minFractionDigits="8"/>
         </h:outputText>
     </p:column>
-    <p:column headerText="Sell exchange" filterBy="#{sellMarketPK.exchangeMeta.exchangeName}" filterMatchMode="contains">
-        <h:outputLink value="#{marketPositionFastCompare.sellSymbolExchangeUrl}" target="_blank">
+    <p:column headerText="Sell exchange, link to pair" filterBy="#{sellMarketPK.exchangeMeta.exchangeName}" filterMatchMode="contains">
+        <h:outputLink value="#{marketPositionFastCompare.sellSymbolExchangeUrl}#{sellMarketPK.exchangeMeta.refParam}" target="_blank">
             #{sellMarketPK.exchangeMeta.exchangeName}
         </h:outputLink>
     </p:column>

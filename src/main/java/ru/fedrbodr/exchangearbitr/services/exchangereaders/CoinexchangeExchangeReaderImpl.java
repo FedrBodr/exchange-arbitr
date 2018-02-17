@@ -39,6 +39,7 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 		exchangeRepository.save(ExchangeMeta.COINEXCHANGE);
 		exchangeRepository.save(ExchangeMeta.POLONIEX);
 		exchangeRepository.save(ExchangeMeta.BINANCE);
+		exchangeRepository.save(ExchangeMeta.HITBTC);
 		exchangeRepository.flush();
 		/*TODO refactor this with aop for all init methods*/
 		log.info(CoinexchangeExchangeReaderImpl.class.getSimpleName() + " initialisation start");

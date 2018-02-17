@@ -11,7 +11,8 @@
                              var="marketPositionFastCompare"
                              value="#{webDataController.adminMarketPositionCompareList}"
                              rowStyleClass="#{marketPositionFastCompare.sellMarketPosition.active eq false or marketPositionFastCompare.buyMarketPosition.active eq false ? 'notActiveWallet' : null}
-                                            #{marketPositionFastCompare.lieProfitByGlasses ? 'lieProfitByGlasses' : null}"
+                                            #{marketPositionFastCompare.lieProfitByGlasses ? 'lieProfitByGlasses' : null}
+                                            #{marketPositionFastCompare.publicVisible ? 'publicVisible' : null}"
 
                 >
                     <f:facet name="header">

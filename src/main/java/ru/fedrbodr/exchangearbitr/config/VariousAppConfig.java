@@ -2,12 +2,14 @@ package ru.fedrbodr.exchangearbitr.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.h2.server.web.WebServlet;
+import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.binance.BinanceExchange;
 import org.knowm.xchange.bittrex.BittrexExchange;
+import org.knowm.xchange.hitbtc.v2.HitbtcExchange;
 import org.knowm.xchange.poloniex.PoloniexExchange;
-import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +18,7 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
-import ru.fedrbodr.exchangearbitr.xchange.custom.CoinexchangeMarketDataService;
+import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 
 import javax.annotation.PostConstruct;
 import java.util.Date;
@@ -50,26 +52,48 @@ public class VariousAppConfig {
 		return executor;
 	}
 
-	@Autowired
-	private CoinexchangeMarketDataService coinexchangeMarketDataService;
-
 	@Bean
-	public Map<ExchangeMeta, MarketDataService> exchangeIdToMarketDataServiceMap() {
-		Map<ExchangeMeta, MarketDataService> exchangeIdToMarketDataService;
+	public Map<ExchangeMeta, Exchange> exchangeMetaToExchangeMap() {
+		Map<ExchangeMeta, Exchange> exchangeMetaToExchangeMap;
 		log.info("Before start initMarketDataServices");
 
 		Date start = new Date();
-		exchangeIdToMarketDataService = new HashMap<>();
-		exchangeIdToMarketDataService.put(
-				ExchangeMeta.BITTREX, ExchangeFactory.INSTANCE.createExchange(BittrexExchange.class.getName()).getMarketDataService());
-		exchangeIdToMarketDataService.put(
-				ExchangeMeta.BINANCE, ExchangeFactory.INSTANCE.createExchange(BinanceExchange.class.getName()).getMarketDataService());
-		exchangeIdToMarketDataService.put(
-				ExchangeMeta.POLONIEX, ExchangeFactory.INSTANCE.createExchange(PoloniexExchange.class.getName()).getMarketDataService());
-		exchangeIdToMarketDataService.put(
-				ExchangeMeta.COINEXCHANGE, coinexchangeMarketDataService);
+		exchangeMetaToExchangeMap = new HashMap<>();
+		exchangeMetaToExchangeMap.put(
+				ExchangeMeta.BITTREX, ExchangeFactory.INSTANCE.createExchange(BittrexExchange.class.getName()));
+		exchangeMetaToExchangeMap.put(
+				ExchangeMeta.BINANCE, ExchangeFactory.INSTANCE.createExchange(BinanceExchange.class.getName()));
+		exchangeMetaToExchangeMap.put(
+				ExchangeMeta.POLONIEX, ExchangeFactory.INSTANCE.createExchange(PoloniexExchange.class.getName()));
+		exchangeMetaToExchangeMap.put(
+				ExchangeMeta.HITBTC, ExchangeFactory.INSTANCE.createExchange(HitbtcExchange.class.getName()));
+
 		/* TODO REALIZE IN XCHANGE Coinexchange Exchange */
 		log.info("After stop initMarketDataServices. time in  seconds: {}", (start.getTime() - new Date().getTime()) / 1000);
-		return exchangeIdToMarketDataService;
+		return exchangeMetaToExchangeMap;
+	}
+
+	@Autowired
+	@Qualifier("bittrexExchangeReaderImpl")
+	private ExchangeReader bittrexExchangeReader;
+	@Autowired
+	@Qualifier("poloniexExchangeReaderImpl")
+	private ExchangeReader poloniexExchangeReader;
+	@Autowired
+	@Qualifier("coinexchangeExchangeReaderImpl")
+	private ExchangeReader coinexchangeExchangeReader;
+	@Autowired
+	@Qualifier("hitBtcExchangeReaderImpl")
+	private ExchangeReader hitBtcExchangeReaderImpl;
+
+	@Bean
+	public Map<ExchangeMeta, ExchangeReader> exchangeMetaToExchangeSummariesReaderMap() {
+		Map<ExchangeMeta, ExchangeReader> exchangeMetaToExchangeSummariesReaderMap = new HashMap<>();
+		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.BITTREX, bittrexExchangeReader);
+		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.POLONIEX, poloniexExchangeReader);
+		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.COINEXCHANGE, coinexchangeExchangeReader);
+		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.HITBTC, hitBtcExchangeReaderImpl);
+
+		return exchangeMetaToExchangeSummariesReaderMap;
 	}
 }

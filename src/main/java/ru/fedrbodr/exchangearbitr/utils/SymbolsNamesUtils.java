@@ -57,6 +57,8 @@ public class SymbolsNamesUtils {
 			urlToSymbolMarket = exchangeMeta.getSymbolMarketUrl() + convertUniversalToCoinexchangeSymbolForUrl(symbolPair);
 		} else if (exchangeMeta.equals(ExchangeMeta.BINANCE)) {
 			urlToSymbolMarket = exchangeMeta.getSymbolMarketUrl() + convertUniversalToBinanceUrlSymbol(symbolPair);
+		} else if (exchangeMeta.equals(ExchangeMeta.HITBTC)) {
+			urlToSymbolMarket = exchangeMeta.getSymbolMarketUrl() + convertUniversalToHitBtcUrlSymbol(symbolPair);
 		}
 
 		if (StringUtils.isEmpty(urlToSymbolMarket)) {
@@ -64,6 +66,10 @@ public class SymbolsNamesUtils {
 					new InvalidParameterException());
 		}
 		return urlToSymbolMarket;
+	}
+
+	private static String convertUniversalToHitBtcUrlSymbol(SymbolPair symbolPair) {
+		return symbolPair.getQuoteName()+"-to-"+symbolPair.getBaseName();
 	}
 
 	/*TODO maybe refactor it to CyrrencyMapper and autowire to each exchangeReader */

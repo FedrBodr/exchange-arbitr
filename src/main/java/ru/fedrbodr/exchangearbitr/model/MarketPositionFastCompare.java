@@ -23,6 +23,7 @@ public class MarketPositionFastCompare {
 	private List<UniLimitOrder> buyOrders;
 	private List<DepositProfit> depositProfitList;
 	private boolean lieProfitByGlasses;
+	private boolean publicVisible;
 
 
 	public MarketPositionFastCompare(MarketPositionFast buyMarketPosition, MarketPositionFast sellMarketPosition,

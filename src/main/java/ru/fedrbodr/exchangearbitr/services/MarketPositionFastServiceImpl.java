@@ -28,12 +28,13 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 	private MarketPositionFastRepositoryCustom marketPositionFastRepositoryCustom;
 	@Autowired
 	private LimitOrderRepository limitOrderRepository;
+	private final int publicPositionsCount = 10;
 
 	@Override
 	@Cacheable(TOP_AFTER_10_COMPARE_LIST)
 	public List<MarketPositionFastCompare> getTopAfter10MarketPositionFastCompareList() {
-		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.selectTopAfter10MarketPositionFastCompareList();
-		return calculateDifferencesForWeb(topMarketPositionDif);
+		List<MarketPositionFastCompare> topMarketPositionFastCompareList = getTopMarketPositionFastCompareList();
+		return topMarketPositionFastCompareList.subList(publicPositionsCount-1, topMarketPositionFastCompareList.size());
 	}
 
 	@Override
@@ -54,7 +55,11 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 	@Cacheable(TOP_COMPARE_LIST)
 	public List<MarketPositionFastCompare> getTopMarketPositionFastCompareList() {
 		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.selectTopMarketPositionFastCompareList();
-		return calculateDifferencesForWeb(topMarketPositionDif);
+		List<MarketPositionFastCompare> marketPositionFastCompares = calculateDifferencesForWeb(topMarketPositionDif);
+		for (int i = publicPositionsCount; i <marketPositionFastCompares.size() ; i++) {
+			marketPositionFastCompares.get(i).setPublicVisible(true);
+		}
+		return marketPositionFastCompares;
 	}
 
 	private List<MarketPositionFastCompare> calculateDifferencesForWeb(List<Object[]> topMarketPositionDif) {

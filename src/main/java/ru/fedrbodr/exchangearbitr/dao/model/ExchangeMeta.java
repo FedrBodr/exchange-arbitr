@@ -16,17 +16,19 @@ import java.util.Objects;
 @Slf4j
 @ToString
 public class ExchangeMeta implements Serializable {
-	public static ExchangeMeta BITTREX = new ExchangeMeta(1,"BITTREX", "https://bittrex.com", "https://bittrex.com/Market/Index?MarketName=");
-	public static ExchangeMeta POLONIEX = new ExchangeMeta(2, "POLONIEX", "https://poloniex.com/", "https://poloniex.com/exchange/#");
+	public static ExchangeMeta BITTREX = new ExchangeMeta(1,"BITTREX", "https://bittrex.com", "https://bittrex.com/Market/Index?MarketName=", "");
+	public static ExchangeMeta POLONIEX = new ExchangeMeta(2, "POLONIEX", "https://poloniex.com/", "https://poloniex.com/exchange/#", "");
 	/** be careful with https://www.coinexchange.io/market/ as params need syboli in this format LTC/BTC*/
-	public static ExchangeMeta COINEXCHANGE = new ExchangeMeta(3, "COINEXCHANGE", "https://www.coinexchange.io", "https://www.coinexchange.io/market/");
-	public static ExchangeMeta BINANCE = new ExchangeMeta(4, "BINANCE", "https://www.binance.com/", "https://www.binance.com/trade.html?symbolPair=");
+	public static ExchangeMeta COINEXCHANGE = new ExchangeMeta(3, "COINEXCHANGE", "https://www.coinexchange.io", "https://www.coinexchange.io/market/", "?r=96594b96");
+	public static ExchangeMeta BINANCE = new ExchangeMeta(4, "BINANCE", "https://www.binance.com/", "https://www.binance.com/trade.html?symbolPair=", "&ref=21325688");
+	public static ExchangeMeta HITBTC = new ExchangeMeta(5, "HIT-BTC", "https://hitbtc.com", "https://hitbtc.com/exchange/", "?ref_id=5a87e613af10d");
 
 	@Id
 	private int id;
 	private String exchangeName;
 	private String exchangeUrl;
 	private String symbolMarketUrl;
+	private String refParam;
 
 	public int getId() {
 		return id;
@@ -38,6 +40,10 @@ public class ExchangeMeta implements Serializable {
 
 	public String getSymbolMarketUrl() {
 		return symbolMarketUrl;
+	}
+
+	public String getRefParam() {
+		return refParam;
 	}
 
 	@Override
