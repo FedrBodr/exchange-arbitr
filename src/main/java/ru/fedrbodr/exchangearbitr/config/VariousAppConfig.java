@@ -47,9 +47,9 @@ public class VariousAppConfig {
 	@Bean
 	public TaskExecutor taskExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(5);
-		executor.setMaxPoolSize(10);
-		executor.setQueueCapacity(25);
+		executor.setCorePoolSize(10);
+		executor.setMaxPoolSize(25);
+		executor.setQueueCapacity(50);
 		return executor;
 	}
 

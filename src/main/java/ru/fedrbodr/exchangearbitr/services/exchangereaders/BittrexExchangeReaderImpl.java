@@ -57,8 +57,8 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 	@PostConstruct
 	private void init() throws IOException {
 		/*TODO refactor this with aop for all init methods*/
-		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
+		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		currencyMap = new HashMap<>();
 		bittrexMarketDataServiceRaw = (BittrexMarketDataServiceRaw) (exchangeMetaToExchangeMap.get(ExchangeMeta.BITTREX).getMarketDataService());
 
@@ -69,7 +69,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 
 		JSONObject json = getNewJsonObject("https://bittrex.com/api/v2.0/pub/Markets/GetMarketSummaries");
 		JSONArray result = json.getJSONArray("result");
-		for(int i = result.length()-1; i>0; i--) {
+		for(int i = result.length()-1; i>=0; i--) {
 			JSONObject market = result.getJSONObject(i).getJSONObject("Market");
 			symbolService.getOrCreateNewSymbol(
 					bittrexToUniCurrencyName(market.getString("BaseCurrency")),

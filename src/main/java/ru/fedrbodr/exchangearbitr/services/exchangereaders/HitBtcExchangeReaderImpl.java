@@ -73,8 +73,6 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 
 	public void readAndSaveMarketPositionsBySummaries() throws JSONException {
 		/*TODO refactor this with aop for all init methods*/
-		Date starDate = new Date();
-		log.info(HitBtcExchangeReaderImpl.class.getSimpleName() + " readAndSaveMarketPositionsBySummaries start");
 		Map<String, HitbtcTicker> hitbtcTickers = new HashMap<>();
 		try {
 			hitbtcTickers = marketDataService.getHitbtcTickers();
@@ -94,9 +92,6 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
-		log.info(HitBtcExchangeReaderImpl.class.getSimpleName() + " readAndSaveMarketPositionsBySummaries end, execution time: {}, last executionTime: {}",
-				new Date().getTime() - starDate.getTime(),new Date());
-
 	}
 
 	private boolean isSymbolPairActive(SymbolPair uniSymbol) {

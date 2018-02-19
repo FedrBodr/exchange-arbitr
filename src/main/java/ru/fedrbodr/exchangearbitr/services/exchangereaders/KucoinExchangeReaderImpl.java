@@ -66,8 +66,6 @@ public class KucoinExchangeReaderImpl implements ExchangeReader {
 
 	public void readAndSaveMarketPositionsBySummaries() throws JSONException {
 		/*TODO refactor this with aop for all init methods*/
-		Date starDate = new Date();
-		log.info(KucoinExchangeReaderImpl.class.getSimpleName() + " readAndSaveMarketPositionsBySummaries start");
 		KucoinResponse<List<KucoinTicker>> kucoinTickerList = null;
 		try {
 			kucoinTickerList = marketDataService.getKucoinTickers();
@@ -87,8 +85,6 @@ public class KucoinExchangeReaderImpl implements ExchangeReader {
 
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
-		log.info(KucoinExchangeReaderImpl.class.getSimpleName() + " readAndSaveMarketPositionsBySummaries end, execution time: {}, last executionTime: {}",
-				new Date().getTime() - starDate.getTime(), new Date());
 
 	}
 

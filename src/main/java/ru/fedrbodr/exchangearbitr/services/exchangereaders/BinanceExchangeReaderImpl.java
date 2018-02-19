@@ -66,8 +66,6 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 
 	public void readAndSaveMarketPositionsBySummaries() throws IOException, JSONException, ParseException {
 		/*TODO refactor this with aop for all init methods*/
-		Date starDate = new Date();
-		log.info(BinanceExchangeReaderImpl.class.getSimpleName() + " readAndSaveMarketPositionsBySummaries start");
 		List<BinanceTicker24h> binanceTicker24hList = marketDataService.ticker24h();
 		List<MarketPosition> marketPositionList = new ArrayList<>();
 		for (BinanceTicker24h binanceTicker24h : binanceTicker24hList) {
@@ -82,8 +80,6 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
-		log.info(BinanceExchangeReaderImpl.class.getSimpleName() + " readAndSaveMarketPositionsBySummaries end, execution time: {}, last executionTime: {}",
-				new Date().getTime() - starDate.getTime(), new Date());
 
 	}
 }

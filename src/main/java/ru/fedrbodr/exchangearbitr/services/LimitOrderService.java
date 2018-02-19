@@ -5,6 +5,6 @@ import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
 
 public interface LimitOrderService {
 
-	void readConvertCalcAndSaveUniOrders(SymbolPair symbolPair, ExchangeMeta exchangeMeta);
+	void readConvertCalcAndSaveUniOrders(SymbolPair symbolPair, ExchangeMeta exchangeMeta, String host, Integer  port);
 
 }

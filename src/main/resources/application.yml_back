@@ -1,27 +1,13 @@
 logging.file: ../logs/exchange-arbitr.log
 spring:
   datasource:
-    url: jdbc:h2:mem:example-app;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    platform: h2
-    username: fe
-    password: fe
-    driverClassName: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/exchange_arbitr?useSSL=false
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate.ddl-auto: update
     properties.hibernate:
+      dialect: org.hibernate.dialect.MySQL5Dialect
       current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+    hibernate.ddl-auto: update
   profiles.active: @activatedProperties@
-###
-#   H2 Settings
-###
-  h2:
-    console:
-      enabled: true
-      path: /console
-      settings:
-        trace: false
-        web-allow-others: false
 ---
 spring:
   profiles: dev

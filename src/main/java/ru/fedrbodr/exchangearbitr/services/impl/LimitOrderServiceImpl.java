@@ -2,6 +2,7 @@ package ru.fedrbodr.exchangearbitr.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.knowm.xchange.Exchange;
+import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,17 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 	private LimitOrderRepository limitOrderRepository;
 
 	@Override
-	public void readConvertCalcAndSaveUniOrders(SymbolPair symbolPair, ExchangeMeta exchangeMeta) {
+	public void readConvertCalcAndSaveUniOrders(SymbolPair symbolPair, ExchangeMeta exchangeMeta, String host, Integer port) {
+		Date start = new Date();
 		try {
-			MarketDataService marketDataService = exchangeMetaToExchangeMap.get(exchangeMeta).getMarketDataService();
+			Exchange exchange = exchangeMetaToExchangeMap.get(exchangeMeta);
+			MarketDataService marketDataService = exchange.getMarketDataService();
+
+			ExchangeSpecification exchangeSpec = exchange.getExchangeSpecification();
+			exchangeSpec.setProxyHost(host);
+			exchangeSpec.setProxyPort(port);
+			exchange.applySpecification(exchangeSpec);
+
 			if(marketDataService!=null) {
 				OrderBook orderBook = marketDataService.getOrderBook(
 						SymbolsNamesUtils.getCurrencyPair(symbolPair.getBaseName(), symbolPair.getQuoteName()),
@@ -52,5 +61,8 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 			log.error("Exception occurred while getting and saving buyOrderBook for exchange " + exchangeMeta.getExchangeName() +
 					" and symbol pair " + symbolPair.getName(), e);
 		}
+
+		log.info("After stop readConvertCalcAndSaveUniOrders total time in milliseconds: {} for exchange: {}", (new Date().getTime() - start.getTime()),
+				exchangeMeta.getExchangeName());
 	}
 }

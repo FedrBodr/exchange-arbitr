@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 public class OrderBooksWorker implements Runnable {
-	public static final int RUN_MIN_PAUSE = 30000;
+	public static final int RUN_MIN_PAUSE = 2000;
 
 	private boolean doGrabbing = false;
 
@@ -32,6 +32,7 @@ public class OrderBooksWorker implements Runnable {
 	private LimitOrderService orderService;
 
 	private Date startPreviousCall;
+	private int threadCount = 30;
 
 	public OrderBooksWorker() {
 		startPreviousCall = new Date();
@@ -41,11 +42,9 @@ public class OrderBooksWorker implements Runnable {
 	public void run() {
 		Date start = new Date();
 		log.info("Before start OrderBooksWorker.run");
-		int threadNum = Runtime.getRuntime().availableProcessors() - 1;
-
 		while (doGrabbing) {
 			try {
-				readAndSaveOrderBooksByTopMarketPositions(threadNum);
+				readAndSaveOrderBooksByTopMarketPositions();
 			} catch (InterruptedException e) {
 				log.error("Maybe it error on shut down and it is ok ?" + e.getMessage(), e);
 			}
@@ -54,12 +53,15 @@ public class OrderBooksWorker implements Runnable {
 		log.info("After stop OrderBooksWorker.run total time in  seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
 	}
 
-	public void readAndSaveOrderBooksByTopMarketPositions(int threadCount) throws InterruptedException {
- 		Date start = new Date();
+	List<MarketPositionFastPK> alreadyLoadedOrdersBySymbolAndExchangeList;
+	public void readAndSaveOrderBooksByTopMarketPositions() throws InterruptedException {
+		Date start = new Date();
 		log.info("Before start readAndSaveOrderBooksByTopMarketPositions");
 		List<MarketPositionFastCompare> marketPositionCompareList = marketPositionFastService.getTopMarketPositionFastCompareList();
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		List<FutureTask<Void>> taskList = new ArrayList<>();
+		/* Do not be surprised MarketPositionFastPK is suitable for check exchangeMeta and symbolPair uniqueness */
+		alreadyLoadedOrdersBySymbolAndExchangeList = new ArrayList<>();
 
 		for (MarketPositionFastCompare marketPositionCompare : marketPositionCompareList) {
 			addOrdersReaderFutureTaskToTaskList(executor, taskList, marketPositionCompare);
@@ -84,35 +86,37 @@ public class OrderBooksWorker implements Runnable {
 		log.info("After stop readAndSaveOrderBooksByTopMarketPositions total time in  seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
 	}
 
-	List<MarketPositionFastPK> alreadyLoadedOrdersBySymbolAndExchangeList;
 	private void addOrdersReaderFutureTaskToTaskList(ExecutorService executor, List<FutureTask<Void>> taskList, MarketPositionFastCompare marketPositionFastCompare) {
 		SymbolPair symbolPair = marketPositionFastCompare.getBuyMarketPosition().getMarketPositionFastPK().getSymbolPair();
 		ExchangeMeta buyExchangeMeta = marketPositionFastCompare.getBuyMarketPosition().getMarketPositionFastPK().getExchangeMeta();
 		ExchangeMeta sellExchangeMeta = marketPositionFastCompare.getSellMarketPosition().getMarketPositionFastPK().getExchangeMeta();
-		/* Do not be surprised MarketPositionFastPK is suitable for check exchangeMeta and symbolPair uniqueness */
-		alreadyLoadedOrdersBySymbolAndExchangeList = new ArrayList<>();
 
+		FutureTask<Void> exchangeReaderBuyExchangeTask = new FutureTask<>(() -> {
+			return getaVoid(symbolPair, buyExchangeMeta);
 
-		FutureTask<Void> exchangeReaderTask = new FutureTask<>(() -> {
-			/* Do not be surprised MarketPositionFastPK is suitable for check exchangeMeta and symbolPair uniqueness */
-			MarketPositionFastPK buyOrderBookUniqKey = new MarketPositionFastPK(buyExchangeMeta, symbolPair);
-			MarketPositionFastPK sellOrderBookUniqKey = new MarketPositionFastPK(sellExchangeMeta, symbolPair);
-
-			if (!alreadyLoadedOrdersBySymbolAndExchangeList.contains(buyOrderBookUniqKey)) {
-				/* save full order book for buy currency pair on the "buy" exchange, 100 rows*/
-				orderService.readConvertCalcAndSaveUniOrders(symbolPair, buyExchangeMeta);
-				alreadyLoadedOrdersBySymbolAndExchangeList.add(buyOrderBookUniqKey);
-			}
-
-			if (!alreadyLoadedOrdersBySymbolAndExchangeList.contains(sellOrderBookUniqKey)) {
-				/* save full order book for sell currency pair on the "sel" exchange, 100 rows*/
-				orderService.readConvertCalcAndSaveUniOrders(symbolPair, sellExchangeMeta);
-				alreadyLoadedOrdersBySymbolAndExchangeList.add(sellOrderBookUniqKey);
-			}
-			return null;
 		});
-		taskList.add(exchangeReaderTask);
-		executor.execute(exchangeReaderTask);
+
+		FutureTask<Void> exchangeReaderSellExchangeTask = new FutureTask<>(() -> {
+			return getaVoid(symbolPair, sellExchangeMeta);
+		});
+
+		taskList.add(exchangeReaderBuyExchangeTask);
+		taskList.add(exchangeReaderSellExchangeTask);
+		executor.execute(exchangeReaderBuyExchangeTask);
+		executor.execute(exchangeReaderSellExchangeTask);
+	}
+
+	private Void getaVoid(SymbolPair symbolPair, ExchangeMeta exchangeMeta) {
+		/* Do not be surprised MarketPositionFastPK is suitable for check exchangeMeta and symbolPair uniqueness */
+		MarketPositionFastPK buyOrderBookUniqKey = new MarketPositionFastPK(exchangeMeta, symbolPair);
+
+		if (!alreadyLoadedOrdersBySymbolAndExchangeList.contains(buyOrderBookUniqKey)) {
+			/* save full order book for buy currency pair on the "buy" exchange, 100 rows*/
+			orderService.readConvertCalcAndSaveUniOrders(symbolPair, exchangeMeta, "localhost", 8080);
+			alreadyLoadedOrdersBySymbolAndExchangeList.add(buyOrderBookUniqKey);
+		}
+
+		return null;
 	}
 
 	public void setDoGrabbing(boolean doGrabbing) {

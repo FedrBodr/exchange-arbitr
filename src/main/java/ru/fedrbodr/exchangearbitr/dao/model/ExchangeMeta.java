@@ -20,9 +20,10 @@ public class ExchangeMeta implements Serializable {
 	public static ExchangeMeta POLONIEX = new ExchangeMeta(2, "POLONIEX", "https://poloniex.com/", "https://poloniex.com/exchange/#", "");
 	/** be careful with https://www.coinexchange.io/market/ as params need syboli in this format LTC/BTC*/
 	public static ExchangeMeta COINEXCHANGE = new ExchangeMeta(3, "COINEXCHANGE", "https://www.coinexchange.io", "https://www.coinexchange.io/market/", "?r=96594b96");
-	public static ExchangeMeta BINANCE = new ExchangeMeta(4, "BINANCE", "https://www.binance.com/", "https://www.binance.com/trade.html?symbolPair=", "&ref=21325688");
+	public static ExchangeMeta BINANCE = new ExchangeMeta(4, "BINANCE", "https://www.binance.com/", "https://www.binance.com/trade.html?symbolPair=", "");
 	public static ExchangeMeta HITBTC = new ExchangeMeta(5, "HIT-BTC", "https://hitbtc.com", "https://hitbtc.com/exchange/", "?ref_id=5a87e613af10d");
 	public static ExchangeMeta KUCOIN = new ExchangeMeta(6, "KUCOIN", "www.kucoin.com", "https://www.kucoin.com/#/trade.pro/", "");
+	public static ExchangeMeta btctrade = new ExchangeMeta(6, "KUCOIN", "www.kucoin.com", "https://www.kucoin.com/#/trade.pro/", "");
 
 
 	@Id
