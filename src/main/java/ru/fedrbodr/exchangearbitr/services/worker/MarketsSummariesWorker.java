@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 public class MarketsSummariesWorker implements Runnable {
-	public static final int REQUESTS_PAUSE = 1000;
+	public static final int REQUESTS_PAUSE = 2000;
 	public static final int BINANCE_ALL_TICKERS_PAUSE = 20000;
 	private boolean doGrabbing = false;
 	private Date startPreviousCall;
@@ -55,7 +55,6 @@ public class MarketsSummariesWorker implements Runnable {
 
 	private void readAndSaveAllExchangeSummaries(int threadCount) throws InterruptedException {
 		Date start = new Date();
-		log.info("Before start readAndSaveAllExchangeSummaries");
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		List<FutureTask<Void>> taskList = new ArrayList<>();
 

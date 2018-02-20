@@ -23,7 +23,7 @@ public class ExchangeMeta implements Serializable {
 	public static ExchangeMeta BINANCE = new ExchangeMeta(4, "BINANCE", "https://www.binance.com/", "https://www.binance.com/trade.html?symbolPair=", "");
 	public static ExchangeMeta HITBTC = new ExchangeMeta(5, "HIT-BTC", "https://hitbtc.com", "https://hitbtc.com/exchange/", "?ref_id=5a87e613af10d");
 	public static ExchangeMeta KUCOIN = new ExchangeMeta(6, "KUCOIN", "www.kucoin.com", "https://www.kucoin.com/#/trade.pro/", "");
-	public static ExchangeMeta btctrade = new ExchangeMeta(6, "KUCOIN", "www.kucoin.com", "https://www.kucoin.com/#/trade.pro/", "");
+	public static ExchangeMeta btctrade = new ExchangeMeta(7, "KUCOIN", "www.kucoin.com", "https://www.kucoin.com/#/trade.pro/", "");
 
 
 	@Id

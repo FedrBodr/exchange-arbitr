@@ -16,25 +16,25 @@ public class CachingConfig {
 	public static final String TOP_COMPARE_LIST = "top30CompareListCache";
 
 	@CacheEvict(allEntries = true, value = {ORDER_LIST_CACHE})
-	@Scheduled(fixedDelay = 30 * 1000, initialDelay = 60 * 1000)
+	@Scheduled(fixedDelay = 2 * 1000, initialDelay = 60 * 1000)
 	public void reportCacheEvict() {
 
 	}
 
 	@CacheEvict(allEntries = true, value = {TOP_AFTER_10_COMPARE_LIST})
-	@Scheduled(fixedDelay = 2 * 1000, initialDelay = 30 * 1000)
+	@Scheduled(fixedDelay = 1 * 1000, initialDelay = 30 * 1000)
 	public void topAfter10CompareListCacheEvict() {
 
 	}
 
 	@CacheEvict(allEntries = true, value = {TOP_PROBLEM_AFTER_10_COMPARE_LIST})
-	@Scheduled(fixedDelay = 2 * 1000, initialDelay = 30 * 1000)
+	@Scheduled(fixedDelay = 1 * 1000, initialDelay = 30 * 1000)
 	public void topProblemAfter10CompareListCacheEvict() {
 
 	}
 
 	@CacheEvict(allEntries = true, value = {TOP_COMPARE_LIST})
-	@Scheduled(fixedDelay = 2 * 1000, initialDelay = 30 * 1000)
+	@Scheduled(fixedDelay = 1 * 1000, initialDelay = 30 * 1000)
 	public void topCompareListCacheEvict() {
 
 	}

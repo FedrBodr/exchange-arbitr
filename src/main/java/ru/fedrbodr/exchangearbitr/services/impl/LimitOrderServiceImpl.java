@@ -2,7 +2,6 @@ package ru.fedrbodr.exchangearbitr.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.knowm.xchange.Exchange;
-import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +35,10 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 			Exchange exchange = exchangeMetaToExchangeMap.get(exchangeMeta);
 			MarketDataService marketDataService = exchange.getMarketDataService();
 
-			ExchangeSpecification exchangeSpec = exchange.getExchangeSpecification();
+			/*ExchangeSpecification exchangeSpec = exchange.getExchangeSpecification();
 			exchangeSpec.setProxyHost(host);
 			exchangeSpec.setProxyPort(port);
-			exchange.applySpecification(exchangeSpec);
+			exchange.applySpecification(exchangeSpec);*/
 
 			if(marketDataService!=null) {
 				OrderBook orderBook = marketDataService.getOrderBook(
@@ -62,7 +61,7 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 					" and symbol pair " + symbolPair.getName(), e);
 		}
 
-		log.info("After stop readConvertCalcAndSaveUniOrders total time in milliseconds: {} for exchange: {}", (new Date().getTime() - start.getTime()),
-				exchangeMeta.getExchangeName());
+		/*log.info("After stop readConvertCalcAndSaveUniOrders total time in milliseconds: {} for exchange: {}", (new Date().getTime() - start.getTime()),
+				exchangeMeta.getExchangeName());*/
 	}
 }

@@ -137,14 +137,13 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 	private void calcAddProfitsList(MarketPositionFastCompare marketPositionFastCompare) {
 		if(marketPositionFastCompare.getBuyOrders() != null && marketPositionFastCompare.getSellOrders() != null) {
 			List<DepositProfit> depositProfitList = new ArrayList<>();
-			DepositProfit depositProfit001 = calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.01));
-			DepositProfit depositProfit01 = calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.1));
-			DepositProfit depositProfit025 = calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.25));
-			DepositProfit depositProfit05 = calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.5));
-			depositProfitList.add(depositProfit001);
-			depositProfitList.add(depositProfit01);
-			depositProfitList.add(depositProfit025);
-			depositProfitList.add(depositProfit05);
+
+			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.1)));
+			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.25)));
+			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.5)));
+			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(2)));
+			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(8)));
+			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(15)));
 
 			CollectionUtils.filter(depositProfitList, PredicateUtils.notNullPredicate());
 			marketPositionFastCompare.setDepositProfitList(depositProfitList);

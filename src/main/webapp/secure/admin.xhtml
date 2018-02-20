@@ -30,7 +30,7 @@
                                                                                                              onclick="PF('poll').start();"/>
                 </div>
 
-                <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable" rows="40"
+                <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable" rows="60"
                              var="marketPositionFastCompare"
                              value="#{webDataController.adminMarketPositionCompareList}"
                              rowStyleClass="#{marketPositionFastCompare.sellMarketPosition.active eq false or marketPositionFastCompare.buyMarketPosition.active eq false ? 'notActiveWallet' : null}
