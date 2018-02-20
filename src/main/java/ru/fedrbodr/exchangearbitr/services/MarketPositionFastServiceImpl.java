@@ -59,6 +59,9 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 		for (int i = publicPositionsCount; i <marketPositionFastCompares.size() ; i++) {
 			marketPositionFastCompares.get(i).setPublicVisible(true);
 		}
+		if(marketPositionFastCompares.size() > 30) {
+			marketPositionFastCompares = marketPositionFastCompares.subList(0, 30);
+		}
 		return marketPositionFastCompares;
 	}
 
@@ -108,7 +111,7 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 			marketPositionFastCompares.add(marketPositionFastCompare);
 
 		});
-// || o1.getDepositProfitList().get(0) == null && o2.getDepositProfitList().get(0)==null
+
 		Collections.sort(marketPositionFastCompares, (o1, o2) -> {
 			if(CollectionUtils.isEmpty(o1.getDepositProfitList()) && CollectionUtils.isEmpty(o2.getDepositProfitList())) {
 				return 0;

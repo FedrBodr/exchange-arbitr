@@ -13,7 +13,7 @@
                 <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable"
                              var="marketPositionFastCompare"
                              value="#{webDataController.topAfter10MarketPositionFastCompareList}"
-                             rows="30"
+                             rows="20"
                              filteredValue="#{webDataController.filteredCompareList}"
                              rowStyleClass="#{marketPositionFastCompare.sellMarketPosition.active eq false or
                                                 marketPositionFastCompare.buyMarketPosition.active eq false ? 'notActiveWallet' : null}
