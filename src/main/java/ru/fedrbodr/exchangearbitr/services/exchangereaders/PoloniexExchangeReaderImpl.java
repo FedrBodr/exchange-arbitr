@@ -70,6 +70,12 @@ public class PoloniexExchangeReaderImpl implements ExchangeReader {
 					jsonObject.getBigDecimal("last"), jsonObject.getBigDecimal("lowestAsk"), jsonObject.getBigDecimal("highestBid"),
 					isSymbolPairActive(symbolPair)));
 		}
+
+/*
+		marketPositionRepository.save(marketPositions);
+		marketPositionRepository.flush();
+*/
+
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositions));
 		marketPositionFastRepository.flush();
 	}

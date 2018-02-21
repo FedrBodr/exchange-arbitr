@@ -10,6 +10,7 @@ import org.knowm.xchange.bittrex.service.BittrexMarketDataServiceRaw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
+import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.model.MarketPosition;
 import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
@@ -37,6 +38,8 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
 	private SymbolService symbolService;
+	@Autowired
+	private MarketPositionRepository marketPositionRepository;
 	@Autowired
 	private Map<ExchangeMeta, Exchange> exchangeMetaToExchangeMap;
 	private BittrexMarketDataServiceRaw bittrexMarketDataServiceRaw;
@@ -104,6 +107,8 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 			marketPositionList.add(marketPosition);
 		}
 
+		/*marketPositionRepository.save(marketPositionList);
+		marketPositionRepository.flush();*/
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
 	}

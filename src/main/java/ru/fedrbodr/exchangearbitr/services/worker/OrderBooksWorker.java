@@ -97,7 +97,8 @@ public class OrderBooksWorker implements Runnable {
 		}
 		startPreviousCall = new Date();
 
-		log.info("After stop readAndSaveOrderBooksByTopMarketPositions total time in  seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
+		long lastOrderLoadingTimeMillis = (new Date().getTime() - start.getTime());
+		log.info("After stop readAndSaveOrderBooksByTopMarketPositions total time in  seconds: {}", lastOrderLoadingTimeMillis / 1000);
 	}
 
 	private void addOrdersReaderFutureTaskToTaskList(ExecutorService executor, List<FutureTask<Void>> taskList, MarketPositionFast buyMarketPosition, MarketPositionFast sellMarketPosition) {

@@ -13,6 +13,7 @@ import org.knowm.xchange.hitbtc.v2.service.HitbtcMarketDataServiceRaw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
+import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.model.MarketPosition;
 import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
@@ -35,6 +36,8 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 	private Map<ExchangeMeta, Exchange> exchangeMetaToExchangeMap;
 	@Autowired
 	private MarketPositionFastRepository marketPositionFastRepository;
+	@Autowired
+	private MarketPositionRepository marketPositionRepository;
 	@Autowired
 	private SymbolService symbolService;
 	private Map<String, HitbtcCurrency> hitBtcCurrencyMap;
@@ -89,6 +92,9 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 					hitbtcTicker.getLast(), hitbtcTicker.getBid(), hitbtcTicker.getAsk(), isSymbolPairActive(uniSymbol))
 			);
 		}
+
+		/*marketPositionRepository.save(marketPositionList);
+		marketPositionRepository.flush();*/
 
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();

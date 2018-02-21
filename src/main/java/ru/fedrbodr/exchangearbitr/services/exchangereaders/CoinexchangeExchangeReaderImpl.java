@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.ExchangeMetaRepository;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
+import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.model.MarketPosition;
 import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
@@ -28,6 +29,8 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
 	private CoinexchangeMarketDataService marketDataService;
+	@Autowired
+	private MarketPositionRepository marketPositionRepository;
 	@Autowired
 	private ExchangeMetaRepository exchangeRepository;
 	private Map<String, Boolean> currencyActivityMap;
@@ -77,6 +80,8 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 			marketPositions.add(marketPosition);
 		});
 
+		/*marketPositionRepository.save(marketPositions);
+		marketPositionRepository.flush();*/
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositions));
 		marketPositionFastRepository.flush();
 	}

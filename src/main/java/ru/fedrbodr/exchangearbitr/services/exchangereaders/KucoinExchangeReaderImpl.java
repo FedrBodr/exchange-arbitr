@@ -12,6 +12,7 @@ import org.knowm.xchange.kucoin.service.KucoinMarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
+import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.model.MarketPosition;
 import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
@@ -37,6 +38,8 @@ public class KucoinExchangeReaderImpl implements ExchangeReader {
 	private Map<ExchangeMeta, Exchange> exchangeMetaToExchangeMap;
 	@Autowired
 	private MarketPositionFastRepository marketPositionFastRepository;
+	@Autowired
+	private MarketPositionRepository marketPositionRepository;
 	@Autowired
 	private SymbolService symbolService;
 	private KucoinMarketDataService marketDataService;
@@ -83,6 +86,8 @@ public class KucoinExchangeReaderImpl implements ExchangeReader {
 			);
 		}
 
+		/*marketPositionRepository.save(marketPositionList);
+		marketPositionRepository.flush();*/
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
 
