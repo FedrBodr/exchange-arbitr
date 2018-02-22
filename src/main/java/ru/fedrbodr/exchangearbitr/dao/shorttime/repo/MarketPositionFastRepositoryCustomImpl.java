@@ -1,12 +1,11 @@
-package ru.fedrbodr.exchangearbitr.dao.impl;
+package ru.fedrbodr.exchangearbitr.dao.shorttime.repo;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepositoryCustom;
-import ru.fedrbodr.exchangearbitr.dao.model.MarketPositionFast;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPositionFast;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.List;

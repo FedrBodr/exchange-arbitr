@@ -12,11 +12,11 @@ import org.knowm.xchange.hitbtc.v2.service.HitbtcMarketDataService;
 import org.knowm.xchange.hitbtc.v2.service.HitbtcMarketDataServiceRaw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
-import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
-import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
-import ru.fedrbodr.exchangearbitr.dao.model.MarketPosition;
-import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPosition;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionFastRepository;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Bittrex ExchangeMeta markect names  format now is main inner format ETH-BTC
+ * Bittrex ExchangeMeta1 markect names  format now is main inner format ETH-BTC
  */
 @Service
 @Slf4j
@@ -87,9 +87,9 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 		for (String symbol : hitbtcTickers.keySet()) {
 			HitbtcTicker hitbtcTicker = hitbtcTickers.get(symbol);
 			CurrencyPair currencyPair = HitbtcAdapters.adaptSymbol(hitbtcTicker.getSymbol());
-			SymbolPair uniSymbol = symbolService.getOrCreateNewSymbol(currencyPair.counter.getCurrencyCode(), currencyPair.base.getSymbol());
+			Symbol uniSymbol = symbolService.getOrCreateNewSymbol(currencyPair.counter.getCurrencyCode(), currencyPair.base.getSymbol());
 			marketPositionList.add(new MarketPosition(exchangeMeta, uniSymbol,
-					hitbtcTicker.getLast(), hitbtcTicker.getBid(), hitbtcTicker.getAsk(), isSymbolPairActive(uniSymbol))
+					hitbtcTicker.getLast(), hitbtcTicker.getBid(), hitbtcTicker.getAsk(), isSymbolActive(uniSymbol))
 			);
 		}
 
@@ -100,7 +100,7 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 		marketPositionFastRepository.flush();
 	}
 
-	private boolean isSymbolPairActive(SymbolPair uniSymbol) {
+	private boolean isSymbolActive(Symbol uniSymbol) {
 		String baseName = uniSymbol.getBaseName();
 		String quoteName = uniSymbol.getQuoteName();
 		if(!"USDT".equals(baseName) && hitBtcCurrencyMap.get(baseName)==null || hitBtcCurrencyMap.get(quoteName)==null) {

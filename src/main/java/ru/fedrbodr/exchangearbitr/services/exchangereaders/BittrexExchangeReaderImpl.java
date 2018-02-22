@@ -9,11 +9,11 @@ import org.knowm.xchange.bittrex.dto.marketdata.BittrexCurrency;
 import org.knowm.xchange.bittrex.service.BittrexMarketDataServiceRaw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
-import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
-import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
-import ru.fedrbodr.exchangearbitr.dao.model.MarketPosition;
-import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPosition;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionFastRepository;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
@@ -29,7 +29,7 @@ import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
 import static ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils.bittrexToUniCurrencyName;
 
 /**
- * Bittrex ExchangeMeta markect names  format now is main inner format ETH-BTC
+ * Bittrex ExchangeMeta1 markect names  format now is main inner format ETH-BTC
  * */
 @Service
 @Slf4j
@@ -92,16 +92,16 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
 			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");
 
-			SymbolPair symbolPair = symbolService.getOrCreateNewSymbol(
+			Symbol symbol = symbolService.getOrCreateNewSymbol(
 					bittrexToUniCurrencyName(market.getString("BaseCurrency")),
 					bittrexToUniCurrencyName(market.getString("MarketCurrency")));
 			MarketPosition marketPosition = new MarketPosition(
 					ExchangeMeta.BITTREX,
-					symbolPair,
+					symbol,
 					summary.getBigDecimal("Last"),
 					summary.getBigDecimal("Bid"),
 					summary.getBigDecimal("Ask"),
-					isSymbolPairActive(market.getString("BaseCurrency"),market.getString("MarketCurrency")));
+					isSymbolActive(market.getString("BaseCurrency"),market.getString("MarketCurrency")));
 			marketPosition.setExchangeTimeStamp(convert(summary.getString("TimeStamp")));
 
 			marketPositionList.add(marketPosition);
@@ -114,7 +114,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 	}
 
 	/*Instead currencyMap can used market.getBoolean("IsActive") but now this as is maybe refactor to universal solution*/
-	private boolean isSymbolPairActive(String baseName, String quoteName) {
+	private boolean isSymbolActive(String baseName, String quoteName) {
 		BittrexCurrency baseSymbol = currencyMap.get(baseName);
 		BittrexCurrency quoteSymbol = currencyMap.get(quoteName);
 

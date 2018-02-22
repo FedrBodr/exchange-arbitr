@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr.dao.model;
+package ru.fedrbodr.exchangearbitr.dao.longtime.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,18 +10,18 @@ import java.io.Serializable;
 @Embeddable
 @NoArgsConstructor
 @Data
-public class UniLimitOrderPK implements Serializable{
+public class UniLimitOrderHistoryPK implements Serializable{
 	private Long id;
 	@Enumerated(EnumType.STRING)
 	private Order.OrderType type;
 	@ManyToOne
 	@JoinColumn(name = "exchange_id")
-	private ExchangeMeta exchangeMeta;
+	private ExchangeMetaLong exchangeMeta;
 	@ManyToOne
 	@JoinColumn(name = "symbol_id")
-	private SymbolPair symbolPair;
+	private SymbolLong symbolPair;
 
-	public UniLimitOrderPK(Long id, ExchangeMeta exchangeMeta, SymbolPair symbolPair, Order.OrderType type) {
+	public UniLimitOrderHistoryPK(Long id, ExchangeMetaLong exchangeMeta, SymbolLong symbolPair, Order.OrderType type) {
 		this.id = id;
 		this.exchangeMeta = exchangeMeta;
 		this.symbolPair = symbolPair;

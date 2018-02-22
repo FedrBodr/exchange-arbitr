@@ -69,17 +69,17 @@
                                 <f:convertNumber minFractionDigits="8" locale="en"/>
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="#{buyMarketPK.symbolPair.quoteName}">
+                        <p:column headerText="#{buyMarketPK.symbol.quoteName}">
                             <h:outputText value="#{sellOrder.originalAmount}">
                                 <f:convertNumber minFractionDigits="8" locale="en"/>
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="#{buyMarketPK.symbolPair.quoteName} sum">
+                        <p:column headerText="#{buyMarketPK.symbol.quoteName} sum">
                             <h:outputText value="#{sellOrder.originalSum}">
                                 <f:convertNumber minFractionDigits="8" locale="en"/>
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="#{buyMarketPK.symbolPair.baseName} sum">
+                        <p:column headerText="#{buyMarketPK.symbol.baseName} sum">
                             <h:outputText value="#{sellOrder.finalSum}">
                                 <f:convertNumber minFractionDigits="8" locale="en"/>
                             </h:outputText>
@@ -106,18 +106,18 @@
                                 <f:convertNumber minFractionDigits="8" locale="en"/>
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="#{buyMarketPK.symbolPair.quoteName}">
+                        <p:column headerText="#{buyMarketPK.symbol.quoteName}">
                             <h:outputText value="#{buyOrder.originalAmount}">
                                 <f:convertNumber minFractionDigits="8" locale="en"/>
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="#{buyMarketPK.symbolPair.baseName} sum">
+                        <p:column headerText="#{buyMarketPK.symbol.baseName} sum">
                             <h:outputText value="#{buyOrder.finalSum}">
                                 <f:convertNumber minFractionDigits="8" locale="en"/>
                             </h:outputText>
                         </p:column>
 
-                        <p:column headerText="#{buyMarketPK.symbolPair.quoteName} sum">
+                        <p:column headerText="#{buyMarketPK.symbol.quoteName} sum">
                             <h:outputText value="#{buyOrder.originalSum}">
                                 <f:convertNumber minFractionDigits="8" locale="en"/>
                             </h:outputText>
@@ -139,7 +139,7 @@
         <p:rowToggler/>
     </p:column>
     <p:column headerText="Symbol">
-        <h:outputText value="#{buyMarketPK.symbolPair.name}" />
+        <h:outputText value="#{buyMarketPK.symbol.name}" />
     </p:column>
     <p:column headerText="Maybe profit">
         <h:outputText value="#{marketPositionFastCompare.differencePercentCorrect}">
@@ -151,7 +151,7 @@
             <f:convertNumber pattern="#0.0%"/>
         </h:outputText>
     </p:column>
-    <p:column headerText="Buy exchange, link to pair" filterBy="#{buyMarketPK.exchangeMeta.exchangeName}" filterMatchMode="contains">
+    <p:column headerText="Buy exchange, link to pair market" filterBy="#{buyMarketPK.exchangeMeta.exchangeName}" filterMatchMode="contains">
         <h:outputLink value="#{marketPositionFastCompare.buySymbolExchangeUrl}#{buyMarketPK.exchangeMeta.refParam}" target="_blank">
             #{buyMarketPK.exchangeMeta.exchangeName}
         </h:outputLink>
@@ -164,7 +164,7 @@
             <f:convertNumber minFractionDigits="8"/>
         </h:outputText>
     </p:column>
-    <p:column headerText="Sell exchange, link to pair" filterBy="#{sellMarketPK.exchangeMeta.exchangeName}" filterMatchMode="contains">
+    <p:column headerText="Sell exchange, link to pair market" filterBy="#{sellMarketPK.exchangeMeta.exchangeName}" filterMatchMode="contains">
         <h:outputLink value="#{marketPositionFastCompare.sellSymbolExchangeUrl}#{sellMarketPK.exchangeMeta.refParam}" target="_blank">
             #{sellMarketPK.exchangeMeta.exchangeName}
         </h:outputLink>

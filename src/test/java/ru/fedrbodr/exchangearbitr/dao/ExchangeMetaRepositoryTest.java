@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.ExchangeMetaRepository;
 
 import static org.junit.Assert.assertEquals;
 

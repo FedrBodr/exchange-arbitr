@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
-import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
 import ru.fedrbodr.exchangearbitr.services.exchangereaders.BittrexExchangeReaderImpl;
 
 import java.io.IOException;
@@ -85,7 +85,7 @@ public class JsonObjectUtilsTest {
 
 	}
 
-	private SymbolPair getOrCreateNewSymbol(String baseCurrency, String marketCurrency) {
+	private Symbol getOrCreateNewSymbol(String baseCurrency, String marketCurrency) {
 		try {
 			Thread.sleep(5);
 		} catch (InterruptedException e) {

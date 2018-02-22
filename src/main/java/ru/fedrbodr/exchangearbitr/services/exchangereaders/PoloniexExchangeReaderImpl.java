@@ -9,11 +9,11 @@ import org.knowm.xchange.poloniex.dto.marketdata.PoloniexCurrencyInfo;
 import org.knowm.xchange.poloniex.service.PoloniexMarketDataServiceRaw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
-import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
-import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
-import ru.fedrbodr.exchangearbitr.dao.model.MarketPosition;
-import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPosition;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionFastRepository;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
@@ -24,7 +24,7 @@ import java.util.*;
 
 import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
 /**
- * Universal symbolPair format is BTC-BCN Poloniex is BTC_BCN
+ * Universal symbol format is BTC-BCN Poloniex is BTC_BCN
  *
  * */
 @Service
@@ -63,12 +63,12 @@ public class PoloniexExchangeReaderImpl implements ExchangeReader {
 		while (marketNameIterator.hasNext()) {
 			String poloniexMarketName = marketNameIterator.next();
 			String[] splitSybol = poloniexMarketName.split("_");
-			SymbolPair symbolPair = symbolService.getOrCreateNewSymbol(splitSybol[0],splitSybol[1]);
+			Symbol symbol = symbolService.getOrCreateNewSymbol(splitSybol[0],splitSybol[1]);
 			JSONObject jsonObject = json.getJSONObject(poloniexMarketName);
 
-			marketPositions.add(new MarketPosition(ExchangeMeta.POLONIEX, symbolPair,
+			marketPositions.add(new MarketPosition(ExchangeMeta.POLONIEX, symbol,
 					jsonObject.getBigDecimal("last"), jsonObject.getBigDecimal("lowestAsk"), jsonObject.getBigDecimal("highestBid"),
-					isSymbolPairActive(symbolPair)));
+					isSymbolActive(symbol)));
 		}
 
 /*
@@ -80,9 +80,9 @@ public class PoloniexExchangeReaderImpl implements ExchangeReader {
 		marketPositionFastRepository.flush();
 	}
 
-	private boolean isSymbolPairActive(SymbolPair symbolPair) {
-		PoloniexCurrencyInfo poloniexBaseSymbol = poloniexCurrencyMap.get(symbolPair.getBaseName());
-		PoloniexCurrencyInfo poloniexQuoteSymbol = poloniexCurrencyMap.get(symbolPair.getQuoteName());
+	private boolean isSymbolActive(Symbol symbol) {
+		PoloniexCurrencyInfo poloniexBaseSymbol = poloniexCurrencyMap.get(symbol.getBaseName());
+		PoloniexCurrencyInfo poloniexQuoteSymbol = poloniexCurrencyMap.get(symbol.getQuoteName());
 
 		if(poloniexBaseSymbol.isDisabled() || poloniexBaseSymbol.isDelisted() || poloniexBaseSymbol.isFrozen() ||
 				poloniexQuoteSymbol.isDisabled() || poloniexQuoteSymbol.isDelisted() || poloniexQuoteSymbol.isFrozen()){

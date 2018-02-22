@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr.dao;
+package ru.fedrbodr.exchangearbitr.dao.shorttime.repo;
 
 import java.util.List;
 

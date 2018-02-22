@@ -12,7 +12,7 @@ import org.knowm.xchange.dto.trade.LimitOrder;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.services.exchangereaders.CoinexchangeExchangeReaderImpl;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -30,8 +30,8 @@ public class CoinexchangeMarketDataService implements MarketDataService {
 	public CoinexchangeMarketDataService() {
 	}
 
-	private HashMap<Integer, SymbolPair> coinexchangeIdToSymbolPair;
-	private HashMap<SymbolPair, Integer> symbolPairToCoinexchangeMarketId;
+	private HashMap<Integer, Symbol> coinexchangeIdToSymbol;
+	private HashMap<Symbol, Integer> symbolToCoinexchangeMarketId;
 	@Autowired
 	private SymbolService symbolService;
 
@@ -41,20 +41,20 @@ public class CoinexchangeMarketDataService implements MarketDataService {
 		log.info(CoinexchangeExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
 
-		coinexchangeIdToSymbolPair = new HashMap();
-		symbolPairToCoinexchangeMarketId = new HashMap();
+		coinexchangeIdToSymbol = new HashMap();
+		symbolToCoinexchangeMarketId = new HashMap();
 		JSONArray markets = getNewJsonObject("https://www.coinexchange.io/api/v1/getmarkets").getJSONArray("result");
 		markets.forEach(item -> {
 			JSONObject obj = (JSONObject) item;
 			// IT IS CORECT NAMES FORMAT like in org.knowm.xchange.currency.Currency
-			SymbolPair symbolPair = symbolService.getOrCreateNewSymbol(
+			Symbol symbol = symbolService.getOrCreateNewSymbol(
 					obj.getString("BaseCurrencyCode"),
 					obj.getString("MarketAssetCode"));
 
 			int coinexchangeMarketID = obj.getInt("MarketID");
-			coinexchangeIdToSymbolPair.put(coinexchangeMarketID, symbolPair);
+			coinexchangeIdToSymbol.put(coinexchangeMarketID, symbol);
 
-			symbolPairToCoinexchangeMarketId.put(symbolPair, coinexchangeMarketID);
+			symbolToCoinexchangeMarketId.put(symbol, coinexchangeMarketID);
 		});
 		/*TODO refactor this with aop*/
 		log.info(CoinexchangeExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
@@ -71,7 +71,7 @@ public class CoinexchangeMarketDataService implements MarketDataService {
 	@Override
 	public OrderBook getOrderBook(CurrencyPair currencyPair, Object... args) throws IOException {
 		JSONObject sellBuyOrders = getNewJsonObject("https://www.coinexchange.io/api/v1/getorderbook?market_id="+
-				symbolPairToCoinexchangeMarketId.get(symbolService.getOrCreateNewSymbol(currencyPair.counter.getSymbol(),currencyPair.base.getSymbol())))
+				symbolToCoinexchangeMarketId.get(symbolService.getOrCreateNewSymbol(currencyPair.counter.getSymbol(),currencyPair.base.getSymbol())))
 				.getJSONObject("result");
 
 		JSONArray sellOrders = sellBuyOrders.getJSONArray("SellOrders");
@@ -118,6 +118,6 @@ public class CoinexchangeMarketDataService implements MarketDataService {
 	}
 
 	public HashMap getCoinexchangeIdToMarketSummaryMap() {
-		return coinexchangeIdToSymbolPair;
+		return coinexchangeIdToSymbol;
 	}
 }

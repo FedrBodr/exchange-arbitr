@@ -3,11 +3,11 @@ package ru.fedrbodr.exchangearbitr.services.worker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepositoryCustom;
-import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
-import ru.fedrbodr.exchangearbitr.dao.model.MarketPositionFast;
-import ru.fedrbodr.exchangearbitr.dao.model.MarketPositionFastPK;
-import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPositionFast;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPositionFastPK;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionFastRepositoryCustom;
 import ru.fedrbodr.exchangearbitr.services.LimitOrderService;
 import ru.fedrbodr.exchangearbitr.services.MarketPositionFastService;
 
@@ -61,7 +61,7 @@ public class OrderBooksWorker implements Runnable {
 		Date start = new Date();
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		List<FutureTask<Void>> taskList = new ArrayList<>();
-		/* Do not be surprised MarketPositionFastPK is suitable for check exchangeMeta and symbolPair uniqueness */
+		/* Do not be surprised MarketPositionFastPK is suitable for check exchangeMeta and symbol uniqueness */
 		alreadyLoadedOrdersBySymbolAndExchangeList = new ArrayList<>();
 
 		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.selectTopMarketPositionFastCompareList();
@@ -102,17 +102,17 @@ public class OrderBooksWorker implements Runnable {
 	}
 
 	private void addOrdersReaderFutureTaskToTaskList(ExecutorService executor, List<FutureTask<Void>> taskList, MarketPositionFast buyMarketPosition, MarketPositionFast sellMarketPosition) {
-		SymbolPair symbolPair = buyMarketPosition.getMarketPositionFastPK().getSymbolPair();
+		Symbol symbol = buyMarketPosition.getMarketPositionFastPK().getSymbol();
 		ExchangeMeta buyExchangeMeta = buyMarketPosition.getMarketPositionFastPK().getExchangeMeta();
 		ExchangeMeta sellExchangeMeta = sellMarketPosition.getMarketPositionFastPK().getExchangeMeta();
 
 		FutureTask<Void> exchangeReaderBuyExchangeTask = new FutureTask<>(() -> {
-			return getaVoid(symbolPair, buyExchangeMeta);
+			return getaVoid(symbol, buyExchangeMeta);
 
 		});
 
 		FutureTask<Void> exchangeReaderSellExchangeTask = new FutureTask<>(() -> {
-			return getaVoid(symbolPair, sellExchangeMeta);
+			return getaVoid(symbol, sellExchangeMeta);
 		});
 
 		taskList.add(exchangeReaderBuyExchangeTask);
@@ -124,14 +124,14 @@ public class OrderBooksWorker implements Runnable {
 
 
 
-	private Void getaVoid(SymbolPair symbolPair, ExchangeMeta exchangeMeta) {
-		/* Do not be surprised MarketPositionFastPK is suitable for check exchangeMeta and symbolPair uniqueness */
-		MarketPositionFastPK buyOrderBookUniqKey = new MarketPositionFastPK(exchangeMeta, symbolPair);
+	private Void getaVoid(Symbol symbol, ExchangeMeta exchangeMeta) {
+		/* Do not be surprised MarketPositionFastPK is suitable for check exchangeMeta and symbol uniqueness */
+		MarketPositionFastPK buyOrderBookUniqKey = new MarketPositionFastPK(exchangeMeta, symbol);
 
 		if (!alreadyLoadedOrdersBySymbolAndExchangeList.contains(buyOrderBookUniqKey)) {
 			/* save full order book for buy currency pair on the "buy" exchange, 100 rows*/
-			/*orderService.readConvertCalcAndSaveUniOrders(symbolPair, exchangeMeta, "localhost", 8080);*/
-			orderService.readConvertCalcAndSaveUniOrders(symbolPair, exchangeMeta, null, null);
+			/*orderService.readConvertCalcAndSaveUniOrders(symbol, exchangeMeta, "localhost", 8080);*/
+			orderService.readConvertCalcAndSaveUniOrders(symbol, exchangeMeta, null, null);
 			alreadyLoadedOrdersBySymbolAndExchangeList.add(buyOrderBookUniqKey);
 		}
 

@@ -1,7 +1,7 @@
 package ru.fedrbodr.exchangearbitr.utils;
 
-import ru.fedrbodr.exchangearbitr.dao.model.MarketPosition;
-import ru.fedrbodr.exchangearbitr.dao.model.MarketPositionFast;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPosition;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPositionFast;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -11,10 +11,10 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.fedrbodr.exchangearbitr.dao.LimitOrderRepository;
-import ru.fedrbodr.exchangearbitr.dao.SymbolPairRepository;
-import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
-import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.LimitOrderRepository;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.SymbolRepository;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -32,9 +32,9 @@ public class LimitOrderServiceImplTest {
 	@Autowired
 	private LimitOrderRepository limitOrderRepository;
 	@Autowired
-	private SymbolPairRepository symbolPairRepository;
+	private SymbolRepository symbolRepository;
 
-	private final SymbolPair symbolPair = new SymbolPair("BTC-DGB","BTC", "DGB");
+	private final Symbol symbol = new Symbol("BTC-DGB","BTC", "DGB");
 
 	@Before
 	public void setup() {
@@ -46,19 +46,19 @@ public class LimitOrderServiceImplTest {
 	@Test
 	public void readConvertCalcAndSaveUniOrders() {
 /*
-		SymbolPair symbolPairPersisted = symbolPairRepository.findByName(symbolPair.getName());
+		Symbol symbolPairPersisted = symbolRepository.findByName(symbol.getName());
 		limitOrderService.readConvertCalcAndSaveUniOrders(symbolPairPersisted, POLONIEX_EXCHANGE_META, "91.134.135.168", 3128);
 		List<UniLimitOrder> uniLimitOrderList = limitOrderRepository.
-				findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(
+				findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolAndUniLimitOrderPk_type(
 						POLONIEX_EXCHANGE_META, symbolPairPersisted, Order.OrderType.ASK);
 
 		UniLimitOrder firstUniLimitOrder = uniLimitOrderList.get(0);
 		UniLimitOrder seccondUniLimitOrder = uniLimitOrderList.get(1);
 		UniLimitOrder thirdLimitOrder = uniLimitOrderList.get(2);
 
-		assertEquals(POLONIEX_EXCHANGE_META, firstUniLimitOrder.getUniLimitOrderPk().getExchangeMeta());
-		assertEquals(firstUniLimitOrder.getUniLimitOrderPk().getExchangeMeta(), seccondUniLimitOrder.getUniLimitOrderPk().getExchangeMeta());
-		assertEquals(Order.OrderType.ASK, seccondUniLimitOrder.getUniLimitOrderPk().getType());
+		assertEquals(POLONIEX_EXCHANGE_META, firstUniLimitOrder.getUniLimitOrderHistoryPk().getExchangeMeta());
+		assertEquals(firstUniLimitOrder.getUniLimitOrderHistoryPk().getExchangeMeta(), seccondUniLimitOrder.getUniLimitOrderHistoryPk().getExchangeMeta());
+		assertEquals(Order.OrderType.ASK, seccondUniLimitOrder.getUniLimitOrderHistoryPk().getType());
 */
 	}
 }

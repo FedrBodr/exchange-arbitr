@@ -4,9 +4,9 @@ import org.junit.Test;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.LimitOrder;
-import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
-import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
-import ru.fedrbodr.exchangearbitr.dao.model.UniLimitOrder;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.UniLimitOrder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -23,10 +23,10 @@ public class LimitOrderUtilsTest {
 		List<LimitOrder> orders = createTestOrders();
 
 		ExchangeMeta exchangeMeta= ExchangeMeta.POLONIEX;
-		SymbolPair symbolPair = new SymbolPair("BTC-DGB","BTC", "DGB");
+		Symbol symbol = new Symbol("BTC-DGB","BTC", "DGB");
 		Date orderReadingTimeStamp = new Date();
 		// when
-		List<UniLimitOrder> uniLimitOrders = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orders, exchangeMeta, symbolPair, orderReadingTimeStamp);
+		List<UniLimitOrder> uniLimitOrders = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orders, exchangeMeta, symbol, orderReadingTimeStamp);
 		// then
 		assertEquals(4, uniLimitOrders.size());
 		assertEquals(new Long(4), uniLimitOrders.get(3).getUniLimitOrderPk().getId());

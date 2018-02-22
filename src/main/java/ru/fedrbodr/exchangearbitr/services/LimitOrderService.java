@@ -1,10 +1,10 @@
 package ru.fedrbodr.exchangearbitr.services;
 
-import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
-import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
 
 public interface LimitOrderService {
 
-	void readConvertCalcAndSaveUniOrders(SymbolPair symbolPair, ExchangeMeta exchangeMeta, String host, Integer  port);
+	void readConvertCalcAndSaveUniOrders(Symbol symbol, ExchangeMeta exchangeMeta, String host, Integer  port);
 
 }

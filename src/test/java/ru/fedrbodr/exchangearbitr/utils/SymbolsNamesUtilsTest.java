@@ -13,10 +13,10 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
-import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
-import ru.fedrbodr.exchangearbitr.dao.model.MarketPositionFast;
-import ru.fedrbodr.exchangearbitr.dao.model.MarketPositionFastPK;
-import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPositionFast;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPositionFastPK;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
@@ -44,7 +44,7 @@ public class SymbolsNamesUtilsTest {
 		logger.detachAppender(mockAppender);
 	}
 
-	private final SymbolPair symbolPair = new SymbolPair("BTC-ZEC","BTC", "ZEC");
+	private final Symbol symbol = new Symbol("BTC-ZEC","BTC", "ZEC");
 
 	@Test
 	public void determineUrlToSymbolMarket() {
@@ -53,13 +53,13 @@ public class SymbolsNamesUtilsTest {
 		MarketPositionFast coinexchangeMarketPosition = getSampleMarketPositionFor(ExchangeMeta.COINEXCHANGE);
 		MarketPositionFast poloniexMarketPosition = getSampleMarketPositionFor(ExchangeMeta.POLONIEX);
 
-		assertEquals("https://www.binance.com/trade.html?symbolPair=ZEC_BTC", SymbolsNamesUtils.determineUrlToSymbolMarket(binanceMarketPosition));
+		assertEquals("https://www.binance.com/trade.html?symbol=ZEC_BTC", SymbolsNamesUtils.determineUrlToSymbolMarket(binanceMarketPosition));
 		assertEquals("https://bittrex.com/Market/Index?MarketName=BTC-ZEC", SymbolsNamesUtils.determineUrlToSymbolMarket(bittrexMarketPosition));
 		assertEquals("https://www.coinexchange.io/market/ZEC/BTC", SymbolsNamesUtils.determineUrlToSymbolMarket(coinexchangeMarketPosition));
 		assertEquals("https://poloniex.com/exchange/#BTC_ZEC", SymbolsNamesUtils.determineUrlToSymbolMarket(poloniexMarketPosition));
 
 		/* try on non existing exchange */
-		poloniexMarketPosition.getMarketPositionFastPK().setExchangeMeta(new ExchangeMeta(559, "FED", "https://www.FED.com/", "https://www.FED.com/symbolPair=", ""));
+		poloniexMarketPosition.getMarketPositionFastPK().setExchangeMeta(new ExchangeMeta(559, "FED", "https://www.FED.com/", "https://www.FED.com/symbol=", ""));
 		assertEquals(null, SymbolsNamesUtils.determineUrlToSymbolMarket(poloniexMarketPosition));
 		//Now verify our logging interactions
 		verify(mockAppender).doAppend(captorLoggingEvent.capture());
@@ -68,7 +68,7 @@ public class SymbolsNamesUtilsTest {
 		//Check log level is correct
 		assertThat(loggingEvent.getLevel(), is(Level.ERROR));
 		//Check the message being logged is correct
-		assertThat(loggingEvent.getFormattedMessage(), is("Can not determine url to symbolPair market for exchange FED"));
+		assertThat(loggingEvent.getFormattedMessage(), is("Can not determine url to symbol market for exchange FED"));
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class SymbolsNamesUtilsTest {
 
 	private MarketPositionFast getSampleMarketPositionFor(ExchangeMeta exchangeMeta) {
 		MarketPositionFast marketPosition = new MarketPositionFast();
-		MarketPositionFastPK marketPositionPK = new MarketPositionFastPK(exchangeMeta, symbolPair);
+		MarketPositionFastPK marketPositionPK = new MarketPositionFastPK(exchangeMeta, symbol);
 		marketPosition.setMarketPositionFastPK(marketPositionPK);
 		return marketPosition;
 	}

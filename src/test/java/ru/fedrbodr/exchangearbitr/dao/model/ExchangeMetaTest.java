@@ -1,6 +1,7 @@
 package ru.fedrbodr.exchangearbitr.dao.model;
 
 import org.junit.Test;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

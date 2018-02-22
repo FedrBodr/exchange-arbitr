@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr.dao.model;
+package ru.fedrbodr.exchangearbitr.dao.shorttime.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,11 +18,11 @@ public class MarketPositionFastPK implements Serializable{
 	private ExchangeMeta exchangeMeta;
 	@ManyToOne
 	@JoinColumn(name = "symbol_id")
-	private SymbolPair symbolPair;
+	private Symbol symbol;
 
-	public MarketPositionFastPK(ExchangeMeta exchangeMeta, SymbolPair symbolPair) {
+	public MarketPositionFastPK(ExchangeMeta exchangeMeta, Symbol symbol) {
 		this.exchangeMeta = exchangeMeta;
-		this.symbolPair = symbolPair;
+		this.symbol = symbol;
 	}
 
 	@Override
@@ -32,12 +32,12 @@ public class MarketPositionFastPK implements Serializable{
 		if (!super.equals(o)) return false;
 		MarketPositionFastPK that = (MarketPositionFastPK) o;
 		return Objects.equals(exchangeMeta, that.exchangeMeta) &&
-				Objects.equals(symbolPair, that.symbolPair);
+				Objects.equals(symbol, that.symbol);
 	}
 
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(super.hashCode(), exchangeMeta, symbolPair);
+		return Objects.hash(super.hashCode(), exchangeMeta, symbol);
 	}
 }

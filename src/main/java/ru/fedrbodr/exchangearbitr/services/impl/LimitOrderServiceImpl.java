@@ -7,15 +7,18 @@ import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.fedrbodr.exchangearbitr.dao.LimitOrderRepository;
-import ru.fedrbodr.exchangearbitr.dao.LimitOrderRepositoryHistory;
-import ru.fedrbodr.exchangearbitr.dao.model.*;
+import ru.fedrbodr.exchangearbitr.dao.longtime.domain.Fork;
+import ru.fedrbodr.exchangearbitr.dao.longtime.repo.ForkRepository;
+import ru.fedrbodr.exchangearbitr.dao.longtime.repo.LimitOrderRepositoryHistory;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.UniLimitOrder;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.LimitOrderRepository;
 import ru.fedrbodr.exchangearbitr.services.LimitOrderService;
 import ru.fedrbodr.exchangearbitr.utils.LimitOrderUtils;
 import ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +34,11 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 	private LimitOrderRepository limitOrderRepository;
 	@Autowired
 	private LimitOrderRepositoryHistory limitOrderRepositoryHistory;
+	@Autowired
+	private ForkRepository forkRepository;
 
 	@Override
-	public void readConvertCalcAndSaveUniOrders(SymbolPair symbolPair, ExchangeMeta exchangeMeta, String host, Integer port) {
+	public void readConvertCalcAndSaveUniOrders(Symbol symbol, ExchangeMeta exchangeMeta, String host, Integer port) {
 		Date start = new Date();
 		try {
 			Exchange exchange = exchangeMetaToExchangeMap.get(exchangeMeta);
@@ -48,15 +53,16 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 
 			if(marketDataService!=null) {
 				OrderBook orderBook = marketDataService.getOrderBook(
-						SymbolsNamesUtils.getCurrencyPair(symbolPair.getBaseName(), symbolPair.getQuoteName()),
+						SymbolsNamesUtils.getCurrencyPair(symbol.getBaseName(), symbol.getQuoteName()),
 						100);
 				Date orderReadingTimeStamp = new Date();
-				List<UniLimitOrder> uniAsks = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.getAsks(), exchangeMeta, symbolPair, orderReadingTimeStamp);
+				List<UniLimitOrder> uniAsks = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.getAsks(), exchangeMeta, symbol, orderReadingTimeStamp);
 				limitOrderRepository.save(uniAsks);
-				List<UniLimitOrder> uniBids = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.getBids(), exchangeMeta, symbolPair, orderReadingTimeStamp);
+				List<UniLimitOrder> uniBids = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.getBids(), exchangeMeta, symbol, orderReadingTimeStamp);
 				limitOrderRepository.save(uniBids);
 				limitOrderRepository.flush();
-
+				forkRepository.save(new Fork());
+				forkRepository.flush();
 /*				limitOrderRepositoryHistory.save(convertToHistory(uniAsks));
 				limitOrderRepositoryHistory.save(convertToHistory(uniBids));
 				limitOrderRepository.flush();*/
@@ -68,25 +74,25 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 
 		} catch (IOException e) {
 			log.error("Exception occurred while getting and saving buyOrderBook for exchange " + exchangeMeta.getExchangeName() +
-					" and symbol pair " + symbolPair.getName(), e);
+					" and symbol " + symbol.getName(), e);
 		}
 
 		/*log.info("After stop readConvertCalcAndSaveUniOrders total time in milliseconds: {} for exchange: {}", (new Date().getTime() - start.getTime()),
 				exchangeMeta.getExchangeName());*/
 	}
 
-	private List<UniLimitOrderHistory> convertToHistory(List<UniLimitOrder> orders) {
+	/*private List<UniLimitOrderHistory> convertToHistory(List<UniLimitOrder> orders) {
 		List<UniLimitOrderHistory> uniLimitOrderHistoryList = new ArrayList<>();
 
 		for (UniLimitOrder order : orders) {
-			UniLimitOrderPK uniLimitOrderPk = order.getUniLimitOrderPk();
-			uniLimitOrderPk.setId(id);
+			UniLimitOrderPK uniLimitOrderHistoryPk = order.getUniLimitOrderHistoryPk();
+			uniLimitOrderHistoryPk.setId(id);
 			id++;
-			uniLimitOrderHistoryList.add(new UniLimitOrderHistory(uniLimitOrderPk, order.getLimitPrice(), order.getOriginalAmount(), order.getTimeStamp(),
+			uniLimitOrderHistoryList.add(new UniLimitOrderHistory(uniLimitOrderHistoryPk, order.getLimitPrice(), order.getOriginalAmount(), order.getTimeStamp(),
 					order.getOriginalSum(), order.getFinalSum()));
 
 
 		}
 		return uniLimitOrderHistoryList;
-	}
+	}*/
 }

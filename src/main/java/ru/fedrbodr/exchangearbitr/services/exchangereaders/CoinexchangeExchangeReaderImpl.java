@@ -6,12 +6,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.fedrbodr.exchangearbitr.dao.ExchangeMetaRepository;
-import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepository;
-import ru.fedrbodr.exchangearbitr.dao.MarketPositionRepository;
-import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
-import ru.fedrbodr.exchangearbitr.dao.model.MarketPosition;
-import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPosition;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.ExchangeMetaRepository;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionFastRepository;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
 import ru.fedrbodr.exchangearbitr.xchange.custom.CoinexchangeMarketDataService;
@@ -68,14 +68,14 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 
 		marketPositionsArray.forEach(item -> {
 			JSONObject jsonObject = (JSONObject) item;
-			SymbolPair symbolPair = getUnifiedMarketSummary(jsonObject.getInt("MarketID"));
+			Symbol symbol = getUnifiedMarketSummary(jsonObject.getInt("MarketID"));
 			MarketPosition marketPosition = new MarketPosition(
 					ExchangeMeta.COINEXCHANGE,
-					symbolPair,
+					symbol,
 					jsonObject.getBigDecimal("LastPrice"),
 					jsonObject.getBigDecimal("AskPrice"),
 					jsonObject.getBigDecimal("BidPrice"),
-					isSymbolPairActive(symbolPair));
+					isSymbolActive(symbol));
 
 			marketPositions.add(marketPosition);
 		});
@@ -86,22 +86,22 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 		marketPositionFastRepository.flush();
 	}
 
-	private boolean isSymbolPairActive(SymbolPair symbolPair) {
-		if (currencyActivityMap.get(symbolPair.getQuoteName()) != null && currencyActivityMap.get(symbolPair.getQuoteName())
-				&& currencyActivityMap.get(symbolPair.getBaseName()) != null && currencyActivityMap.get(symbolPair.getBaseName())) {
+	private boolean isSymbolActive(Symbol symbol) {
+		if (currencyActivityMap.get(symbol.getQuoteName()) != null && currencyActivityMap.get(symbol.getQuoteName())
+				&& currencyActivityMap.get(symbol.getBaseName()) != null && currencyActivityMap.get(symbol.getBaseName())) {
 			return true;
 		}
 		return false;
 	}
 
-	private SymbolPair getUnifiedMarketSummary(int coinexchangeMarketID) {
-		SymbolPair symbolPair = (SymbolPair) marketDataService.getCoinexchangeIdToMarketSummaryMap().get(coinexchangeMarketID);
-		if (symbolPair == null) {
-			log.info("Found Market Summary at coinexchange for non existen symbolPair");
+	private Symbol getUnifiedMarketSummary(int coinexchangeMarketID) {
+		Symbol symbol = (Symbol) marketDataService.getCoinexchangeIdToMarketSummaryMap().get(coinexchangeMarketID);
+		if (symbol == null) {
+			log.info("Found Market Summary at coinexchange for non existen symbol");
 			/* init all coinexchange markets summary again*/
 			this.init();
 		}
-		return symbolPair;
+		return symbol;
 	}
 
 

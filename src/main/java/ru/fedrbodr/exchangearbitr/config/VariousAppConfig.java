@@ -1,7 +1,6 @@
 package ru.fedrbodr.exchangearbitr.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.h2.server.web.WebServlet;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.binance.BinanceExchange;
@@ -11,14 +10,13 @@ import org.knowm.xchange.kucoin.KucoinExchange;
 import org.knowm.xchange.poloniex.PoloniexExchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 
 import javax.annotation.PostConstruct;
@@ -35,13 +33,6 @@ public class VariousAppConfig {
 	public void init(){
 		/*TimeZone.setDefault(TimeZone.getTimeZone("GMT+3"));*/
 
-	}
-
-	@Bean
-	public ServletRegistrationBean h2servletRegistration(){
-		ServletRegistrationBean registrationBean = new ServletRegistrationBean( new WebServlet());
-		registrationBean.addUrlMappings("/console/*");
-		return registrationBean;
 	}
 
 	@Bean

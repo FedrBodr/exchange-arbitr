@@ -1,8 +1,7 @@
-package ru.fedrbodr.exchangearbitr.dao.model;
+package ru.fedrbodr.exchangearbitr.dao.longtime.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.knowm.xchange.dto.trade.LimitOrder;
 import org.knowm.xchange.dto.trade.MarketOrder;
 
 import javax.persistence.Column;
@@ -15,7 +14,7 @@ import java.util.Date;
 
 /**
  * <p>
- * Representing a limit order with multiple primary key (id, exchange_id, symbol_pair_id) ordered by id
+ * Representing a limit order with multiple primary key (id, exchange_id, symbol_id) ordered by id
  * Also sum at base and quote symbols currencies according to id ordering
  * </p>
  * <p>
@@ -27,9 +26,9 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
-public class UniLimitOrder implements Serializable {
+public class UniLimitOrderHistory implements Serializable {
 	@EmbeddedId
-	private UniLimitOrderPK uniLimitOrderPk;
+	private UniLimitOrderHistoryPK uniLimitOrderHistoryPk;
 	/**
 	 * The limit price
 	 */
@@ -43,10 +42,10 @@ public class UniLimitOrder implements Serializable {
 	@Column(precision = 15, scale = 8)
 	private BigDecimal finalSum;
 
-	public UniLimitOrder(LimitOrder ask, Long id, ExchangeMeta exchangeMeta, SymbolPair symbolPair, Date timeStamp, BigDecimal originalSum, BigDecimal finalSum) {
-		this.uniLimitOrderPk = new UniLimitOrderPK(id, exchangeMeta, symbolPair, ask.getType());
-		this.limitPrice = ask.getLimitPrice();
-		this.originalAmount = ask.getOriginalAmount();
+	public UniLimitOrderHistory(UniLimitOrderHistoryPK uniLimitOrderPk, BigDecimal limitPrice, BigDecimal originalAmount, Date timeStamp, BigDecimal originalSum, BigDecimal finalSum) {
+		this.uniLimitOrderHistoryPk = uniLimitOrderPk;
+		this.limitPrice = limitPrice;
+		this.originalAmount = originalAmount;
 		this.timeStamp = timeStamp;
 		this.originalSum = originalSum;
 		this.finalSum = finalSum;

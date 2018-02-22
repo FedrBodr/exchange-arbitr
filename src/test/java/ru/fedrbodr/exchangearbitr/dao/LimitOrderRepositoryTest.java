@@ -9,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.fedrbodr.exchangearbitr.dao.model.ExchangeMeta;
-import ru.fedrbodr.exchangearbitr.dao.model.SymbolPair;
-import ru.fedrbodr.exchangearbitr.dao.model.UniLimitOrder;
-import ru.fedrbodr.exchangearbitr.dao.model.UniLimitOrderPK;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.UniLimitOrder;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.UniLimitOrderPK;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.LimitOrderRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,12 +28,12 @@ public class LimitOrderRepositoryTest {
 	private TestEntityManager entityManager;
 	@Autowired
 	private LimitOrderRepository limitOrderRepository;
-	private final SymbolPair symbolPair = new SymbolPair("BTC-DGB","BTC", "DGB");
+	private final Symbol symbol = new Symbol("BTC-DGB","BTC", "DGB");
 
 	@Before
 	public void setup() {
 		entityManager.persist(POLONIEX_EXCHANGE_META);
-		entityManager.persist(symbolPair);
+		entityManager.persist(symbol);
 		entityManager.flush();
 	}
 	@After
@@ -41,7 +42,7 @@ public class LimitOrderRepositoryTest {
 	}
 
 	@Test
-	public void findByExchangeMetaAndSymbolPair() {
+	public void findByExchangeMetaAndSymbol() {
 		// given
 		// final and original sum not calculated
 		entityManager.persist(createLimitOrder((long) 1, 0.000081, 12.1, 0.1, 0.1, Order.OrderType.ASK));
@@ -50,7 +51,7 @@ public class LimitOrderRepositoryTest {
 		entityManager.flush();
 		// when
 		List<UniLimitOrder> limitOrderList = limitOrderRepository.
-				findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(POLONIEX_EXCHANGE_META, symbolPair, Order.OrderType.ASK);
+				findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolAndUniLimitOrderPk_type(POLONIEX_EXCHANGE_META, symbol, Order.OrderType.ASK);
 		// get second
 		UniLimitOrder order = limitOrderList.get(1);
 		// then
@@ -64,7 +65,7 @@ public class LimitOrderRepositoryTest {
 		UniLimitOrderPK orderPk = new UniLimitOrderPK();
 		orderPk.setId(id);
 		orderPk.setExchangeMeta(POLONIEX_EXCHANGE_META);
-		orderPk.setSymbolPair(symbolPair);
+		orderPk.setSymbol(symbol);
 		orderPk.setType(type);
 		order.setUniLimitOrderPk(orderPk);
 		order.setLimitPrice(new BigDecimal(limitPrice));

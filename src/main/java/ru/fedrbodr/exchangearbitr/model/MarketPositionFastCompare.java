@@ -3,8 +3,8 @@ package ru.fedrbodr.exchangearbitr.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.fedrbodr.exchangearbitr.dao.model.MarketPositionFast;
-import ru.fedrbodr.exchangearbitr.dao.model.UniLimitOrder;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPositionFast;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.UniLimitOrder;
 
 import java.math.BigDecimal;
 import java.util.List;

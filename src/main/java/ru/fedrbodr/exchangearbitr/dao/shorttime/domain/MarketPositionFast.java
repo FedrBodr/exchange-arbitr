@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr.dao.model;
+package ru.fedrbodr.exchangearbitr.dao.shorttime.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Table
+@Table( name = "market_position_fast")
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Data
@@ -20,26 +20,27 @@ public class MarketPositionFast implements Serializable{
 
 	@EmbeddedId
 	protected MarketPositionFastPK marketPositionFastPK;
-	@Column(precision = 15, scale = 8)
+	@Column(name = "last_price", precision = 15, scale = 8)
 	private BigDecimal lastPrice;
-	@Column(precision = 15, scale = 8)
+	@Column(name = "bid_price", precision = 15, scale = 8)
 	private BigDecimal bidPrice;
-	@Column(precision = 15, scale = 8)
+	@Column(name = "ask_price", precision = 15, scale = 8)
 	private BigDecimal askPrice;
 	/* TODO think twice when i will review maybe it is not needed(only one exchange return time in ticker23) */
+	@Column(name = "exchange_time_stamp")
 	private Date exchangeTimeStamp;
-	@Column(nullable = false, updatable = false)
+	@Column(name = "create_at", nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	private Date createAt;
-	@Column(nullable = false)
+	@Column(name = "updated_at", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	private Date updatedAt;
 	private boolean active;
 
 	public MarketPositionFast(MarketPosition marketPosition) {
-		marketPositionFastPK = new MarketPositionFastPK(marketPosition.getExchangeMeta(), marketPosition.getSymbolPair());
+		marketPositionFastPK = new MarketPositionFastPK(marketPosition.getExchangeMeta(), marketPosition.getSymbol());
 		this.lastPrice = marketPosition.getLastPrice();
 		this.bidPrice = marketPosition.getBidPrice();
 		this.askPrice = marketPosition.getAskPrice();

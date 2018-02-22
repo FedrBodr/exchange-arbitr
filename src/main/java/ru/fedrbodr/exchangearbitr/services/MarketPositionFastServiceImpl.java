@@ -6,10 +6,10 @@ import org.knowm.xchange.dto.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import ru.fedrbodr.exchangearbitr.dao.LimitOrderRepository;
-import ru.fedrbodr.exchangearbitr.dao.MarketPositionFastRepositoryCustom;
-import ru.fedrbodr.exchangearbitr.dao.model.MarketPositionFast;
-import ru.fedrbodr.exchangearbitr.dao.model.UniLimitOrder;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPositionFast;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.UniLimitOrder;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.LimitOrderRepository;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionFastRepositoryCustom;
 import ru.fedrbodr.exchangearbitr.model.DepositProfit;
 import ru.fedrbodr.exchangearbitr.model.MarketPositionFastCompare;
 import ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils;
@@ -34,7 +34,10 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 	@Cacheable(TOP_AFTER_10_COMPARE_LIST)
 	public List<MarketPositionFastCompare> getTopAfter10MarketPositionFastCompareList() {
 		List<MarketPositionFastCompare> topMarketPositionFastCompareList = getTopMarketPositionFastCompareList();
-		return topMarketPositionFastCompareList.subList(publicPositionsCount-1, topMarketPositionFastCompareList.size());
+		if(topMarketPositionFastCompareList!=null && topMarketPositionFastCompareList.size() > publicPositionsCount){
+			topMarketPositionFastCompareList = topMarketPositionFastCompareList.subList(publicPositionsCount-1, topMarketPositionFastCompareList.size());
+		}
+		return topMarketPositionFastCompareList;
 	}
 
 	@Override
@@ -90,15 +93,15 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 							divide(marketPositionSell.getAskPrice(), 8, RoundingMode.HALF_DOWN));
 
 			marketPositionFastCompare.setSellOrders(limitOrderRepository.
-					findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(
+					findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolAndUniLimitOrderPk_type(
 							marketPositionBuy.getMarketPositionFastPK().getExchangeMeta(),
-							marketPositionBuy.getMarketPositionFastPK().getSymbolPair(),
+							marketPositionBuy.getMarketPositionFastPK().getSymbol(),
 							Order.OrderType.ASK));
 
 			marketPositionFastCompare.setBuyOrders(limitOrderRepository.
-					findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolPairAndUniLimitOrderPk_type(
+					findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolAndUniLimitOrderPk_type(
 							marketPositionSell.getMarketPositionFastPK().getExchangeMeta(),
-							marketPositionSell.getMarketPositionFastPK().getSymbolPair(),
+							marketPositionSell.getMarketPositionFastPK().getSymbol(),
 							Order.OrderType.BID));
 
 			calcAddProfitsList(marketPositionFastCompare);
