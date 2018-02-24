@@ -22,6 +22,7 @@ import javax.sql.DataSource;
 		basePackages = {"ru.fedrbodr.exchangearbitr.dao.longtime.repo"}
 )
 public class LongTimeDbConfig {
+
 	@Bean(name = "longTimeDataSource")
 	@ConfigurationProperties(prefix = "longtime.datasource")
 	public DataSource dataSource() {
@@ -40,4 +41,5 @@ public class LongTimeDbConfig {
 			@Qualifier("longTimeEntityManagerFactory") EntityManagerFactory longTimeEntityManagerFactory) {
 		return new JpaTransactionManager(longTimeEntityManagerFactory);
 	}
+
 }

@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.binance.BinanceExchange;
-import org.knowm.xchange.bittrex.BittrexExchange;
 import org.knowm.xchange.hitbtc.v2.HitbtcExchange;
 import org.knowm.xchange.kucoin.KucoinExchange;
 import org.knowm.xchange.poloniex.PoloniexExchange;
@@ -51,8 +50,8 @@ public class VariousAppConfig {
 
 		Date start = new Date();
 		exchangeMetaToExchangeMap = new HashMap<>();
-		exchangeMetaToExchangeMap.put(
-				ExchangeMeta.BITTREX, ExchangeFactory.INSTANCE.createExchange(BittrexExchange.class.getName()));
+/*		exchangeMetaToExchangeMap.put(
+				ExchangeMeta.BITTREX, ExchangeFactory.INSTANCE.createExchange(BittrexExchange.class.getName()));*/
 		exchangeMetaToExchangeMap.put(
 				ExchangeMeta.BINANCE, ExchangeFactory.INSTANCE.createExchange(BinanceExchange.class.getName()));
 		exchangeMetaToExchangeMap.put(
@@ -87,7 +86,7 @@ public class VariousAppConfig {
 	public Map<ExchangeMeta, ExchangeReader> exchangeMetaToExchangeSummariesReaderMap() {
 		Map<ExchangeMeta, ExchangeReader> exchangeMetaToExchangeSummariesReaderMap = new HashMap<>();
 		/*BINANCE NOT NEEDAD in this place*/
-		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.BITTREX, bittrexExchangeReader);
+		/*exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.BITTREX, bittrexExchangeReader);*/
 		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.POLONIEX, poloniexExchangeReader);
 		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.COINEXCHANGE, coinexchangeExchangeReader);
 		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.HITBTC, hitBtcExchangeReaderImpl);

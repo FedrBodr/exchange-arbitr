@@ -2,6 +2,7 @@ package ru.fedrbodr.exchangearbitr.dao.longtime.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,10 +34,16 @@ public class SymbolLong implements Serializable {
 	@Column(name = "quote_name")
 	private String quoteName;
 
-	public SymbolLong(String name, String baseName, String secondaryCurrencyName) {
+	public SymbolLong(String name, String baseName, String quoteName) {
 		this.name = name;
 		this.baseName = baseName;
-		this.quoteName = secondaryCurrencyName;
+		this.quoteName = quoteName;
+	}
+
+	public SymbolLong(Symbol symbol) {
+		this.name = symbol.getName();
+		this.baseName = symbol.getBaseName();
+		this.quoteName = symbol.getQuoteName();
 	}
 
 	@Override

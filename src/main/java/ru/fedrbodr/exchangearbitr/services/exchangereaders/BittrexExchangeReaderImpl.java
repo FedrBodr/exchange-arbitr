@@ -18,7 +18,6 @@ import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -57,7 +56,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 		return dateFormat.get().parse(source);
 	}
 
-	@PostConstruct
+	/*@PostConstruct*/
 	private void init() throws IOException {
 		/*TODO refactor this with aop for all init methods*/
 		Date starDate = new Date();

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,6 +38,14 @@ public class ExchangeMetaLong implements Serializable {
 	private String symbolMarketUrl;
 	@Column(name = "ref_param")
 	private String refParam;
+
+	public ExchangeMetaLong(ExchangeMeta exchangeMeta) {
+		this.id = exchangeMeta.getId();
+		this.exchangeName = exchangeMeta.getExchangeName();
+		this.exchangeUrl = exchangeMeta.getExchangeUrl();
+		this.symbolMarketUrl = exchangeMeta.getSymbolMarketUrl();
+		this.refParam = exchangeMeta.getRefParam();
+	}
 
 	public int getId() {
 		return id;

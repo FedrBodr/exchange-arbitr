@@ -23,7 +23,7 @@ import java.util.Date;
  * guarantee that your conditions will be met on the exchange, so your order may not be executed.
  * </p>
  */
-@Table
+@Table(name = "uni_limit_order")
 @Entity
 @Data
 @NoArgsConstructor

@@ -21,6 +21,11 @@
 		<logger name="org.knowm.xchange" level="INFO"/>
 		<!--<logger name="si.mazi.rescu" level="TRACE"/>-->
 
+		<logger name="ru.fedrbodr.exchangearbitr.services.impl" level="DEBUG">
+			<appender-ref ref="CONSOLE_APPENDER"/>
+		</logger>
+
+
 	</configuration>
 </springProfile>
 

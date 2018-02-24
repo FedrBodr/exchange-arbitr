@@ -45,18 +45,21 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 	private ExchangeMeta exchangeMeta;
 
 	@PostConstruct
-	private void init() {
+	private void init() throws InterruptedException {
 		/*TODO refactor this with aop for all init methods*/
 		log.info(HitBtcExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
 		exchangeMeta = ExchangeMeta.HITBTC;
 		hitBtcCurrencyMap = new HashMap<>();
 		exchange = (HitbtcExchange) exchangeMetaToExchangeMap.get(exchangeMeta);
+		synchronized (this) { // obtain lock's monitor
+			this.wait(30);
+		}
 		marketDataService = (HitbtcMarketDataService) exchange.getMarketDataService();
 
 		try {
 			List<CurrencyPair> exchangeSymbols = exchange.getExchangeSymbols();
-			List<HitbtcCurrency> hitbtcCurrencies = ((HitbtcMarketDataServiceRaw) exchange.getMarketDataService()).getHitbtcCurrencies();
+			List<HitbtcCurrency> hitbtcCurrencies = ((HitbtcMarketDataServiceRaw) marketDataService).getHitbtcCurrencies();
 			for (HitbtcCurrency hitbtcCurrency : hitbtcCurrencies) {
 				hitBtcCurrencyMap.put(hitbtcCurrency.getId(), hitbtcCurrency);
 			}
@@ -75,6 +78,7 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 	}
 
 	public void readAndSaveMarketPositionsBySummaries() throws JSONException {
+		Date starDate = new Date();
 		/*TODO refactor this with aop for all init methods*/
 		Map<String, HitbtcTicker> hitbtcTickers = new HashMap<>();
 		try {
@@ -98,6 +102,7 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
+		log.info("HitBtc readAndSaveMarketPositionsBySummaries end, execution time sec: {}", (new Date().getTime() - starDate.getTime())/1000);
 	}
 
 	private boolean isSymbolActive(Symbol uniSymbol) {

@@ -1,4 +1,4 @@
-package ru.fedrbodr.exchangearbitr.services;
+package ru.fedrbodr.exchangearbitr.services.impl;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.PredicateUtils;
@@ -12,6 +12,7 @@ import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.LimitOrderRepository;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionFastRepositoryCustom;
 import ru.fedrbodr.exchangearbitr.model.DepositProfit;
 import ru.fedrbodr.exchangearbitr.model.MarketPositionFastCompare;
+import ru.fedrbodr.exchangearbitr.services.MarketPositionFastService;
 import ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils;
 
 import java.math.BigDecimal;
@@ -28,7 +29,7 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 	private MarketPositionFastRepositoryCustom marketPositionFastRepositoryCustom;
 	@Autowired
 	private LimitOrderRepository limitOrderRepository;
-	private final int publicPositionsCount = 10;
+	private final int publicPositionsCount = 3;
 
 	@Override
 	@Cacheable(TOP_AFTER_10_COMPARE_LIST)
@@ -44,21 +45,20 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 	@Cacheable(TOP_PROBLEM_AFTER_10_COMPARE_LIST)
 	public List<MarketPositionFastCompare> getTopProblemAfterMarketPositionFastCompareList() {
 		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.selectTopProblemMarketPositionFastCompareList();
-		return calculateDifferencesForWeb(topMarketPositionDif);
+		return calculateDifferences(topMarketPositionDif);
 	}
 
 	@Override
 	public List<MarketPositionFastCompare> getTopFullMarketPositionFastCompareList() {
 		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.selectFullMarketPositionFastCompareList();
 
-		return calculateDifferencesForWeb(topMarketPositionDif);
+		return calculateDifferences(topMarketPositionDif);
 	}
 
 	@Override
 	@Cacheable(TOP_COMPARE_LIST)
 	public List<MarketPositionFastCompare> getTopMarketPositionFastCompareList() {
-		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.selectTopMarketPositionFastCompareList();
-		List<MarketPositionFastCompare> marketPositionFastCompares = calculateDifferencesForWeb(topMarketPositionDif);
+		List<MarketPositionFastCompare> marketPositionFastCompares = getMarketPositionFastCompares();
 		for (int i = publicPositionsCount; i <marketPositionFastCompares.size() ; i++) {
 			marketPositionFastCompares.get(i).setPublicVisible(true);
 		}
@@ -68,7 +68,13 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 		return marketPositionFastCompares;
 	}
 
-	private List<MarketPositionFastCompare> calculateDifferencesForWeb(List<Object[]> topMarketPositionDif) {
+	@Override
+	public List<MarketPositionFastCompare> getMarketPositionFastCompares() {
+		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.selectTopMarketPositionFastCompareList();
+		return calculateDifferences(topMarketPositionDif);
+	}
+
+	private List<MarketPositionFastCompare> calculateDifferences(List<Object[]> topMarketPositionDif) {
 		List<MarketPositionFastCompare> marketPositionFastCompares = new ArrayList<>();
 
 		topMarketPositionDif.forEach(marketPositionDif -> {
@@ -147,8 +153,11 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.1)));
 			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.25)));
 			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(0.5)));
+			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(1)));
 			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(2)));
+			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(4)));
 			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(8)));
+			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(12)));
 			depositProfitList.add(calculateAddProfitByGlassesByDeposit(marketPositionFastCompare, new BigDecimal(15)));
 
 			CollectionUtils.filter(depositProfitList, PredicateUtils.notNullPredicate());

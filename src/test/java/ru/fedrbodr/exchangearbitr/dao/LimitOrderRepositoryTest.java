@@ -58,6 +58,11 @@ public class LimitOrderRepositoryTest {
 		assertEquals(new BigDecimal(0.000082), order.getLimitPrice());
 		assertEquals(Order.OrderType.ASK, order.getUniLimitOrderPk().getType());
 		assertEquals(2, limitOrderList.size());
+
+		limitOrderRepository.deleteByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_Symbol(POLONIEX_EXCHANGE_META, symbol);
+		limitOrderList = limitOrderRepository.
+				findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolAndUniLimitOrderPk_type(POLONIEX_EXCHANGE_META, symbol, Order.OrderType.ASK);
+		assertEquals(0, limitOrderList.size());
 	}
 
 	private UniLimitOrder createLimitOrder(Long id, double limitPrice, double originalAmount, double originalSum, double finalSum, Order.OrderType type) {

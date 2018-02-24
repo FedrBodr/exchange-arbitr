@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Table(indexes={@Index(columnList="exchange_time_stamp"), @Index(columnList="create_time")})
+@Table(name="market_position", indexes={@Index(columnList="exchange_time_stamp"), @Index(columnList="create_time")})
 @Entity
 @Data
 @NoArgsConstructor

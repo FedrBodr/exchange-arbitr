@@ -17,4 +17,7 @@ public interface LimitOrderRepository extends JpaRepository<UniLimitOrder, Long>
 	List<UniLimitOrder> findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolAndUniLimitOrderPk_type(
 			ExchangeMeta exchangeMeta, Symbol symbol, Order.OrderType type);
 
+	void deleteByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_Symbol(
+			ExchangeMeta exchangeMeta, Symbol symbol);
+
 }

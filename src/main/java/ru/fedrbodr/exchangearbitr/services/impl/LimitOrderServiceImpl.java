@@ -2,12 +2,10 @@ package ru.fedrbodr.exchangearbitr.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.knowm.xchange.Exchange;
-import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.fedrbodr.exchangearbitr.dao.longtime.domain.Fork;
 import ru.fedrbodr.exchangearbitr.dao.longtime.repo.ForkRepository;
 import ru.fedrbodr.exchangearbitr.dao.longtime.repo.LimitOrderRepositoryHistory;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
@@ -44,31 +42,28 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 			Exchange exchange = exchangeMetaToExchangeMap.get(exchangeMeta);
 			MarketDataService marketDataService = exchange.getMarketDataService();
 
-			/**/
+			/**//*
 			ExchangeSpecification exchangeSpec = exchange.getExchangeSpecification();
 			exchangeSpec.setProxyHost(host);
 			exchangeSpec.setProxyPort(port);
 
-			exchange.applySpecification(exchangeSpec);
+			exchange.applySpecification(exchangeSpec);*/
 
 			if(marketDataService!=null) {
 				OrderBook orderBook = marketDataService.getOrderBook(
 						SymbolsNamesUtils.getCurrencyPair(symbol.getBaseName(), symbol.getQuoteName()),
 						100);
+				/* Clear previous order list*/
+				limitOrderRepository.deleteByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_Symbol(exchangeMeta, symbol);
 				Date orderReadingTimeStamp = new Date();
 				List<UniLimitOrder> uniAsks = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.getAsks(), exchangeMeta, symbol, orderReadingTimeStamp);
 				limitOrderRepository.save(uniAsks);
+				limitOrderRepository.flush();
 				List<UniLimitOrder> uniBids = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.getBids(), exchangeMeta, symbol, orderReadingTimeStamp);
 				limitOrderRepository.save(uniBids);
 				limitOrderRepository.flush();
-				forkRepository.save(new Fork());
-				forkRepository.flush();
-/*				limitOrderRepositoryHistory.save(convertToHistory(uniAsks));
-				limitOrderRepositoryHistory.save(convertToHistory(uniBids));
-				limitOrderRepository.flush();*/
 			}else{
 				/* TODO uncomment after COINEXCHANGE added
-
 				log.error("BE CAREFUL Can not found MarketDataService for exchangeMeta : " + exchangeMeta.getExchangeName());*/
 			}
 

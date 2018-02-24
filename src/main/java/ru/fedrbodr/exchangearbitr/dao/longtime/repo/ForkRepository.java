@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import ru.fedrbodr.exchangearbitr.dao.longtime.domain.Fork;
 
 public interface ForkRepository extends JpaRepository<Fork, Long>, CrudRepository<Fork, Long> {
-
+	Fork findFirstByBuyExchangeMetaIdAndSellExchangeMetaIdAndSymbolIdOrderByIdDesc(Integer buyExchangeMetaId, Integer sellExchangeMetaId, Long symbolId);
 }

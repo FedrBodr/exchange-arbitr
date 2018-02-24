@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 public class MarketsSummariesWorker implements Runnable {
-	public static final int REQUESTS_PAUSE = 2000;
+	public static final int REQUESTS_PAUSE = 4000;
 	public static final int BINANCE_ALL_TICKERS_PAUSE = 20000;
 	private boolean doGrabbing = false;
 	private Date startPreviousCall;
@@ -37,25 +37,23 @@ public class MarketsSummariesWorker implements Runnable {
 	public void run() {
 		Date start = new Date();
 		log.info("Before start run iteration MarketsSummariesWorker");
-		int threadNum = Runtime.getRuntime().availableProcessors()-1;
-
 		while(doGrabbing) {
 			try {
-				readAndSaveAllExchangeSummaries(threadNum);
+				readAndSaveAllExchangeSummaries();
 			} catch (InterruptedException e) {
 				log.error("Maybe int arror on shut down and it is ok" + e.getMessage(), e);
 			}
 		}
 
-		log.info("After stop run iteration MarketsSummariesWorker total time in  millisecconds: {}", (start.getTime() - new Date().getTime()));
+		log.info("After stop run iteration MarketsSummariesWorker total time in  seconds: {}", (new Date().getTime() - start.getTime())/1000);
 	}
 
 
 
 
-	private void readAndSaveAllExchangeSummaries(int threadCount) throws InterruptedException {
+	private void readAndSaveAllExchangeSummaries() throws InterruptedException {
 		Date start = new Date();
-		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+		ExecutorService executor = Executors.newFixedThreadPool(exchangeMetaToExchangeSummariesReaderMap.values().size());
 		List<FutureTask<Void>> taskList = new ArrayList<>();
 
 		Collection<ExchangeReader> values = exchangeMetaToExchangeSummariesReaderMap.values();

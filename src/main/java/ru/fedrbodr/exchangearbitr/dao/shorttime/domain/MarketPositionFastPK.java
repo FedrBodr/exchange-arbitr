@@ -37,7 +37,6 @@ public class MarketPositionFastPK implements Serializable{
 
 	@Override
 	public int hashCode() {
-
 		return Objects.hash(super.hashCode(), exchangeMeta, symbol);
 	}
 }

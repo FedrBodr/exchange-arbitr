@@ -90,7 +90,6 @@ public class KucoinExchangeReaderImpl implements ExchangeReader {
 		marketPositionRepository.flush();*/
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
-
 	}
 
 }

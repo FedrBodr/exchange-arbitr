@@ -25,10 +25,10 @@
                     <p:commandButton update="adminPanel" value="Stop Order Books Grabbing" action="#{adminController.stopOrderBooksGrabbing}"/>
                 </p:panel>
                 <br/>
-                <div class="middle">
+                <!--<div class="middle">
                     <p:commandButton value="Stop auto update" onclick="PF('poll').stop();"/><p:commandButton value="Start auto update"
                                                                                                              onclick="PF('poll').start();"/>
-                </div>
+                </div>-->
 
                 <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable" rows="20"
                              var="marketPositionFastCompare"
