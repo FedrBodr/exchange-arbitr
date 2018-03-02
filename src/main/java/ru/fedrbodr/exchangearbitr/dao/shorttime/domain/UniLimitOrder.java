@@ -2,13 +2,10 @@ package ru.fedrbodr.exchangearbitr.dao.shorttime.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.knowm.xchange.dto.trade.LimitOrder;
+import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.MarketOrder;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -23,13 +20,23 @@ import java.util.Date;
  * guarantee that your conditions will be met on the exchange, so your order may not be executed.
  * </p>
  */
-@Table(name = "uni_limit_order")
+@Table(name = "uni_limit_order", indexes={@Index(name = "uni_limit_order_exchange_symbol_idx", columnList="exchange_id, symbol_id, type")})
 @Entity
 @Data
 @NoArgsConstructor
 public class UniLimitOrder implements Serializable {
-	@EmbeddedId
-	private UniLimitOrderPK uniLimitOrderPk;
+	@Id
+	@GeneratedValue
+	private Long id;
+	@Enumerated(EnumType.STRING)
+	private Order.OrderType type;
+	@ManyToOne
+	@JoinColumn(name = "exchange_id")
+	private ExchangeMeta exchangeMeta;
+	@ManyToOne
+	@JoinColumn(name = "symbol_id")
+	private Symbol symbol;
+
 	/**
 	 * The limit price
 	 */
@@ -37,19 +44,22 @@ public class UniLimitOrder implements Serializable {
 	private BigDecimal limitPrice;
 	@Column(name = "original_price", precision = 17, scale = 8)
 	private BigDecimal originalAmount;
-	@Column(name = "time_stamp")
-	private Date timeStamp;
 	@Column(name = "original_sum", precision = 18, scale = 8)
 	private BigDecimal originalSum;
-	@Column(name = "final_sum", precision = 15, scale = 8)
+	@Column(name = "final_sum", precision = 18, scale = 8)
 	private BigDecimal finalSum;
+	@Column(name = "time_stamp")
+	private Date timeStamp;
 
-	public UniLimitOrder(LimitOrder ask, Long id, ExchangeMeta exchangeMeta, Symbol symbol, Date timeStamp, BigDecimal originalSum, BigDecimal finalSum) {
-		this.uniLimitOrderPk = new UniLimitOrderPK(id, exchangeMeta, symbol, ask.getType());
-		this.limitPrice = ask.getLimitPrice();
-		this.originalAmount = ask.getOriginalAmount();
-		this.timeStamp = timeStamp;
+	public UniLimitOrder(Order.OrderType type, ExchangeMeta exchangeMeta, Symbol symbol, BigDecimal limitPrice,
+						 BigDecimal originalAmount, BigDecimal originalSum, BigDecimal finalSum, Date timeStamp) {
+		this.type = type;
+		this.exchangeMeta = exchangeMeta;
+		this.symbol = symbol;
+		this.limitPrice = limitPrice;
+		this.originalAmount = originalAmount;
 		this.originalSum = originalSum;
 		this.finalSum = finalSum;
+		this.timeStamp = timeStamp;
 	}
 }

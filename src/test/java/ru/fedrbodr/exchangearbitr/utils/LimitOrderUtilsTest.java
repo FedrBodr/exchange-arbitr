@@ -26,13 +26,13 @@ public class LimitOrderUtilsTest {
 		Symbol symbol = new Symbol("BTC-DGB","BTC", "DGB");
 		Date orderReadingTimeStamp = new Date();
 		// when
-		List<UniLimitOrder> uniLimitOrders = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orders, exchangeMeta, symbol, orderReadingTimeStamp);
+		List<UniLimitOrder> uniLimitOrders = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orders, exchangeMeta, symbol, orderReadingTimeStamp, Order.OrderType.BID);
 		// then
 		assertEquals(4, uniLimitOrders.size());
-		assertEquals(new Long(4), uniLimitOrders.get(3).getUniLimitOrderPk().getId());
+		assertEquals(new Long(4), uniLimitOrders.get(3).getId());
 		assertEquals(new BigDecimal(50), uniLimitOrders.get(1).getOriginalSum());
-		assertEquals(Order.OrderType.BID, uniLimitOrders.get(1).getUniLimitOrderPk().getType());
-		assertEquals(Order.OrderType.ASK, uniLimitOrders.get(2).getUniLimitOrderPk().getType());
+		assertEquals(Order.OrderType.BID, uniLimitOrders.get(1).getType());
+		assertEquals(Order.OrderType.BID, uniLimitOrders.get(2).getType());
 		assertEquals(new BigDecimal(75), uniLimitOrders.get(3).getOriginalSum());
 	}
 
@@ -41,8 +41,8 @@ public class LimitOrderUtilsTest {
 		List<LimitOrder> limitOrders = new ArrayList<>();
 		limitOrders.add(new LimitOrder.Builder(Order.OrderType.BID, CurrencyPair.BTC_USD).limitPrice(new BigDecimal("5")).originalAmount(new BigDecimal(20)).build());
 		limitOrders.add(new LimitOrder.Builder(Order.OrderType.BID, CurrencyPair.BTC_USD).limitPrice(new BigDecimal("4")).originalAmount(new BigDecimal(30)).build());
-		limitOrders.add(new LimitOrder.Builder(Order.OrderType.ASK, CurrencyPair.BTC_USD).limitPrice(new BigDecimal("2")).originalAmount(new BigDecimal(10)).build());
-		limitOrders.add(new LimitOrder.Builder(Order.OrderType.ASK, CurrencyPair.BTC_USD).limitPrice(new BigDecimal("3")).originalAmount(new BigDecimal(15)).build());
+		limitOrders.add(new LimitOrder.Builder(Order.OrderType.BID, CurrencyPair.BTC_USD).limitPrice(new BigDecimal("2")).originalAmount(new BigDecimal(10)).build());
+		limitOrders.add(new LimitOrder.Builder(Order.OrderType.BID, CurrencyPair.BTC_USD).limitPrice(new BigDecimal("3")).originalAmount(new BigDecimal(15)).build());
 
 		return limitOrders;
 	}

@@ -5,6 +5,6 @@ import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
 
 public interface LimitOrderService {
 
-	void readConvertCalcAndSaveUniOrders(Symbol symbol, ExchangeMeta exchangeMeta, String host, Integer  port);
+	void readConvertCalcAndSaveUniOrders(Symbol symbol, ExchangeMeta exchangeMeta) throws InterruptedException;
 
 }

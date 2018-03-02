@@ -49,7 +49,7 @@ public class LimitOrderServiceImplTest {
 		Symbol symbolPairPersisted = symbolRepository.findByName(symbol.getName());
 		limitOrderService.readConvertCalcAndSaveUniOrders(symbolPairPersisted, POLONIEX_EXCHANGE_META, "91.134.135.168", 3128);
 		List<UniLimitOrder> uniLimitOrderList = limitOrderRepository.
-				findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolAndUniLimitOrderPk_type(
+				findFirst60ByExchangeMetaAndSymbolAndType(
 						POLONIEX_EXCHANGE_META, symbolPairPersisted, Order.OrderType.ASK);
 
 		UniLimitOrder firstUniLimitOrder = uniLimitOrderList.get(0);

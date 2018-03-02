@@ -11,6 +11,7 @@ import org.knowm.xchange.dto.marketdata.Trades;
 import org.knowm.xchange.dto.trade.LimitOrder;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
@@ -20,6 +21,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.util.*;
 
 import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
@@ -27,8 +30,10 @@ import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
 @Service
 @Slf4j
 public class CoinexchangeMarketDataService implements MarketDataService {
-	public CoinexchangeMarketDataService() {
-	}
+	@Value("#{'${proxy.list}'.split(',')}")
+	private List<String> proxyHostPortList;
+	private List<Proxy> proxyList;
+	private Integer lastUsedProxyIndex = 0;
 
 	private HashMap<Integer, Symbol> coinexchangeIdToSymbol;
 	private HashMap<Symbol, Integer> symbolToCoinexchangeMarketId;
@@ -37,6 +42,16 @@ public class CoinexchangeMarketDataService implements MarketDataService {
 
 	@PostConstruct
 	public void init() throws IOException {
+		proxyList = new ArrayList<>();
+		try {
+			for (String proxyHostAndPort : proxyHostPortList) {
+				String[] split = proxyHostAndPort.split(":");
+				proxyList.add(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(split[0], Integer.parseInt(split[1]))));
+			}
+		}catch (Exception e){
+			throw new IllegalArgumentException("Proxy list in incorrect format! Must be proxy.list: 185.128.215.224:8000,193.93.60.95:8000,193.93.60.236:8000");
+		}
+
 		/*TODO refactor this with aop for all init methods*/
 		log.info(CoinexchangeExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
@@ -70,9 +85,20 @@ public class CoinexchangeMarketDataService implements MarketDataService {
 	 * */
 	@Override
 	public OrderBook getOrderBook(CurrencyPair currencyPair, Object... args) throws IOException {
+		Proxy proxy = null;
+		synchronized (lastUsedProxyIndex) {
+			proxy = proxyList.get(lastUsedProxyIndex);
+			if (lastUsedProxyIndex < proxyList.size() - 1) {
+				lastUsedProxyIndex++;
+			} else {
+				lastUsedProxyIndex = 0;
+			}
+		}
+
 		JSONObject sellBuyOrders = getNewJsonObject("https://www.coinexchange.io/api/v1/getorderbook?market_id="+
-				symbolToCoinexchangeMarketId.get(symbolService.getOrCreateNewSymbol(currencyPair.counter.getSymbol(),currencyPair.base.getSymbol())))
+				symbolToCoinexchangeMarketId.get(symbolService.getOrCreateNewSymbol(currencyPair.counter.getSymbol(),currencyPair.base.getSymbol())), proxy)
 				.getJSONObject("result");
+
 
 		JSONArray sellOrders = sellBuyOrders.getJSONArray("SellOrders");
 		JSONArray buyOrders = sellBuyOrders.getJSONArray("BuyOrders");

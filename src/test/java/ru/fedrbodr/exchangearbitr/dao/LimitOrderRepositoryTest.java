@@ -12,11 +12,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.UniLimitOrder;
-import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.UniLimitOrderPK;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.LimitOrderRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
@@ -28,7 +31,7 @@ public class LimitOrderRepositoryTest {
 	private TestEntityManager entityManager;
 	@Autowired
 	private LimitOrderRepository limitOrderRepository;
-	private final Symbol symbol = new Symbol("BTC-DGB","BTC", "DGB");
+	private final Symbol symbol = new Symbol("BTC-DGB", "BTC", "DGB");
 
 	@Before
 	public void setup() {
@@ -36,6 +39,7 @@ public class LimitOrderRepositoryTest {
 		entityManager.persist(symbol);
 		entityManager.flush();
 	}
+
 	@After
 	public void teardown() {
 
@@ -50,29 +54,44 @@ public class LimitOrderRepositoryTest {
 		entityManager.persist(createLimitOrder((long) 3, 0.000083, 158.56, 0.1, 0.1, Order.OrderType.BID));
 		entityManager.flush();
 		// when
-		List<UniLimitOrder> limitOrderList = limitOrderRepository.
-				findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolAndUniLimitOrderPk_type(POLONIEX_EXCHANGE_META, symbol, Order.OrderType.ASK);
+		List<UniLimitOrder> limitOrderList = limitOrderRepository.findFirst60ByExchangeMetaAndSymbolAndType(POLONIEX_EXCHANGE_META, symbol, Order.OrderType.ASK);
 		// get second
 		UniLimitOrder order = limitOrderList.get(1);
 		// then
 		assertEquals(new BigDecimal(0.000082), order.getLimitPrice());
-		assertEquals(Order.OrderType.ASK, order.getUniLimitOrderPk().getType());
-		assertEquals(2, limitOrderList.size());
+		assertEquals(Order.OrderType.ASK, order.getType());
+		assertEquals(3, limitOrderList.size());
 
-		limitOrderRepository.deleteByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_Symbol(POLONIEX_EXCHANGE_META, symbol);
-		limitOrderList = limitOrderRepository.
-				findFirst30ByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_SymbolAndUniLimitOrderPk_type(POLONIEX_EXCHANGE_META, symbol, Order.OrderType.ASK);
-		assertEquals(0, limitOrderList.size());
+		//limitOrderRepository.deleteByExchangeMetaAndSymbol(POLONIEX_EXCHANGE_META, symbol);
+//		limitOrderList = limitOrderRepository.
+//				findFirst60ByExchangeMetaAndSymbolAndType(POLONIEX_EXCHANGE_META, symbol, Order.OrderType.ASK);
+//		assertEquals(0, limitOrderList.size());
+		ExecutorService executor = Executors.newFixedThreadPool(16);
+
+		Callable<Void> tCallable = () -> {
+			try {
+				limitOrderRepository.deleteByExchangeMetaAndSymbol(POLONIEX_EXCHANGE_META, symbol);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		};
+		executor.submit(tCallable);
+		executor.shutdown();
+		try {
+			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private UniLimitOrder createLimitOrder(Long id, double limitPrice, double originalAmount, double originalSum, double finalSum, Order.OrderType type) {
 		UniLimitOrder order = new UniLimitOrder();
-		UniLimitOrderPK orderPk = new UniLimitOrderPK();
-		orderPk.setId(id);
-		orderPk.setExchangeMeta(POLONIEX_EXCHANGE_META);
-		orderPk.setSymbol(symbol);
-		orderPk.setType(type);
-		order.setUniLimitOrderPk(orderPk);
+
+		order.setExchangeMeta(POLONIEX_EXCHANGE_META);
+		order.setSymbol(symbol);
+		order.setType(type);
 		order.setLimitPrice(new BigDecimal(limitPrice));
 		order.setOriginalAmount(new BigDecimal(originalAmount));
 		order.setOriginalSum(new BigDecimal(originalSum));

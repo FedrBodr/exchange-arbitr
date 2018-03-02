@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 public class MarketsSummariesWorker implements Runnable {
-	public static final int REQUESTS_PAUSE = 4000;
+	public static final int REQUESTS_PAUSE = 8000;
 	public static final int BINANCE_ALL_TICKERS_PAUSE = 20000;
 	private boolean doGrabbing = false;
 	private Date startPreviousCall;

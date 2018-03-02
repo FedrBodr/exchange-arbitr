@@ -2,12 +2,12 @@ package ru.fedrbodr.exchangearbitr.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.knowm.xchange.Exchange;
+import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
-import ru.fedrbodr.exchangearbitr.dao.longtime.repo.ForkRepository;
-import ru.fedrbodr.exchangearbitr.dao.longtime.repo.LimitOrderRepositoryHistory;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.UniLimitOrder;
@@ -15,79 +15,92 @@ import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.LimitOrderRepository;
 import ru.fedrbodr.exchangearbitr.services.LimitOrderService;
 import ru.fedrbodr.exchangearbitr.utils.LimitOrderUtils;
 import ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils;
+import ru.fedrbodr.exchangearbitr.xchange.custom.ExchangeProxy;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Slf4j
 public class LimitOrderServiceImpl implements LimitOrderService {
-	private long id=0;
+	private static final long MAX_TIMEOUT_FOR_GETING_ORDER_BOOK_REQUESTR = 4000;
 
 	@Autowired
-	private Map<ExchangeMeta, Exchange> exchangeMetaToExchangeMap;
+	private Map<ExchangeMeta, ExchangeProxy> exchangeMetaToExchangeProxyMap;
 	@Autowired
 	private LimitOrderRepository limitOrderRepository;
-	@Autowired
-	private LimitOrderRepositoryHistory limitOrderRepositoryHistory;
-	@Autowired
-	private ForkRepository forkRepository;
 
 	@Override
-	public void readConvertCalcAndSaveUniOrders(Symbol symbol, ExchangeMeta exchangeMeta, String host, Integer port) {
+	public void readConvertCalcAndSaveUniOrders(Symbol symbol, ExchangeMeta exchangeMeta) throws InterruptedException {
 		Date start = new Date();
-		try {
-			Exchange exchange = exchangeMetaToExchangeMap.get(exchangeMeta);
-			MarketDataService marketDataService = exchange.getMarketDataService();
+		MarketDataService marketDataService;
+		Exchange exchange = null;
+		if(exchangeMeta.equals(ExchangeMeta.COINEXCHANGE)){
+			marketDataService = exchangeMetaToExchangeProxyMap.get(exchangeMeta).getNextMarketDataService();
+		}else{
+			exchange = exchangeMetaToExchangeProxyMap.get(exchangeMeta).getNextExchange();
+			marketDataService = exchange.getMarketDataService();
+		}
 
-			/**//*
-			ExchangeSpecification exchangeSpec = exchange.getExchangeSpecification();
-			exchangeSpec.setProxyHost(host);
-			exchangeSpec.setProxyPort(port);
+		if (marketDataService != null) {
+			try {
+				AtomicReference<OrderBook> orderBook = new AtomicReference<>();
 
-			exchange.applySpecification(exchangeSpec);*/
 
-			if(marketDataService!=null) {
-				OrderBook orderBook = marketDataService.getOrderBook(
-						SymbolsNamesUtils.getCurrencyPair(symbol.getBaseName(), symbol.getQuoteName()),
-						100);
-				/* Clear previous order list*/
-				limitOrderRepository.deleteByUniLimitOrderPk_ExchangeMetaAndUniLimitOrderPk_Symbol(exchangeMeta, symbol);
-				Date orderReadingTimeStamp = new Date();
-				List<UniLimitOrder> uniAsks = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.getAsks(), exchangeMeta, symbol, orderReadingTimeStamp);
-				limitOrderRepository.save(uniAsks);
-				limitOrderRepository.flush();
-				List<UniLimitOrder> uniBids = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.getBids(), exchangeMeta, symbol, orderReadingTimeStamp);
-				limitOrderRepository.save(uniBids);
-				limitOrderRepository.flush();
-			}else{
-				/* TODO uncomment after COINEXCHANGE added
-				log.error("BE CAREFUL Can not found MarketDataService for exchangeMeta : " + exchangeMeta.getExchangeName());*/
+				ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+				Callable<Void> tCallable = () -> {
+					orderBook.set(marketDataService.getOrderBook(
+							SymbolsNamesUtils.getCurrencyPair(symbol.getBaseName(), symbol.getQuoteName()),
+							100));
+					return null;
+				};
+				FutureTask futureTask = new FutureTask(tCallable);
+				executorService.execute(futureTask);
+				executorService.shutdown();
+
+				executorService.awaitTermination(MAX_TIMEOUT_FOR_GETING_ORDER_BOOK_REQUESTR, TimeUnit.MILLISECONDS);
+
+				if (orderBook.get() == null) {
+					log.error("LONG getting order bok detected time {} for exchange {} and symbol {} by proxy {}",
+							(new Date().getTime() - start.getTime()), exchangeMeta.getExchangeName(), symbol.getName(), exchange==null? "null exchange local ip":exchange.getExchangeSpecification().getProxyHost());
+				} else {
+					/*TODO refactor to service */
+					Date orderReadingTimeStamp = new Date();
+					List<UniLimitOrder> uniAsks = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.get().getAsks(), exchangeMeta, symbol, orderReadingTimeStamp, Order.OrderType.ASK);
+					/* Clear previous order list*/
+					try {
+						/*log.info("DELETE on exchange {} {}  and symbol {} {}",
+								exchangeMeta.getExchangeName(), exchangeMeta.getId(), symbol.getName(),symbol.getId());*/
+						limitOrderRepository.deleteByExchangeMetaAndSymbol(exchangeMeta, symbol);
+					}catch (ObjectOptimisticLockingFailureException e){
+						// something weird - i am cannot understand where but hibernate persistence scope not equal to the db
+						log.error("New ObjectOptimisticLockingFailureException occured while try to deleteByExchangeMetaAndSymbol on exchange {} and symbol {}",
+								exchangeMeta.getExchangeName(), symbol.getName());
+					}
+
+
+					limitOrderRepository.save(uniAsks);
+					limitOrderRepository.flush();
+					List<UniLimitOrder> uniBids = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.get().getBids(), exchangeMeta, symbol, orderReadingTimeStamp, Order.OrderType.BID);
+					limitOrderRepository.save(uniBids);
+					limitOrderRepository.flush();
+				}
+			} catch (Exception e) {
+				log.error("Exception occurred while getting and saving buyOrderBook for exchange " + exchangeMeta.getExchangeName() +
+						" and symbol " + symbol.getName(), e);
+				throw new InterruptedException("Some problems with loadinf order book for exchange "
+						+ exchangeMeta.getExchangeName() + " and symbol " + symbol.getName());
 			}
-
-		} catch (IOException e) {
-			log.error("Exception occurred while getting and saving buyOrderBook for exchange " + exchangeMeta.getExchangeName() +
-					" and symbol " + symbol.getName(), e);
+		} else {
+			log.error("BE CAREFUL Can not found MarketDataService for exchangeMeta : " + exchangeMeta.getExchangeName());
 		}
 
 		/*log.info("After stop readConvertCalcAndSaveUniOrders total time in milliseconds: {} for exchange: {}", (new Date().getTime() - start.getTime()),
 				exchangeMeta.getExchangeName());*/
+
 	}
-
-	/*private List<UniLimitOrderHistory> convertToHistory(List<UniLimitOrder> orders) {
-		List<UniLimitOrderHistory> uniLimitOrderHistoryList = new ArrayList<>();
-
-		for (UniLimitOrder order : orders) {
-			UniLimitOrderPK uniLimitOrderHistoryPk = order.getUniLimitOrderHistoryPk();
-			uniLimitOrderHistoryPk.setId(id);
-			id++;
-			uniLimitOrderHistoryList.add(new UniLimitOrderHistory(uniLimitOrderHistoryPk, order.getLimitPrice(), order.getOriginalAmount(), order.getTimeStamp(),
-					order.getOriginalSum(), order.getFinalSum()));
-
-
-		}
-		return uniLimitOrderHistoryList;
-	}*/
 }

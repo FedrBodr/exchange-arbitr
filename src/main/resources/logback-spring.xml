@@ -18,10 +18,10 @@
 
 
 		<!-- Define logging for organization applications only -->
-		<logger name="org.knowm.xchange" level="INFO"/>
+		<logger name="org.knowm.xchange" level="INFO"  additivity="false"/>
 		<!--<logger name="si.mazi.rescu" level="TRACE"/>-->
 
-		<logger name="ru.fedrbodr.exchangearbitr.services.impl" level="DEBUG">
+		<logger name="ru.fedrbodr.exchangearbitr.services.impl" level="DEBUG" additivity="false">
 			<appender-ref ref="CONSOLE_APPENDER"/>
 		</logger>
 

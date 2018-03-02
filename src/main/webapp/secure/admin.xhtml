@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:body>
     <ui:composition template="/template/commonLayout.xhtml">
         <ui:define name="content">
@@ -30,7 +30,7 @@
                                                                                                              onclick="PF('poll').start();"/>
                 </div>-->
 
-                <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable" rows="20"
+                <!--<p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable" rows="20"
                              var="marketPositionFastCompare"
                              value="#{webDataController.adminMarketPositionCompareList}"
                              rowStyleClass="#{marketPositionFastCompare.sellMarketPosition.active eq false or marketPositionFastCompare.buyMarketPosition.active eq false ? 'notActiveWallet' : null}
@@ -55,7 +55,7 @@
                         presumably working symbols / предположительно рабочие пары
                     </f:facet>
                     <ui:include src="/template/commonTableCollumns.xhtml"/>
-                </p:dataTable>
+                </p:dataTable>-->
             </h:form>
         </ui:define>
     </ui:composition>

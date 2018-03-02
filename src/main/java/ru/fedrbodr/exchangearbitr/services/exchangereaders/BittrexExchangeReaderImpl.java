@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.knowm.xchange.Exchange;
 import org.knowm.xchange.bittrex.dto.marketdata.BittrexCurrency;
+import org.knowm.xchange.bittrex.dto.marketdata.BittrexMarketSummary;
 import org.knowm.xchange.bittrex.service.BittrexMarketDataServiceRaw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +13,12 @@ import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPosition;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionFastRepository;
-import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
+import ru.fedrbodr.exchangearbitr.xchange.custom.ExchangeProxy;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -38,10 +39,7 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 	@Autowired
 	private SymbolService symbolService;
 	@Autowired
-	private MarketPositionRepository marketPositionRepository;
-	@Autowired
-	private Map<ExchangeMeta, Exchange> exchangeMetaToExchangeMap;
-	private BittrexMarketDataServiceRaw bittrexMarketDataServiceRaw;
+	private Map<ExchangeMeta, ExchangeProxy> exchangeMetaToExchangeProxyMap;
 	private Map<String, BittrexCurrency> currencyMap;
 
 	private static final ThreadLocal<DateFormat> dateFormat = new ThreadLocal<DateFormat>(){
@@ -56,15 +54,13 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 		return dateFormat.get().parse(source);
 	}
 
-	/*@PostConstruct*/
+	@PostConstruct
 	private void init() throws IOException {
-		/*TODO refactor this with aop for all init methods*/
+		/* TODO refactor this with aop for all init methods */
 		Date starDate = new Date();
 		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		currencyMap = new HashMap<>();
-		bittrexMarketDataServiceRaw = (BittrexMarketDataServiceRaw) (exchangeMetaToExchangeMap.get(ExchangeMeta.BITTREX).getMarketDataService());
-
-		BittrexCurrency[] bittrexCurrencies = bittrexMarketDataServiceRaw.getBittrexCurrencies();
+		BittrexCurrency[] bittrexCurrencies = getMarketDataService().getBittrexCurrencies();
 		for (BittrexCurrency bittrexCurrency : bittrexCurrencies) {
 			currencyMap.put(bittrexCurrency.getCurrency(), bittrexCurrency);
 		}
@@ -77,37 +73,37 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 					bittrexToUniCurrencyName(market.getString("BaseCurrency")),
 					bittrexToUniCurrencyName(market.getString("MarketCurrency")));
 		}
-		/*TODO refactor this with aop*/
+		/* TODO refactor this with aop */
 		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
 	}
 
+	private BittrexMarketDataServiceRaw getMarketDataService() {
+		return (BittrexMarketDataServiceRaw) (exchangeMetaToExchangeProxyMap.get(ExchangeMeta.BITTREX).getNextExchange().getMarketDataService());
+	}
+
 	public void readAndSaveMarketPositionsBySummaries() throws IOException, JSONException, ParseException {
-		JSONObject json = getNewJsonObject("https://bittrex.com/api/v2.0/pub/Markets/GetMarketSummaries");
-		JSONArray result = json.getJSONArray("result");
+		ArrayList<BittrexMarketSummary> bittrexMarketSummaries = getMarketDataService().getBittrexMarketSummaries();
 		List<MarketPosition> marketPositionList = new ArrayList<>();
 
-		for(int i = result.length()-1; i>-1; i--) {
-			JSONObject marketPositionJsonObject = result.getJSONObject(i);
-			JSONObject market = marketPositionJsonObject.getJSONObject("Market");
-			JSONObject summary = marketPositionJsonObject.getJSONObject("Summary");
+		for (BittrexMarketSummary bittrexMarketSummary : bittrexMarketSummaries) {
+			String[] split = bittrexMarketSummary.getMarketName().split("-");
 
 			Symbol symbol = symbolService.getOrCreateNewSymbol(
-					bittrexToUniCurrencyName(market.getString("BaseCurrency")),
-					bittrexToUniCurrencyName(market.getString("MarketCurrency")));
+					bittrexToUniCurrencyName(split[0]), // "BaseCurrency"
+					bittrexToUniCurrencyName(split[1]));//"MarketCurrency"
+
 			MarketPosition marketPosition = new MarketPosition(
 					ExchangeMeta.BITTREX,
 					symbol,
-					summary.getBigDecimal("Last"),
-					summary.getBigDecimal("Bid"),
-					summary.getBigDecimal("Ask"),
-					isSymbolActive(market.getString("BaseCurrency"),market.getString("MarketCurrency")));
-			marketPosition.setExchangeTimeStamp(convert(summary.getString("TimeStamp")));
+					bittrexMarketSummary.getLast(),
+					bittrexMarketSummary.getBid(),
+					bittrexMarketSummary.getAsk(),
+					isSymbolActive(split[0],split[1]));
+			marketPosition.setExchangeTimeStamp(convert(bittrexMarketSummary.getTimeStamp()));
 
 			marketPositionList.add(marketPosition);
 		}
 
-		/*marketPositionRepository.save(marketPositionList);
-		marketPositionRepository.flush();*/
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
 	}

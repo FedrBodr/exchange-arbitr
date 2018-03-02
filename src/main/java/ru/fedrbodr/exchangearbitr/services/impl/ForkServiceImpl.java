@@ -17,12 +17,14 @@ import ru.fedrbodr.exchangearbitr.services.SymbolLongService;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
 public class ForkServiceImpl implements ForkService {
-	public static final double MIN_PROFIT_TO_LOGGING = 0.006;
+	public static final double MIN_PROFIT_TO_LOGGING = 0.003;
 	private static final long FORK_DELIMITER_LATENCY_TIME = 5000;
 	@Autowired
 	private MarketPositionFastService marketPositionFastService;
@@ -35,10 +37,14 @@ public class ForkServiceImpl implements ForkService {
 
 	@Override
 	public void determineAndPersistForks(long lastOrdersLoadingTime) {
+		Date start = new Date();
+		//log.info("Before getMarketPositionFastCompares: {}", (new Date().getTime() - start.getTime()) / 1000);
 		List<MarketPositionFastCompare> marketPositionFastCompares = marketPositionFastService.getMarketPositionFastCompares();
+		//log.info("After getMarketPositionFastCompares Load seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
 		Date currentForkDetectedTime = new Date();
+		Set<Fork> foundedForks = new HashSet<>();
 		for (MarketPositionFastCompare marketPositionFastCompare : marketPositionFastCompares) {
-			if(marketPositionFastCompare.getDepositProfitList() != null &&
+			if(marketPositionFastCompare.getDepositProfitList() != null && marketPositionFastCompare.getDepositProfitList().size() > 0 &&
 					new BigDecimal(MIN_PROFIT_TO_LOGGING).compareTo(marketPositionFastCompare.getDepositProfitList().get(0).getProfit()) < 0) {
 				Fork fork = new Fork();
 				ExchangeMetaLong buyExchangeMeta = exchangeMetaLongRepository.findById(marketPositionFastCompare.getSellMarketPosition().getMarketPositionFastPK().getExchangeMeta().getId());
@@ -66,10 +72,14 @@ public class ForkServiceImpl implements ForkService {
 				}else{
 					fork.setForkWindowId((long) 1);
 				}
-				forkRepository.save(fork);
+				foundedForks.add(fork);
 			}
+
 		}
+		log.info("After for seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
+		forkRepository.save(foundedForks);
 		forkRepository.flush();
+		log.info("After save and flush seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
 	}
 }
 

@@ -16,7 +16,7 @@ public class CachingConfig {
 	public static final String TOP_COMPARE_LIST = "top30CompareListCache";
 
 	@CacheEvict(allEntries = true, value = {ORDER_LIST_CACHE})
-	@Scheduled(fixedDelay = 2 * 1000, initialDelay = 60 * 1000)
+	@Scheduled(fixedDelay = 1 * 1000, initialDelay = 60 * 1000)
 	public void reportCacheEvict() {
 
 	}

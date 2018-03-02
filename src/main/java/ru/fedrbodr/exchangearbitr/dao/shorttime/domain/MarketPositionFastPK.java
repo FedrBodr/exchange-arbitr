@@ -29,7 +29,6 @@ public class MarketPositionFastPK implements Serializable{
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		if (!super.equals(o)) return false;
 		MarketPositionFastPK that = (MarketPositionFastPK) o;
 		return Objects.equals(exchangeMeta, that.exchangeMeta) &&
 				Objects.equals(symbol, that.symbol);
@@ -37,6 +36,6 @@ public class MarketPositionFastPK implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), exchangeMeta, symbol);
+		return Objects.hash(exchangeMeta, symbol);
 	}
 }

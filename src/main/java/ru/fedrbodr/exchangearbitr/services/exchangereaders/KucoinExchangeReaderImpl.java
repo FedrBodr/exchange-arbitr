@@ -2,9 +2,7 @@ package ru.fedrbodr.exchangearbitr.services.exchangereaders;
 
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
-import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
-import org.knowm.xchange.kucoin.KucoinExchange;
 import org.knowm.xchange.kucoin.dto.KucoinAdapters;
 import org.knowm.xchange.kucoin.dto.KucoinResponse;
 import org.knowm.xchange.kucoin.dto.marketdata.KucoinTicker;
@@ -19,6 +17,7 @@ import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
+import ru.fedrbodr.exchangearbitr.xchange.custom.ExchangeProxy;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -33,16 +32,15 @@ import java.util.Map;
 @Service
 @Slf4j
 public class KucoinExchangeReaderImpl implements ExchangeReader {
-	private KucoinExchange exchange;
+	private ExchangeProxy exchangeProxy;
 	@Autowired
-	private Map<ExchangeMeta, Exchange> exchangeMetaToExchangeMap;
+	private Map<ExchangeMeta, ExchangeProxy> exchangeMetaToExchangeProxyMap;
 	@Autowired
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
 	private MarketPositionRepository marketPositionRepository;
 	@Autowired
 	private SymbolService symbolService;
-	private KucoinMarketDataService marketDataService;
 	private ExchangeMeta exchangeMeta;
 
 	@PostConstruct
@@ -51,11 +49,9 @@ public class KucoinExchangeReaderImpl implements ExchangeReader {
 		log.info(KucoinExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
 		exchangeMeta = ExchangeMeta.KUCOIN;
+		exchangeProxy = exchangeMetaToExchangeProxyMap.get(exchangeMeta);
 
-		exchange = (KucoinExchange) exchangeMetaToExchangeMap.get(exchangeMeta);
-		marketDataService = (KucoinMarketDataService) exchange.getMarketDataService();
-
-		List<CurrencyPair> exchangeSymbols = exchange.getExchangeSymbols();
+		List<CurrencyPair> exchangeSymbols = exchangeProxy.getNextExchange().getExchangeSymbols();
 		for (CurrencyPair exchangeSymbol : exchangeSymbols) {
 			/* USE it when start working with fee
 			 * CurrencyPairMetaData currencyPairMetaData = currencyPairs.get(currencyPair);
@@ -71,7 +67,7 @@ public class KucoinExchangeReaderImpl implements ExchangeReader {
 		/*TODO refactor this with aop for all init methods*/
 		KucoinResponse<List<KucoinTicker>> kucoinTickerList = null;
 		try {
-			kucoinTickerList = marketDataService.getKucoinTickers();
+			kucoinTickerList = ((KucoinMarketDataService) exchangeProxy.getNextExchange().getMarketDataService()).getKucoinTickers();
 		} catch (IOException e) {
 			log.error("Error occurred while getHitbtcTickers ", e);
 		}
@@ -86,8 +82,6 @@ public class KucoinExchangeReaderImpl implements ExchangeReader {
 			);
 		}
 
-		/*marketPositionRepository.save(marketPositionList);
-		marketPositionRepository.flush();*/
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
 	}

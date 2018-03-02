@@ -1,5 +1,6 @@
 package ru.fedrbodr.exchangearbitr.utils;
 
+import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.LimitOrder;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class LimitOrderUtils {
 	public static List<UniLimitOrder> convertToUniLimitOrderListWithCalcSums(List<LimitOrder> orders, ExchangeMeta exchangeMeta,
-																			 Symbol symbol, Date orderReadingTimeStamp) {
+																			 Symbol symbol, Date orderReadingTimeStamp, Order.OrderType type) {
 		Long orderId = 1L;
 		BigDecimal originalAmountSum = BigDecimal.ZERO;
 		BigDecimal finalSum = BigDecimal.ZERO;
@@ -21,7 +22,8 @@ public class LimitOrderUtils {
 			originalAmountSum = originalAmountSum.add(askOrBid.getOriginalAmount());
 			finalSum = finalSum.add(askOrBid.getLimitPrice().multiply(askOrBid.getOriginalAmount()));
 			UniLimitOrder order =
-					new UniLimitOrder(askOrBid, orderId, exchangeMeta, symbol, orderReadingTimeStamp, originalAmountSum, finalSum);
+					new UniLimitOrder(type, exchangeMeta, symbol, askOrBid.getLimitPrice(),
+							askOrBid.getOriginalAmount(), originalAmountSum, finalSum , orderReadingTimeStamp);
 			uniOrderList.add(order);
 			orderId++;
 		}

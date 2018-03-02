@@ -2,13 +2,10 @@ package ru.fedrbodr.exchangearbitr.services.exchangereaders;
 
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
-import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.hitbtc.v2.HitbtcAdapters;
-import org.knowm.xchange.hitbtc.v2.HitbtcExchange;
 import org.knowm.xchange.hitbtc.v2.dto.HitbtcCurrency;
 import org.knowm.xchange.hitbtc.v2.dto.HitbtcTicker;
-import org.knowm.xchange.hitbtc.v2.service.HitbtcMarketDataService;
 import org.knowm.xchange.hitbtc.v2.service.HitbtcMarketDataServiceRaw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +17,7 @@ import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
+import ru.fedrbodr.exchangearbitr.xchange.custom.ExchangeProxy;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -31,9 +29,8 @@ import java.util.*;
 @Service
 @Slf4j
 public class HitBtcExchangeReaderImpl implements ExchangeReader {
-	private HitbtcExchange exchange;
 	@Autowired
-	private Map<ExchangeMeta, Exchange> exchangeMetaToExchangeMap;
+	private Map<ExchangeMeta, ExchangeProxy> exchangeMetaToExchangeProxyMap;
 	@Autowired
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
@@ -41,8 +38,8 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 	@Autowired
 	private SymbolService symbolService;
 	private Map<String, HitbtcCurrency> hitBtcCurrencyMap;
-	private HitbtcMarketDataService marketDataService;
 	private ExchangeMeta exchangeMeta;
+	private ExchangeProxy exchangeProxy;
 
 	@PostConstruct
 	private void init() throws InterruptedException {
@@ -51,15 +48,10 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 		Date starDate = new Date();
 		exchangeMeta = ExchangeMeta.HITBTC;
 		hitBtcCurrencyMap = new HashMap<>();
-		exchange = (HitbtcExchange) exchangeMetaToExchangeMap.get(exchangeMeta);
-		synchronized (this) { // obtain lock's monitor
-			this.wait(30);
-		}
-		marketDataService = (HitbtcMarketDataService) exchange.getMarketDataService();
-
 		try {
-			List<CurrencyPair> exchangeSymbols = exchange.getExchangeSymbols();
-			List<HitbtcCurrency> hitbtcCurrencies = ((HitbtcMarketDataServiceRaw) marketDataService).getHitbtcCurrencies();
+			exchangeProxy = exchangeMetaToExchangeProxyMap.get(ExchangeMeta.HITBTC);
+			List<CurrencyPair> exchangeSymbols = exchangeProxy.getNextExchange().getExchangeSymbols();
+			List<HitbtcCurrency> hitbtcCurrencies = ((HitbtcMarketDataServiceRaw) exchangeProxy.getNextExchange().getMarketDataService()).getHitbtcCurrencies();
 			for (HitbtcCurrency hitbtcCurrency : hitbtcCurrencies) {
 				hitBtcCurrencyMap.put(hitbtcCurrency.getId(), hitbtcCurrency);
 			}
@@ -82,7 +74,7 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 		/*TODO refactor this with aop for all init methods*/
 		Map<String, HitbtcTicker> hitbtcTickers = new HashMap<>();
 		try {
-			hitbtcTickers = marketDataService.getHitbtcTickers();
+			hitbtcTickers = ((HitbtcMarketDataServiceRaw) exchangeProxy.getNextExchange().getMarketDataService()).getHitbtcTickers();
 		} catch (IOException e) {
 			log.error("Error occurred while getHitbtcTickers ", e);
 		}
@@ -97,23 +89,20 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 			);
 		}
 
-		/*marketPositionRepository.save(marketPositionList);
-		marketPositionRepository.flush();*/
-
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
-		log.info("HitBtc readAndSaveMarketPositionsBySummaries end, execution time sec: {}", (new Date().getTime() - starDate.getTime())/1000);
+//		log.info("HitBtc readAndSaveMarketPositionsBySummaries end, execution time sec: {}", (new Date().getTime() - starDate.getTime()) / 1000);
 	}
 
 	private boolean isSymbolActive(Symbol uniSymbol) {
 		String baseName = uniSymbol.getBaseName();
 		String quoteName = uniSymbol.getQuoteName();
-		if(!"USDT".equals(baseName) && hitBtcCurrencyMap.get(baseName)==null || hitBtcCurrencyMap.get(quoteName)==null) {
+		if (!"USDT".equals(baseName) && hitBtcCurrencyMap.get(baseName) == null || hitBtcCurrencyMap.get(quoteName) == null) {
 			return false;
-		}else if ("USDT".equals(baseName)){
+		} else if ("USDT".equals(baseName)) {
 			return hitBtcCurrencyMap.get(quoteName).getPayinEnabled() && hitBtcCurrencyMap.get(quoteName).getPayoutEnabled() && hitBtcCurrencyMap.get(quoteName).getTransferEnabled();
 		}
 		return hitBtcCurrencyMap.get(baseName).getPayinEnabled() && hitBtcCurrencyMap.get(baseName).getPayoutEnabled() && hitBtcCurrencyMap.get(baseName).getTransferEnabled() &&
-		hitBtcCurrencyMap.get(quoteName).getPayinEnabled() && hitBtcCurrencyMap.get(quoteName).getPayoutEnabled() && hitBtcCurrencyMap.get(quoteName).getTransferEnabled();
+				hitBtcCurrencyMap.get(quoteName).getPayinEnabled() && hitBtcCurrencyMap.get(quoteName).getPayoutEnabled() && hitBtcCurrencyMap.get(quoteName).getTransferEnabled();
 	}
 }

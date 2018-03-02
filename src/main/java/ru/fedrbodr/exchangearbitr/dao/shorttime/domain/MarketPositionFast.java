@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 @Table( name = "market_position_fast")
 @Entity
@@ -17,7 +18,6 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class MarketPositionFast implements Serializable{
-
 	@EmbeddedId
 	protected MarketPositionFastPK marketPositionFastPK;
 	@Column(name = "last_price", precision = 15, scale = 8)
@@ -46,5 +46,18 @@ public class MarketPositionFast implements Serializable{
 		this.askPrice = marketPosition.getAskPrice();
 		this.exchangeTimeStamp = marketPosition.getExchangeTimeStamp();
 		this.active = marketPosition.isActive();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MarketPositionFast that = (MarketPositionFast) o;
+		return Objects.equals(marketPositionFastPK, that.marketPositionFastPK);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(marketPositionFastPK.hashCode());
 	}
 }

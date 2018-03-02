@@ -2,7 +2,6 @@ package ru.fedrbodr.exchangearbitr.services.exchangereaders;
 
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
-import org.knowm.xchange.Exchange;
 import org.knowm.xchange.binance.dto.marketdata.BinanceTicker24h;
 import org.knowm.xchange.binance.dto.meta.exchangeinfo.BinanceExchangeInfo;
 import org.knowm.xchange.binance.service.BinanceMarketDataService;
@@ -16,6 +15,7 @@ import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
+import ru.fedrbodr.exchangearbitr.xchange.custom.ExchangeProxy;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -30,9 +30,8 @@ import static ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils.binanceToUniCur
 @Service
 @Slf4j
 public class BinanceExchangeReaderImpl implements ExchangeReader {
-	private BinanceMarketDataService marketDataService;
 	@Autowired
-	private Map<ExchangeMeta, Exchange> exchangeMetaToExchangeMap;
+	private Map<ExchangeMeta, ExchangeProxy> exchangeMetaToExchangeProxyMap;
 	@Autowired
 	private MarketPositionRepository marketPositionRepository;
 	@Autowired
@@ -49,10 +48,9 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 		/*TODO refactor this with aop for all init methods*/
 		log.info(BinanceExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 
-		marketDataService = (BinanceMarketDataService) exchangeMetaToExchangeMap.get(ExchangeMeta.BINANCE).getMarketDataService();
 		Date starDate = new Date();
 		binanceSymbolToUniSymbolMap = new HashMap<>();
-		BinanceExchangeInfo exchangeInfo = marketDataService.getExchangeInfo();
+		BinanceExchangeInfo exchangeInfo = getMarketDataService().getExchangeInfo();
 		org.knowm.xchange.binance.dto.meta.exchangeinfo.Symbol[] bynanceSymbols = exchangeInfo.getSymbols();
 		for (org.knowm.xchange.binance.dto.meta.exchangeinfo.Symbol symbol : bynanceSymbols) {
 			Symbol uniSymbol = symbolService.getOrCreateNewSymbol(
@@ -66,7 +64,7 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 
 	public void readAndSaveMarketPositionsBySummaries() throws IOException, JSONException, ParseException {
 		/*TODO refactor this with aop for all init methods*/
-		List<BinanceTicker24h> binanceTicker24hList = marketDataService.ticker24h();
+		List<BinanceTicker24h> binanceTicker24hList = getMarketDataService().ticker24h();
 		List<MarketPosition> marketPositionList = new ArrayList<>();
 		for (BinanceTicker24h binanceTicker24h : binanceTicker24hList) {
 			Symbol symbol = binanceSymbolToUniSymbolMap.get(binanceToUniCurrencyName(binanceTicker24h.getSymbol()));
@@ -82,5 +80,9 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
 
+	}
+
+	private BinanceMarketDataService getMarketDataService() {
+		return (BinanceMarketDataService) exchangeMetaToExchangeProxyMap.get(ExchangeMeta.BINANCE).getNextExchange().getMarketDataService();
 	}
 }
