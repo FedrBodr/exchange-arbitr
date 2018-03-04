@@ -26,7 +26,6 @@ public class ExchangeMetaLongService {
 		persistencedExchangeMetaMap.put(ExchangeMetaLong.HITBTC.getId(), exchangeMetaLongRepository.save(ExchangeMetaLong.HITBTC));
 		persistencedExchangeMetaMap.put(ExchangeMetaLong.KUCOIN.getId(), exchangeMetaLongRepository.save(ExchangeMetaLong.KUCOIN));
 		persistencedExchangeMetaMap.put(ExchangeMetaLong.btctrade.getId(), exchangeMetaLongRepository.save(ExchangeMetaLong.btctrade));
-
 	}
 
 	public ExchangeMetaLong getPersistencedExchangeMetaLong(ExchangeMeta exchangeMeta) {

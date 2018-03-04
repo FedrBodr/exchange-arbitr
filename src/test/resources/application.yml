@@ -22,11 +22,18 @@ spring:
 #    properties.hibernate:
 #      current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
 # In-Memory H2 database for monitoring and fast calculating of real-time forks.
+#  datasource:
+#    url: jdbc:h2:mem:shorttime2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    username: fe
+#    password:
+#    driverClassName: org.h2.Driver
   datasource:
-    url: jdbc:h2:mem:shorttime2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: fe
-    password:
-    driverClassName: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/exchange_arbitr_fast
+    username: fedr
+    password: 351
+    driver-class-name: com.mysql.jdbc.Driver
+    tomcat.max-active: 150
+    tomcat.max-idle: 15
 # H2 In-Memory Database "bar" (used in tests instead of a real PostgreSQL DB)
 longtime.datasource:
   url: jdbc:h2:mem:longtime2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE

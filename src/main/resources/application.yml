@@ -1,4 +1,4 @@
-# MySQL datasource
+# one datasource config MySQL datasource
 # datasource:
 #    url: jdbc:mysql://localhost:3306/exchange_arbitr?useSSL=false
 #  jpa:
@@ -18,6 +18,7 @@ spring:
     generate-ddl: true
     # used for jsf el session resolve problem
     properties.hibernate:
+#      dialect: org.hibernate.dialect.Oracle10gDialect
       current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
 #      show_sql: true
 #      use_sql_comments: true
@@ -26,29 +27,86 @@ spring:
 #      current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
 
 # In-Memory H2 database for monitoring and fast calculating of real-time forks.
-#  datasource:
-#    url: jdbc:h2:mem:shorttime2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE
-#    username: fe
-#    password: noMONEY0607noHoney
-#    driverClassName: org.h2.Driver
-#    tomcat.max-active: 300
-#    tomcat.max-idle: 30
   datasource:
-    url: jdbc:mysql://localhost:3306/exchange_arbitr_fast
-    username: fedr
-    password: 351
-    driver-class-name: com.mysql.jdbc.Driver
-    tomcat.max-active: 150
-    tomcat.max-idle: 15
+    url: jdbc:h2:mem:shorttime2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE
+    username: fe
+    password: noMONEY0607noHoney
+    driverClassName: org.h2.Driver
+    tomcat.max-active: 300
+    tomcat.max-idle: 30
+
+# POSTGRE database for TEST monitoring and fast calculating of real-time forks.
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/foo
+#    username: postgres
+#    password: 351
+#    driver-class-name: org.postgresql.Driver
+#    testWhileIdle: true
+#    spring.datasource.validationQuery: SELECT 1
+#    tomcat:
+#      max-active: 150
+#      max-idle: 15
+#      validation-query: SELECT 1
+#      test-while-idle: true
+
+# Oracle database for TEST monitoring and fast calculating of real-time forks.
+#  datasource:
+#    url: jdbc:oracle:thin:@localhost:1521:XE
+#    username: exchange_arbitr_fast
+#    password: 351
+#    driver-class-name: oracle.jdbc.OracleDriver
+#    testWhileIdle: true
+#    spring.datasource.validationQuery: SELECT 1
+#    tomcat:
+#      max-active: 150
+#      max-idle: 15
+#      validation-query: SELECT 1
+#      test-while-idle: true
+
+# MySql database for TEST monitoring and fast calculating of real-time forks.
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/exchange_arbitr_fast
+#    username: fedr
+#    password: 351
+#    driver-class-name: com.mysql.jdbc.Driver
+#    tomcat.max-active: 150
+#    tomcat.max-idle: 15
   profiles.active: @activatedProperties@
-# H2 In-Memory Database "bar" (used in tests instead of a real PostgreSQL DB)
+# Long time Database POSTGRE
 longtime.datasource:
-  url: jdbc:mysql://localhost:3306/exchange_arbitr
-  username: fedr
+  url: jdbc:postgresql://localhost:5432/foo
+  username: postgres
   password: 351
-  driver-class-name: com.mysql.jdbc.Driver
-  tomcat.max-active: 100
-  tomcat.max-idle: 15
+  driver-class-name: org.postgresql.Driver
+  testWhileIdle: true
+  validationQuery: SELECT 1
+  tomcat:
+    max-active: 150
+    max-idle: 15
+    validation-query: SELECT 1
+    test-while-idle: true
+## Long time Database MySql
+#longtime.datasource:
+#  url: jdbc:mysql://localhost:3306/exchange_arbitr
+#  username: fedr
+#  password: 351
+#  driver-class-name: com.mysql.jdbc.Driver
+#  tomcat.max-active: 100
+#  tomcat.max-idle: 15
+# Long time Database Oracle
+#longtime.datasource:
+#
+#  url: jdbc:oracle:thin:@localhost:1521:XE
+#  username: exchange_arbitr_long
+#  password: 351
+#  driver-class-name: oracle.jdbc.OracleDriver
+#  testWhileIdle: true
+#  validationQuery: SELECT 1
+#  tomcat:
+#    max-active: 150
+#    max-idle: 15
+#    validation-query: SELECT 1
+#    test-while-idle: true
 ###
 #   H2 Settings
 ###
@@ -63,9 +121,6 @@ proxy.list: 185.128.215.224:8000,193.93.60.95:8000,193.93.60.236:8000,194.242.12
 ---
 spring:
   profiles: dev
-  datasource:
-    username: fedr
-    password: 351
 #show sql statement
 #logging.level.org.hibernate.SQL: debug
 #show sql values

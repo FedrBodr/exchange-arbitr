@@ -11,6 +11,7 @@ import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPositionFast;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.UniLimitOrder;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.LimitOrderRepository;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionFastRepositoryCustom;
+import ru.fedrbodr.exchangearbitr.dao.shorttime.reports.DepoFork;
 import ru.fedrbodr.exchangearbitr.model.DepositProfit;
 import ru.fedrbodr.exchangearbitr.model.MarketPositionFastCompare;
 import ru.fedrbodr.exchangearbitr.services.MarketPositionFastService;
@@ -74,10 +75,18 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 		Date start = new Date();
 		log.info("Before selectTopMarketPositionFastCompareList: {}", (new Date().getTime() - start.getTime()) / 1000);
 		List<Object[]> topMarketPositionDif = marketPositionFastRepositoryCustom.selectTopMarketPositionFastCompareList();
-		log.info("After selectTopMarketPositionFastCompareList Load seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
 		List<MarketPositionFastCompare> marketPositionFastCompares = calculateDifferences(topMarketPositionDif);
 		log.info("After calculateDifferences(topMarketPositionDif) seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
 		return marketPositionFastCompares;
+	}
+
+	@Override
+	public List<DepoFork> getDepoForks(BigDecimal deposit) {
+		Date start = new Date();
+		log.info("Before selectTopForksByDeposit(deposit): {} ms", (new Date().getTime() - start.getTime()));
+		List<DepoFork> depoForks = marketPositionFastRepositoryCustom.selectTopForksByDeposit(deposit);
+		log.info("After selectTopForksByDeposit(deposit) : {} ms", (new Date().getTime() - start.getTime()));
+		return depoForks;
 	}
 
 	private List<MarketPositionFastCompare> calculateDifferences(List<Object[]> topMarketPositionDif) {
@@ -109,17 +118,19 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 		}
 		log.info("After executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);: {} s", (new Date().getTime() - start.getTime()) / 1000);
 
-		Collections.sort(marketPositionFastCompares, (o1, o2) -> {
-			if (CollectionUtils.isEmpty(o1.getDepositProfitList()) && CollectionUtils.isEmpty(o2.getDepositProfitList())) {
-				return 0;
-			}
-			if (CollectionUtils.isEmpty(o1.getDepositProfitList()))
-				return 1;
-			if (CollectionUtils.isEmpty(o2.getDepositProfitList()))
-				return -1;
+		if(CollectionUtils.isNotEmpty(marketPositionFastCompares)) {
+			Collections.sort(marketPositionFastCompares, (o1, o2) -> {
+				if (CollectionUtils.isEmpty(o1.getDepositProfitList()) && CollectionUtils.isEmpty(o2.getDepositProfitList())) {
+					return 0;
+				}
+				if (CollectionUtils.isEmpty(o1.getDepositProfitList()))
+					return 1;
+				if (CollectionUtils.isEmpty(o2.getDepositProfitList()))
+					return -1;
 
-			return o2.getDepositProfitList().get(0).getProfit().compareTo(o1.getDepositProfitList().get(0).getProfit());
-		});
+				return o2.getDepositProfitList().get(0).getProfit().compareTo(o1.getDepositProfitList().get(0).getProfit());
+			});
+		}
 		log.info("After calculateDifferences: {}", (new Date().getTime() - start.getTime()) / 1000);
 		return marketPositionFastCompares;
 	}
