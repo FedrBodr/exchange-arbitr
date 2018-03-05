@@ -1,5 +1,6 @@
 package ru.fedrbodr.exchangearbitr.xchange.custom;
 
+import lombok.extern.slf4j.Slf4j;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
@@ -7,8 +8,9 @@ import org.knowm.xchange.service.marketdata.MarketDataService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
-
+@Slf4j
 public class ExchangeProxy {
 	public static final String COINEXCHANGE = "COINEXCHANGE";
 
@@ -22,11 +24,22 @@ public class ExchangeProxy {
 	}
 
 	public ExchangeProxy(List<String> proxyHostPortList, String exchangeClassName) {
+		ExecutorService executorService = Executors.newFixedThreadPool(proxyHostPortList.size());
 		try {
 			for (String proxyHostAndPort : proxyHostPortList) {
-				String[] split = proxyHostAndPort.split(":");
-				exchangePoll.add(getExchangeProxy(split[0], Integer.parseInt(split[1]), exchangeClassName));
-			}	
+				Callable<Void> tCallable = () -> {
+					String[] split = proxyHostAndPort.split(":");
+					exchangePoll.add(getExchangeProxy(split[0], Integer.parseInt(split[1]), exchangeClassName));
+					return null;
+				};
+				executorService.execute(new FutureTask(tCallable));
+			}
+			executorService.shutdown();
+			try {
+				executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+			} catch (InterruptedException e) {
+				log.error("Init proxy error " + e.getMessage(), e);
+			}
 		}catch (Exception e){
 			throw new IllegalArgumentException("Proxy list in incorrect format! Must be proxy.list: 185.128.215.224:8000,193.93.60.95:8000,193.93.60.236:8000");
 		}

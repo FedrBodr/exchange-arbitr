@@ -42,7 +42,7 @@ public class UniLimitOrder implements Serializable {
 	 */
 	@Column(name = "limit_price", precision = 15, scale = 8)
 	private BigDecimal limitPrice;
-	@Column(name = "original_price", precision = 18, scale = 8)
+	@Column(name = "original_amount", precision = 18, scale = 8)
 	private BigDecimal originalAmount;
 	@Column(name = "original_sum", precision = 18, scale = 8)
 	private BigDecimal originalSum;

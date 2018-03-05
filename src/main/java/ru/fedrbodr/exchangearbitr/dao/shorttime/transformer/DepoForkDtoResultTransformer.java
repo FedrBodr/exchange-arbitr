@@ -20,6 +20,8 @@ public class DepoForkDtoResultTransformer extends AliasedTupleSubsetResultTransf
 		depoFork.setFinalCoinsAmount((BigDecimal) tuple[5]);
 		depoFork.setProfit((BigDecimal) tuple[6]);
 		depoFork.setSymbolName((String) tuple[7]);
+		depoFork.setSellLimitPrice((BigDecimal) tuple[8]);
+		depoFork.setBuyLimitPrice((BigDecimal) tuple[9]);
 		return depoFork;
 	}
 }

@@ -1,34 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+
+<!--
+rowStyleClass="#{marketPositionFastCompare.sellMarketPosition.active eq false or
+                                                marketPositionFastCompare.buyMarketPosition.active eq false ? 'notActiveWallet' : null}
+                                            #{marketPositionFastCompare.lieProfitByGlasses ? 'lieProfitByGlasses' : null}"
+
+                                            filteredValue="#{webDataController.filteredCompareList}"
+-->
 <h:body>
     <ui:composition template="/template/commonLayout.xhtml">
         <ui:define name="content">
             <h:form>
-                <p:panel header="Admin Zone, be carrefully" id="adminPanel" style="text-align: center">
-
-                    MarketsSummaries crawling status <p:outputLabel value="#{adminController.marketsSummariesCrawlingStatus}"/> <br/>
-                    OrderBooks crawling status <p:outputLabel value="#{adminController.orderBooksCrawlingStatus}"/> <br/><br/>
-
-                    <p:commandButton update="adminPanel" value="RunAll" action="#{adminController.startAllGrabbing}" style="margin-right: 25px;"/>
-                    <p:commandButton update="adminPanel" value="StopAll" action="#{adminController.stopAllGrabbing}"/>
-                    <br/>
-
-                    <p:commandButton update="adminPanel" value="Run Market Summaries Grabbing" action="#{adminController.startMarketSummariesGrabbing}"
-                                     style="margin-right: 25px;"/>
-                    <p:commandButton update="adminPanel" value="Stop Market Summaries Grabbing" action="#{adminController.stopMarketSummariesGrabbing}"/>
-                    <br/>
-
-                    <p:commandButton update="adminPanel" value="Run Order Books Grabbing" action="#{adminController.startOrderBooksGrabbing}"
-                                     style="margin-right: 25px;"/>
-                    <p:commandButton update="adminPanel" value="Stop Order Books Grabbing" action="#{adminController.stopOrderBooksGrabbing}"/>
-                </p:panel>
-                <br/>
-
                 <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable"
                              var="fork"
                              value="#{webDataController.currentForks}"
@@ -36,7 +25,7 @@
 
                 >
                     <!-- START orders and profits subtable collumns -->
-                    <p:rowExpansion >
+                    <p:rowExpansion>
                         <div class="expansionWrapper">
                             <div class="profitsTableWrapper">
                                 <p:dataTable var="profit"
@@ -45,32 +34,50 @@
                                         Profits by depos / Профиты по депозитам
                                     </f:facet>
                                     <p:column headerText="Deposit">
-                                        <h:outputText value="#{profit.deposit}" >
+                                        <h:outputText value="#{profit.deposit}">
                                             <f:convertNumber minFractionDigits="8" locale="en"/>
                                         </h:outputText>
                                     </p:column>
 
                                     <p:column headerText="Average buy price (we buy)">
+                                        <h:outputText value="#{profit.averageSellStackPrice}">
+                                            <f:convertNumber minFractionDigits="8" locale="en"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Buy limit price for order">
+                                        <h:outputText value="#{profit.sellLimitPrice}">
+                                            <f:convertNumber minFractionDigits="8" locale="en"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Buy glass last update" style="width:63px">
+                                        <h:outputText value="#{profit.sellGlassUpdated}">
+                                            <f:convertDateTime pattern="HH:mm:ss"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Average sell price (we sell)">
                                         <h:outputText value="#{profit.averageBuyStackPrice}">
                                             <f:convertNumber minFractionDigits="8" locale="en"/>
                                         </h:outputText>
                                     </p:column>
 
                                     <p:column headerText="Buy limit price for order">
-                                        <h:outputText value="#{profit.buyLimitPrice}">
-                                            <f:convertNumber minFractionDigits="8" locale="en"/>
-                                        </h:outputText>
-                                    </p:column>
-
-                                    <p:column headerText="Average sell price (we sell)">
-                                        <h:outputText value="#{profit.averageSellStackPrice}">
+                                        <h:outputText value="#{profit.sellLimitPrice}">
                                             <f:convertNumber minFractionDigits="8" locale="en"/>
                                         </h:outputText>
                                     </p:column>
 
                                     <p:column headerText="Sell limit price for order">
-                                        <h:outputText value="#{profit.sellLimitPrice}">
+                                        <h:outputText value="#{profit.buyLimitPrice}">
                                             <f:convertNumber minFractionDigits="8" locale="en"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Sell glass last update" style="width:63px">
+                                        <h:outputText value="#{profit.buyGlassUpdated}">
+                                            <f:convertDateTime pattern="HH:mm:ss"/>
                                         </h:outputText>
                                     </p:column>
 
@@ -174,29 +181,29 @@
                         <p:rowToggler/>
                     </p:column>
                     <p:column headerText="Symbol">
-                        <h:outputText value="#{fork.symbol.name}" />
+                        <h:outputText value="#{fork.symbol.name}"/>
                     </p:column>
                     <!-- filterBy="#{fork.buyExchangeMeta.exchangeName}" filterMatchMode="contains" -->
-                    <p:column headerText="Buy exchange, link to pair market" >
+                    <p:column headerText="Buy exchange, link to pair market">
                         #{fork.buyExchangeMeta.exchangeName}
                         <!--<h:outputLink value="#{marketPositionFastCompare.buySymbolExchangeUrl}#{buyMarketPK.exchangeMeta.refParam}" target="_blank">
 
                         </h:outputLink>-->
                     </p:column>
                     <!-- filterBy="#{fork.sellExchangeMeta.exchangeName}" filterMatchMode="contains" -->
-                    <p:column headerText="Sell exchange, link to pair market" >
+                    <p:column headerText="Sell exchange, link to pair market">
                         #{fork.sellExchangeMeta.exchangeName}
                         <!--<h:outputLink value="#{marketPositionFastCompare.sellSymbolExchangeUrl}#{sellMarketPK.exchangeMeta.refParam}" target="_blank">
 
                         </h:outputLink>-->
                     </p:column>
                     <p:column headerText="Deposit">
-                        <h:outputText value="#{fork.profits[0].deposit}" >
+                        <h:outputText value="#{fork.profits[0].deposit}">
                             <f:convertNumber minFractionDigits="8" locale="en"/>
                         </h:outputText>
                     </p:column>
                     <p:column headerText="Profit by deposit">
-                        <h:outputText value="#{marketPositionFastCompare.differencePercentCorrect}">
+                        <h:outputText value="#{fork.profits[0].profit}">
                             <f:convertNumber pattern="#0.0%"/>
                         </h:outputText>
                     </p:column>
@@ -211,40 +218,9 @@
                         </h:outputText>
                     </p:column>
                 </p:dataTable>
-
-                <!--<div class="middle">
-                    <p:commandButton value="Stop auto update" onclick="PF('poll').stop();"/><p:commandButton value="Start auto update"
-                                                                                                             onclick="PF('poll').start();"/>
-                </div>-->
-
-                <!--<p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable" rows="20"
-                             var="marketPositionFastCompare"
-                             value="#{webDataController.adminMarketPositionCompareList}"
-                             rowStyleClass="#{marketPositionFastCompare.sellMarketPosition.active eq false or marketPositionFastCompare.buyMarketPosition.active eq false ? 'notActiveWallet' : null}
-                                            #{marketPositionFastCompare.lieProfitByGlasses ? 'lieProfitByGlasses' : null}
-                                            #{marketPositionFastCompare.publicVisible ? 'publicVisible' : null}"
-
-                >
-                    <f:facet name="header">
-                        all symbols / все пары тут и нерабочие с главной и те что в серединке которые я не выводил на index и ите что вывел на главной
-                    </f:facet>
-                    <ui:include src="/template/commonTableCollumns.xhtml"/>
-                </p:dataTable>
-
-                <p:dataTable id="notTrueMarketPositionsCompareTable" styleClass="marketSymbolsCompareTable"
-                             var="marketPositionFastCompare"
-                             value="#{webDataController.topProblemAfter10MarketPositionFastCompareList}"
-                             filteredValue="#{webDataController.filteredCompareList}"
-                             rowStyleClass="#{marketPositionFastCompare.sellMarketPosition.active eq false or marketPositionFastCompare.buyMarketPosition.active eq false ? 'notActiveWallet' : null}
-                                            #{marketPositionFastCompare.lieProfitByGlasses ? 'lieProfitByGlasses' : null}"
-                >
-                    <f:facet name="header">
-                        presumably working symbols / предположительно рабочие пары
-                    </f:facet>
-                    <ui:include src="/template/commonTableCollumns.xhtml"/>
-                </p:dataTable>-->
             </h:form>
         </ui:define>
     </ui:composition>
 </h:body>
 </html>
+

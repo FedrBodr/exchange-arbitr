@@ -80,10 +80,12 @@ public class MarketPositionFastRepositoryCustomImpl implements MarketPositionFas
 				"buyOrders.exchange_id as \"buyExchangeMetaId\",\n" +
 				"min(buyOrders.final_sum)/min(buyOrders.original_sum) as \"averageBuyStackPrice\",\n" +
 				"min(buyOrders.final_sum)/min(buyOrders.original_sum)*min(coinsForTransferAmount) as \"finalCoinsAmount\",\n" +
-				"((min(buyOrders.final_sum)/min(buyOrders.original_sum))*min(coinsForTransferAmount) - :deposit)/:deposit as \"PROFIT\",\n" +
-				"min(sellOrdersCalc.name) as \"symbolName\"\n" +
+				"((min(buyOrders.final_sum)/min(buyOrders.original_sum))*min(coinsForTransferAmount) - :deposit)/:deposit as \"profit\",\n" +
+				"min(sellOrdersCalc.name) as \"symbolName\",\n" +
+				"min(sellOrdersCalc.limit_price1) as \"sellLimitPrice\",\n" +
+				"min(buyOrders.limit_price) as \"buyLimitPrice\"" +
 				"from uni_limit_order buyOrders, \n" +
-				"(select exchange_id as sellOrders_exchange_id, min(final_sum), :deposit/(min(sellOrders.final_sum)/min(sellOrders.original_sum)) as coinsForTransferAmount, min(sellOrders.final_sum)/min(sellOrders.original_sum) as averageSellStackPrice,\n" +
+				"(select exchange_id as sellOrders_exchange_id, min(final_sum), min(limit_price) as limit_price1, :deposit/(min(sellOrders.final_sum)/min(sellOrders.original_sum)) as coinsForTransferAmount, min(sellOrders.final_sum)/min(sellOrders.original_sum) as averageSellStackPrice,\n" +
 				"min(s.name) as name, min(s.id) as sy_id\n" +
 				"from uni_limit_order sellOrders, symbol s\n" +
 				"where s.id=sellOrders.symbol_id and sellOrders.type = 'ASK' and sellOrders.final_sum > :deposit\n" +

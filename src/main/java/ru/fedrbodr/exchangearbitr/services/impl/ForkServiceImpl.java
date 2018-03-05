@@ -5,6 +5,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.PredicateUtils;
 import org.knowm.xchange.dto.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.longtime.domain.DepoProfit;
 import ru.fedrbodr.exchangearbitr.dao.longtime.domain.ExchangeMetaLong;
@@ -12,6 +13,8 @@ import ru.fedrbodr.exchangearbitr.dao.longtime.domain.Fork;
 import ru.fedrbodr.exchangearbitr.dao.longtime.domain.SymbolLong;
 import ru.fedrbodr.exchangearbitr.dao.longtime.repo.ExchangeMetaLongRepository;
 import ru.fedrbodr.exchangearbitr.dao.longtime.repo.ForkRepository;
+import ru.fedrbodr.exchangearbitr.dao.longtime.repo.ForkRepositoryCustom;
+import ru.fedrbodr.exchangearbitr.dao.longtime.reports.ForkInfo;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.UniLimitOrder;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.LimitOrderRepository;
@@ -20,17 +23,24 @@ import ru.fedrbodr.exchangearbitr.services.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static ru.fedrbodr.exchangearbitr.config.CachingConfig.CURRENT_FORKS_CACHE;
 
 @Service
 @Slf4j
 public class ForkServiceImpl implements ForkService {
 	public static final double MIN_PROFIT_TO_LOGGING = 0.003;
 	private static final long FORK_DELIMITER_LATENCY_TIME = 5000;
+	public static final int FORK_LAST_UPDATED_SECONDS = 60;
 	@Autowired
 	private MarketPositionFastService marketPositionFastService;
 	@Autowired
 	private ForkRepository forkRepository;
+	@Autowired
+	private ForkRepositoryCustom forkRepositoryCustom;
 	@Autowired
 	private SymbolLongService symbolLongService;
 	@Autowired
@@ -42,32 +52,55 @@ public class ForkServiceImpl implements ForkService {
 	@Autowired
 	private LimitOrderRepository limitOrderRepository;
 
+	//@Cacheable("CURRENT_FORKS_CACHE")
+	@Override
+	public List<ForkInfo> getCurrentForks() {
+		List<ForkInfo> forkInfos = forkRepositoryCustom.selectLatestForksInfo(FORK_LAST_UPDATED_SECONDS);
+		for (ForkInfo forkInfo : forkInfos) {
+			forkInfo.setProfits(calcProfitsByOrderBooks(forkInfo.getSellExchangeMeta(), forkInfo.getBuyExchangeMeta(), forkInfo.getSymbol()));
+		}
+		return forkInfos;
+	}
+
 	@Override
 	public void determineAndPersistForks(long lastOrdersLoadingTime) {
 		Date start = new Date();
 		//log.info("Before getMarketPositionFastCompares: {}", (new Date().getTime() - start.getTime()) / 1000);
 		/*List<MarketPositionFastCompare> marketPositionFastCompares = marketPositionFastService.getMarketPositionFastCompares();*/
 		//log.info("After getMarketPositionFastCompares Load seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
-		List<DepoFork> depoForks = marketPositionFastService.getDepoForks(BigDecimal.valueOf(0.001));
+		List<DepoFork> depoForks = marketPositionFastService.getDepoForks(BigDecimal.valueOf(0.01));
 		log.info("After getDepoForks: {} ms", new Date().getTime() - start.getTime());
 		Date currentForkDetectedTime = new Date();
-		Set<Fork> foundedForks = new HashSet<>();
+		List<Fork> foundedForks = calcForks(lastOrdersLoadingTime, depoForks, currentForkDetectedTime);
+		log.info("After forks for seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
+		saveAndFlash(foundedForks);
+		log.info("After save and flush forks seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
+	}
 
+	@CacheEvict(allEntries = true, value = {CURRENT_FORKS_CACHE})
+	public void saveAndFlash(Iterable<? extends Fork> foundedForks) {
+		forkRepository.save(foundedForks);
+		forkRepository.flush();
+	}
+
+	@Override
+	public List<Fork> calcForks(long lastOrdersLoadingTime, List<DepoFork> depoForks, Date currentForkDetectedTime) {
+		List<Fork> foundedForks = new ArrayList<>();
 		for (DepoFork depoFork : depoForks) {
 			Fork fork = new Fork();
-			ExchangeMetaLong buyExchangeMeta = exchangeMetaLongRepository.findById(depoFork.getSellExchangeMetaId());
+			ExchangeMetaLong buyExchangeMeta = exchangeMetaLongRepository.findById(depoFork.getBuyExchangeMetaId());
 			fork.setBuyExchangeMeta(buyExchangeMeta);
-			ExchangeMetaLong sellExchangeMeta = exchangeMetaLongRepository.findById(depoFork.getBuyExchangeMetaId());
+			ExchangeMetaLong sellExchangeMeta = exchangeMetaLongRepository.findById(depoFork.getSellExchangeMetaId());
 			fork.setSellExchangeMeta(sellExchangeMeta);
 			// first it is base like BTC seccond alt like
 			String[] splitSymbol = depoFork.getSymbolName().split("-");
 			SymbolLong symbol = symbolLongService.getOrCreateNewSymbol(splitSymbol[0], splitSymbol[1]);
 			fork.setSymbol(symbol);
 
-			fork.setProfits(calcProfitsByOrderBooks(buyExchangeMeta, sellExchangeMeta, symbol));
+			fork.setProfits(calcProfitsByOrderBooks(sellExchangeMeta, buyExchangeMeta, symbol));
 			fork.setTimestamp(currentForkDetectedTime);
 
-			Fork lastSameFork = forkRepository.findFirstByBuyExchangeMetaIdAndSellExchangeMetaIdAndSymbolIdOrderByIdDesc(
+			ru.fedrbodr.exchangearbitr.dao.longtime.domain.Fork lastSameFork = forkRepository.findFirstByBuyExchangeMetaIdAndSellExchangeMetaIdAndSymbolIdOrderByIdDesc(
 					buyExchangeMeta.getId(), sellExchangeMeta.getId(), symbol.getId());
 			if (lastSameFork != null) {
 				log.debug("LastSameFork is {} and currentForkDetectedTime.getTime() - lastSameFork.getTimestamp().getTime() = {} and lastOrdersLoadingTime+ FORK_DELIMITER_LATENCY_TIME = {}",
@@ -84,65 +117,28 @@ public class ForkServiceImpl implements ForkService {
 			foundedForks.add(fork);
 
 		}
-		/* Old style fork calculating
-		Set<Fork> foundedForks2 = new HashSet<>();
-		for (MarketPositionFastCompare marketPositionFastCompare : marketPositionFastCompares) {
-			if(marketPositionFastCompare.getDepositProfitList() != null && marketPositionFastCompare.getDepositProfitList().size() > 0 &&
-					new BigDecimal(MIN_PROFIT_TO_LOGGING).compareTo(marketPositionFastCompare.getDepositProfitList().get(0).getProfit()) < 0) {
-				Fork fork = new Fork();
-				ExchangeMetaLong buyExchangeMeta = exchangeMetaLongRepository.findById(marketPositionFastCompare.getSellMarketPosition().getMarketPositionFastPK().getExchangeMeta().getId());
-				fork.setBuyExchangeMeta(buyExchangeMeta);
-				ExchangeMetaLong sellExchangeMeta = exchangeMetaLongRepository.findById(marketPositionFastCompare.getBuyMarketPosition().getMarketPositionFastPK().getExchangeMeta().getId());
-				fork.setSellExchangeMeta(sellExchangeMeta);
-				Symbol symbol1 = marketPositionFastCompare.getBuyMarketPosition().getMarketPositionFastPK().getSymbol();
-				SymbolLong symbol = symbolLongService.getOrCreateNewSymbol(symbol1.getBaseName(), symbol1.getQuoteName());
-
-				fork.setSymbol(symbol);
-				fork.setProfits(DepoProfit.convertToDepoProfitList(marketPositionFastCompare.getDepositProfitList()));
-				fork.setTimestamp(currentForkDetectedTime);
-
-				Fork lastSameFork = forkRepository.findFirstByBuyExchangeMetaIdAndSellExchangeMetaIdAndSymbolIdOrderByIdDesc(
-						buyExchangeMeta.getId(), sellExchangeMeta.getId(), symbol.getId());
-				if (lastSameFork != null) {
-					log.debug("LastSameFork is {} and currentForkDetectedTime.getTime() - lastSameFork.getTimestamp().getTime() = {} and lastOrdersLoadingTime+ FORK_DELIMITER_LATENCY_TIME = {}",
-							lastSameFork, currentForkDetectedTime.getTime() - lastSameFork.getTimestamp().getTime(), lastOrdersLoadingTime + FORK_DELIMITER_LATENCY_TIME);
-					if (currentForkDetectedTime.getTime() - lastSameFork.getTimestamp().getTime() < lastOrdersLoadingTime + FORK_DELIMITER_LATENCY_TIME) {
-						fork.setForkWindowId(lastSameFork.getForkWindowId());
-					} else {
-						// Previous fork window end and next start with new forkPackId
-						fork.setForkWindowId(lastSameFork.getForkWindowId() + 1);
-					}
-				}else{
-					fork.setForkWindowId((long) 1);
-				}
-				foundedForks2.add(fork);
-			}
-
-		}*/
-		log.info("After forks for seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
-		forkRepository.save(foundedForks);
-		forkRepository.flush();
-		log.info("After save and flush forks seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
+		return foundedForks;
 	}
 
-	private List<DepoProfit> calcProfitsByOrderBooks(ExchangeMetaLong buyExchangeMeta, ExchangeMetaLong sellExchangeMeta, SymbolLong symbol) {
-		Symbol symbol1 = symbolService.getOrCreateNewSymbol(symbol.getBaseName(), symbol.getQuoteName());
+	private List<DepoProfit> calcProfitsByOrderBooks(ExchangeMetaLong sellExchangeMeta, ExchangeMetaLong buyExchangeMeta, SymbolLong symbol) {
+		Symbol symbolShort = symbolService.getOrCreateNewSymbol(symbol.getBaseName(), symbol.getQuoteName());
 
-		List<UniLimitOrder> sellUniLimitOrders = limitOrderRepository.findFirst60ByExchangeMetaAndSymbolAndType(
-				exchangeMetaService.getExchangeMetaById(buyExchangeMeta.getId()),
-				symbol1,
-				Order.OrderType.ASK);
-		List<UniLimitOrder> buyUniLimitOrders = limitOrderRepository.findFirst60ByExchangeMetaAndSymbolAndType(
-				exchangeMetaService.getExchangeMetaById(sellExchangeMeta.getId()),
-				symbol1,
+		List<UniLimitOrder> sellUniLimitOrders = limitOrderRepository.findFirst60ByExchangeMetaAndSymbolAndTypeOrderById(exchangeMetaService.getExchangeMetaById(sellExchangeMeta.getId()),symbolShort,Order.OrderType.ASK);
+		List<UniLimitOrder> buyUniLimitOrders = limitOrderRepository.findFirst60ByExchangeMetaAndSymbolAndTypeOrderById(exchangeMetaService.getExchangeMetaById(buyExchangeMeta.getId()),
+				symbolShort,
 				Order.OrderType.BID);
 
 		return calcAddProfitsList(sellUniLimitOrders, buyUniLimitOrders);
 	}
 
+	/**
+	 * sellUniLimitOrders - where we buy
+	 * buyUniLimitOrders - where we sell
+	 */
 	private List<DepoProfit> calcAddProfitsList(List<UniLimitOrder> sellUniLimitOrders, List<UniLimitOrder> buyUniLimitOrders) {
 		List<DepoProfit> depositProfitList = new ArrayList<>();
 
+		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(0.01)));
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(0.1)));
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(0.25)));
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(0.5)));
@@ -193,6 +189,9 @@ public class ForkServiceImpl implements ForkService {
 		BigDecimal finalCoinsAmount = averageBuyStackPrice.multiply(coinsForTransferAmount);
 
 		BigDecimal depoProfit = finalCoinsAmount.subtract(baseDepositAmount).divide(baseDepositAmount, 3, RoundingMode.HALF_DOWN);
+		if (depoProfit.compareTo(BigDecimal.ZERO) < 0){
+			return null;
+		}
 
 		DepoProfit depositProfit = new DepoProfit();
 		depositProfit.setDeposit(baseDepositAmount);
@@ -200,6 +199,10 @@ public class ForkServiceImpl implements ForkService {
 		depositProfit.setAverageBuyStackPrice(averageBuyStackPrice);
 		depositProfit.setFinalCoinsAmount(finalCoinsAmount);
 		depositProfit.setProfit(depoProfit);
+		depositProfit.setSellLimitPrice(sellOrderForCalc.getLimitPrice());
+		depositProfit.setSellGlassUpdated(sellOrderForCalc.getTimeStamp());
+		depositProfit.setBuyLimitPrice(buyOrderForCalc.getLimitPrice());
+		depositProfit.setBuyGlassUpdated(buyOrderForCalc.getTimeStamp());
 		return depositProfit;
 
 

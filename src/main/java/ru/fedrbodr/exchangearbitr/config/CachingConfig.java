@@ -14,6 +14,7 @@ public class CachingConfig {
 	public static final String TOP_AFTER_10_COMPARE_LIST = "topAfter12CompareListCache";
 	public static final String TOP_PROBLEM_AFTER_10_COMPARE_LIST = "topProblemAfter12CompareListCache";
 	public static final String TOP_COMPARE_LIST = "top30CompareListCache";
+	public static final String CURRENT_FORKS_CACHE = "currentForksCache";
 
 	@CacheEvict(allEntries = true, value = {ORDER_LIST_CACHE})
 	@Scheduled(fixedDelay = 1 * 1000, initialDelay = 60 * 1000)

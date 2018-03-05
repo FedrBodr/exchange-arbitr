@@ -19,6 +19,20 @@ public interface LimitOrderRepository extends JpaRepository<UniLimitOrder, Long>
 	List<UniLimitOrder> findFirst60ByExchangeMetaAndSymbolAndType(
 			ExchangeMeta exchangeMeta, Symbol symbol, Order.OrderType type);
 
+	@Transactional(readOnly = true)
+	List<UniLimitOrder> findFirst60ByExchangeMetaAndSymbolAndTypeOrderById(
+			ExchangeMeta exchangeMeta, Symbol symbol, Order.OrderType type);
+
+	@Transactional(readOnly = true)
+	List<UniLimitOrder> findFirst60ByExchangeMetaAndSymbolAndTypeOrderByIdDesc(
+			ExchangeMeta exchangeMeta, Symbol symbol, Order.OrderType type);
+	@Transactional(readOnly = true)
+	List<UniLimitOrder> findLast60ByExchangeMetaAndSymbolAndType(
+			ExchangeMeta exchangeMeta, Symbol symbol, Order.OrderType type);
+	@Transactional(readOnly = true)
+	List<UniLimitOrder> findTop60ByExchangeMetaAndSymbolAndType(
+			ExchangeMeta exchangeMeta, Symbol symbol, Order.OrderType type);
+
 	@Transactional
 	void deleteByExchangeMetaAndSymbol(
 			ExchangeMeta exchangeMeta, Symbol symbol);

@@ -5,7 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-
+/**
+ * Agregate entyty for reports
+* */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,5 +26,9 @@ public class DepoFork {
 	private BigDecimal finalCoinsAmount;
 	private BigDecimal profit;
 	private String symbolName;
+	/** Limit price on first exchange by last sell order for the deposit(we buy) */
+	private BigDecimal sellLimitPrice;
+	/** Limit price on second exchange by last buy order for the deposit(we sell) */
+	private BigDecimal buyLimitPrice;
 
 }

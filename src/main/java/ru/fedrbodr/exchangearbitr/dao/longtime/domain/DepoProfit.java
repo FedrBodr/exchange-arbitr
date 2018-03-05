@@ -7,6 +7,7 @@ import ru.fedrbodr.exchangearbitr.model.DepositProfit;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Table(name = "depo_profit")
@@ -26,13 +27,19 @@ public class DepoProfit {
 	@Column(name = "average_buy_stack_price", nullable = false)
 	private BigDecimal averageBuyStackPrice;
 	/**
-	 * average price on seccond exchange by buy orders for the deposit(we sell)
+	 * average price on second exchange by buy orders for the deposit(we sell)
 	 * */
 	@Column(name = "average_sell_stack_price", nullable = false)
 	private BigDecimal averageSellStackPrice;
 	@Column(name = "final_coins_amount", nullable = false)
 	private BigDecimal finalCoinsAmount;
 	private BigDecimal profit;
+	/** Limit price on first exchange by last sell order for the deposit(we buy) */
+	private BigDecimal sellLimitPrice;
+	private Date sellGlassUpdated;
+	/** Limit price on second exchange by last buy order for the deposit(we sell) */
+	private BigDecimal buyLimitPrice;
+	private Date buyGlassUpdated;
 
 	public DepoProfit(BigDecimal deposit, BigDecimal averageBuyStackPrice, BigDecimal averageSellStackPrice, BigDecimal finalCoinsAmount, BigDecimal profit) {
 		this.deposit = deposit;

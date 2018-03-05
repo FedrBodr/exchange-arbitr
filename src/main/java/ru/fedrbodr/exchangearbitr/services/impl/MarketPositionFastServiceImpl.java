@@ -80,6 +80,9 @@ public class MarketPositionFastServiceImpl implements MarketPositionFastService 
 		return marketPositionFastCompares;
 	}
 
+	/**
+	 * Correct calc
+	* */
 	@Override
 	public List<DepoFork> getDepoForks(BigDecimal deposit) {
 		Date start = new Date();
