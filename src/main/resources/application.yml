@@ -27,27 +27,27 @@ spring:
 #      current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
 
 # In-Memory H2 database for monitoring and fast calculating of real-time forks.
-#  datasource:
-#    url: jdbc:h2:mem:shorttime2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE
-#    username: fe
-#    password: noMONEY0607noHoney
-#    driverClassName: org.h2.Driver
-#    tomcat.max-active: 300
-#    tomcat.max-idle: 30
+  datasource:
+    url: jdbc:h2:mem:shorttime2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE
+    username: fe
+    password: noMONEY0607noHoney
+    driverClassName: org.h2.Driver
+    tomcat.max-active: 300
+    tomcat.max-idle: 30
 
 # POSTGRE database for TEST monitoring and fast calculating of real-time forks.
-  datasource:
-    url: jdbc:postgresql://localhost:5432/shorttime
-    username: postgres
-    password: 351
-    driver-class-name: org.postgresql.Driver
-    testWhileIdle: true
-    spring.datasource.validationQuery: SELECT 1
-    tomcat:
-      max-active: 150
-      max-idle: 15
-      validation-query: SELECT 1
-      test-while-idle: true
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/shorttime
+#    username: postgres
+#    password: 351
+#    driver-class-name: org.postgresql.Driver
+#    testWhileIdle: true
+#    spring.datasource.validationQuery: SELECT 1
+#    tomcat:
+#      max-active: 150
+#      max-idle: 15
+#      validation-query: SELECT 1
+#      test-while-idle: true
 
 # Oracle database for TEST monitoring and fast calculating of real-time forks.
 #  datasource:

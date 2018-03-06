@@ -17,10 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Component
 @Slf4j
@@ -69,8 +66,8 @@ public class OrderBooksWorker implements Runnable {
 		Date start = new Date();
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		List<FutureTask<Void>> taskList = new ArrayList<>();
-		/* Do not be surprised MarketPositionFastPK is suitable for check exchangeMeta and symbol uniqueness */
 
+		/* Do not be surprised MarketPositionFastPK is suitable for check exchangeMeta and symbol uniqueness */
 		Set<MarketPositionFast> marketPositionFastSet = marketPositionFastService.getMarketPositionSetToLoadOrderBooks();
 		for (MarketPositionFast marketPositionFast : marketPositionFastSet) {
 			addOrderBookReaderFutureTaskToTaskList(executor, taskList, marketPositionFast);
@@ -84,13 +81,16 @@ public class OrderBooksWorker implements Runnable {
 		long allOrdersLoadingTime = (new Date().getTime() - start.getTime());
 		log.info("After all orders Load seconds: {}", allOrdersLoadingTime / 1000);
 		/* Start forks calculating for saving statistics */
-		ExecutorService executorService = Executors.newSingleThreadExecutor();
 		forkService.determineAndPersistForks(allOrdersLoadingTime);
-		/*Callable<Void> tCallable = () -> {
+		/*call preinit last forks cache*/
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
+		Callable<Void> tCallable = () -> {
+			/* just for pre init last forks cache */
+			forkService.getCurrentForks();
 			return null;
 		};
 		FutureTask futureTask = new FutureTask(tCallable);
-		executorService.execute(futureTask);*/
+		executorService.execute(futureTask);
 
 		long lastCallWas = System.currentTimeMillis() - startPreviousCall.getTime();
 		if (lastCallWas < RUN_MIN_PAUSE) {

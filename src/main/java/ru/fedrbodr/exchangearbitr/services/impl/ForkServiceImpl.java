@@ -5,12 +5,13 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.PredicateUtils;
 import org.knowm.xchange.dto.Order;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.longtime.domain.DepoProfit;
 import ru.fedrbodr.exchangearbitr.dao.longtime.domain.ExchangeMetaLong;
 import ru.fedrbodr.exchangearbitr.dao.longtime.domain.Fork;
 import ru.fedrbodr.exchangearbitr.dao.longtime.domain.SymbolLong;
+import ru.fedrbodr.exchangearbitr.dao.longtime.repo.DepoProfitRepository;
 import ru.fedrbodr.exchangearbitr.dao.longtime.repo.ExchangeMetaLongRepository;
 import ru.fedrbodr.exchangearbitr.dao.longtime.repo.ForkRepository;
 import ru.fedrbodr.exchangearbitr.dao.longtime.repo.ForkRepositoryCustom;
@@ -24,6 +25,7 @@ import ru.fedrbodr.exchangearbitr.services.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -33,8 +35,8 @@ import static ru.fedrbodr.exchangearbitr.config.CachingConfig.CURRENT_FORKS_CACH
 @Slf4j
 public class ForkServiceImpl implements ForkService {
 	public static final double MIN_PROFIT_TO_LOGGING = 0.003;
-	private static final long FORK_DELIMITER_LATENCY_TIME = 5000;
-	public static final int FORK_LAST_UPDATED_SECONDS = 60;
+	private static final long FORK_DELIMITER_LATENCY_TIME = 240;
+	public static final int FORK_LAST_UPDATED_SECONDS = 100;
 	@Autowired
 	private MarketPositionFastService marketPositionFastService;
 	@Autowired
@@ -51,13 +53,27 @@ public class ForkServiceImpl implements ForkService {
 	private ExchangeMetaService exchangeMetaService;
 	@Autowired
 	private LimitOrderRepository limitOrderRepository;
+	@Autowired
+	private DepoProfitRepository depoProfitRepository;
 
-	//@Cacheable("CURRENT_FORKS_CACHE")
+	@Cacheable(CURRENT_FORKS_CACHE)
 	@Override
 	public List<ForkInfo> getCurrentForks() {
 		List<ForkInfo> forkInfos = forkRepositoryCustom.selectLatestForksInfo(FORK_LAST_UPDATED_SECONDS);
 		for (ForkInfo forkInfo : forkInfos) {
-			forkInfo.setProfits(calcProfitsByOrderBooks(forkInfo.getSellExchangeMeta(), forkInfo.getBuyExchangeMeta(), forkInfo.getSymbol()));
+			forkInfo.setProfits(depoProfitRepository.findAllByForkId(forkInfo.getId()));
+		}
+		if(CollectionUtils.isNotEmpty(forkInfos)) {
+			Collections.sort(forkInfos, (o1, o2) -> {
+				if (o1.getProfits().size() < 2 && o2.getProfits().size() > 1) {
+					return 1;
+				}else if (o1.getProfits().size() > 1 && o2.getProfits().size() < 2) {
+					return -1;
+				}else if(o1.getProfits().size() > 1 && o2.getProfits().size() > 1){
+					return -o1.getProfits().get(1).getProfit().compareTo(o2.getProfits().get(1).getProfit());
+				}
+				return -o1.getProfits().get(0).getProfit().compareTo(o2.getProfits().get(0).getProfit());
+			});
 		}
 		return forkInfos;
 	}
@@ -73,14 +89,8 @@ public class ForkServiceImpl implements ForkService {
 		Date currentForkDetectedTime = new Date();
 		List<Fork> foundedForks = calcForks(lastOrdersLoadingTime, depoForks, currentForkDetectedTime);
 		log.info("After forks for seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
-		saveAndFlash(foundedForks);
+		forkRepositoryCustom.saveAndFlash(foundedForks);
 		log.info("After save and flush forks seconds: {}", (new Date().getTime() - start.getTime()) / 1000);
-	}
-
-	@CacheEvict(allEntries = true, value = {CURRENT_FORKS_CACHE})
-	public void saveAndFlash(Iterable<? extends Fork> foundedForks) {
-		forkRepository.save(foundedForks);
-		forkRepository.flush();
 	}
 
 	@Override
@@ -96,8 +106,11 @@ public class ForkServiceImpl implements ForkService {
 			String[] splitSymbol = depoFork.getSymbolName().split("-");
 			SymbolLong symbol = symbolLongService.getOrCreateNewSymbol(splitSymbol[0], splitSymbol[1]);
 			fork.setSymbol(symbol);
-
-			fork.setProfits(calcProfitsByOrderBooks(sellExchangeMeta, buyExchangeMeta, symbol));
+			List<DepoProfit> depoProfits = calcProfitsByOrderBooks(sellExchangeMeta, buyExchangeMeta, symbol);
+			depoProfits.forEach(depoProfit -> {
+				depoProfit.setFork(fork);
+			});
+			fork.setProfits(depoProfits);
 			fork.setTimestamp(currentForkDetectedTime);
 
 			ru.fedrbodr.exchangearbitr.dao.longtime.domain.Fork lastSameFork = forkRepository.findFirstByBuyExchangeMetaIdAndSellExchangeMetaIdAndSymbolIdOrderByIdDesc(

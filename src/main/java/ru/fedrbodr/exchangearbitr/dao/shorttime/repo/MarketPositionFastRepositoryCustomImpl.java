@@ -73,14 +73,14 @@ public class MarketPositionFastRepositoryCustomImpl implements MarketPositionFas
 	@Transactional(readOnly = true)
 	public List<DepoFork> selectTopForksByDeposit(BigDecimal deposit) {
 		SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-		String sql = "select\n" +
-				":deposit as \"deposit\", \n" +
+		String sql = "select :deposit as \"deposit\", depoprofits.* from (" +
+				"select\n" +
 				"min(sellOrdersCalc.sellOrders_exchange_id) as \"sellExchangeMetaId\",\n" +
 				"min(averageSellStackPrice) as \"averageSellStackPrice\",\n" +
 				"buyOrders.exchange_id as \"buyExchangeMetaId\",\n" +
 				"min(buyOrders.final_sum)/min(buyOrders.original_sum) as \"averageBuyStackPrice\",\n" +
 				"min(buyOrders.final_sum)/min(buyOrders.original_sum)*min(coinsForTransferAmount) as \"finalCoinsAmount\",\n" +
-				"((min(buyOrders.final_sum)/min(buyOrders.original_sum))*min(coinsForTransferAmount) - :deposit)/:deposit as \"profit\",\n" +
+				"((min(buyOrders.final_sum)/min(buyOrders.original_sum))*min(coinsForTransferAmount) - :deposit)/:deposit as \"PROFIT\",\n" +
 				"min(sellOrdersCalc.name) as \"symbolName\",\n" +
 				"min(sellOrdersCalc.limit_price1) as \"sellLimitPrice\",\n" +
 				"min(buyOrders.limit_price) as \"buyLimitPrice\"" +
@@ -93,10 +93,11 @@ public class MarketPositionFastRepositoryCustomImpl implements MarketPositionFas
 				"sellOrdersCalc\n" +
 				"where \n" +
 				"buyOrders.exchange_id != sellOrdersCalc.sellOrders_exchange_id and buyOrders.type = 'BID'\n" +
-				"and buyOrders.original_sum > sellOrdersCalc.coinsForTransferAmount and buyOrders.symbol_id = sellOrdersCalc.sy_id and \n" +
-				"((buyOrders.final_sum/buyOrders.original_sum)*coinsForTransferAmount - :deposit)/:deposit > 0.03\n" +
+				"and buyOrders.original_sum > sellOrdersCalc.coinsForTransferAmount and buyOrders.symbol_id = sellOrdersCalc.sy_id\n" +
 				"group by buyOrders.exchange_id, buyOrders.symbol_id\n" +
-				"order by profit desc;";
+				"order by profit desc" +
+				") depoprofits \n" +
+				"where depoprofits.profit > 0.009;";
 		Session session = sessionFactory.getCurrentSession();
 		SQLQuery sqlQuery = session.createSQLQuery(sql);
 		sqlQuery.setParameter("deposit", deposit);

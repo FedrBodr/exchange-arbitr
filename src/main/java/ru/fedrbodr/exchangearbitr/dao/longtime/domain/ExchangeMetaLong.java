@@ -25,7 +25,7 @@ public class ExchangeMetaLong implements Serializable {
 	public static ExchangeMetaLong BINANCE = new ExchangeMetaLong(4, "BINANCE", "https://www.binance.com/", "https://www.binance.com/trade.html?symbol=", "");
 	public static ExchangeMetaLong HITBTC = new ExchangeMetaLong(5, "HIT-BTC", "https://hitbtc.com", "https://hitbtc.com/exchange/", "?ref_id=5a87e613af10d");
 	public static ExchangeMetaLong KUCOIN = new ExchangeMetaLong(6, "KUCOIN", "www.kucoin.com", "https://www.kucoin.com/#/trade.pro/", "");
-	public static ExchangeMetaLong btctrade = new ExchangeMetaLong(7, "KUCOIN", "www.kucoin.com", "https://www.kucoin.com/#/trade.pro/", "");
+	public static ExchangeMetaLong btctrade = new ExchangeMetaLong(7, "BTCTRADE", "www.kucoin.com", "https://www.kucoin.com/#/trade.pro/", "");
 
 
 	@Id

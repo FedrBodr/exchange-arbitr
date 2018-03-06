@@ -5,12 +5,16 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Repository;
+import ru.fedrbodr.exchangearbitr.dao.longtime.domain.Fork;
 import ru.fedrbodr.exchangearbitr.dao.longtime.reports.ForkInfo;
 import ru.fedrbodr.exchangearbitr.dao.longtime.transformer.ForkDtoResultTransformer;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
+
+import static ru.fedrbodr.exchangearbitr.config.CachingConfig.CURRENT_FORKS_CACHE;
 
 @Repository
 public class ForkRepositoryCustomImpl implements ForkRepositoryCustom {
@@ -21,6 +25,8 @@ public class ForkRepositoryCustomImpl implements ForkRepositoryCustom {
 	private ExchangeMetaLongRepository exchangeMetaLongRepository;
 	@Autowired
 	private SymbolLongRepository symbolRepository;
+	@Autowired
+	private ForkRepository forkRepository;
 
 	/**
 	 *  STRON forkLastUpdatedSeconds must be number only do not refactor!!!
@@ -39,5 +45,12 @@ public class ForkRepositoryCustomImpl implements ForkRepositoryCustom {
 		Session session = sessionFactory.getCurrentSession();
 		SQLQuery sqlQuery = session.createSQLQuery(sql);
 		return sqlQuery.setResultTransformer(new ForkDtoResultTransformer(exchangeMetaLongRepository, symbolRepository)).list();
+	}
+
+	@CacheEvict(allEntries = true, value = {CURRENT_FORKS_CACHE})
+	@Override
+	public void saveAndFlash(Iterable<? extends Fork> foundedForks) {
+		forkRepository.save(foundedForks);
+		forkRepository.flush();
 	}
 }

@@ -40,6 +40,9 @@ public class DepoProfit {
 	/** Limit price on second exchange by last buy order for the deposit(we sell) */
 	private BigDecimal buyLimitPrice;
 	private Date buyGlassUpdated;
+	@ManyToOne
+	@JoinColumn(name = "fork_id")
+	private Fork fork;
 
 	public DepoProfit(BigDecimal deposit, BigDecimal averageBuyStackPrice, BigDecimal averageSellStackPrice, BigDecimal finalCoinsAmount, BigDecimal profit) {
 		this.deposit = deposit;

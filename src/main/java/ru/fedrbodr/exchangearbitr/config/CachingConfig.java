@@ -1,15 +1,19 @@
 package ru.fedrbodr.exchangearbitr.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import ru.fedrbodr.exchangearbitr.services.ForkService;
 
 @Configuration
 @EnableCaching
 @EnableScheduling
 public class CachingConfig {
+	@Autowired
+	private ForkService forkService;
 	public static final String ORDER_LIST_CACHE = "orderListCache";
 	public static final String TOP_AFTER_10_COMPARE_LIST = "topAfter12CompareListCache";
 	public static final String TOP_PROBLEM_AFTER_10_COMPARE_LIST = "topProblemAfter12CompareListCache";
@@ -21,6 +25,12 @@ public class CachingConfig {
 	public void reportCacheEvict() {
 
 	}
+
+	/*@CacheEvict(allEntries = true, value = {CURRENT_FORKS_CACHE})
+	@Scheduled(fixedDelay = 20 * 1000, initialDelay = 60 * 1000)
+	public void currentForksCacheEvict() {
+
+	}*/
 
 	@CacheEvict(allEntries = true, value = {TOP_AFTER_10_COMPARE_LIST})
 	@Scheduled(fixedDelay = 1 * 1000, initialDelay = 30 * 1000)

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+>
+<body>
+<ui:composition>
+    <p:dataTable id="lastForksTable" styleClass="marketSymbolsCompareTable"
+                 var="fork"
+                 widgetVar="lastForksTable"
+                 value="#{webDataController.currentForks}"
+                 filteredValue="#{filteredForkInfos}"
+                 rows="20"
+
+    >
+        <!-- START orders and profits subtable collumns -->
+        <p:rowExpansion>
+            <div class="expansionWrapper">
+                <div class="profitsTableWrapper">
+                    <p:dataTable var="profit"
+                                 value="#{fork.profits}">
+                        <f:facet name="header">
+                            Profits by depos / Профиты по депозитам
+                        </f:facet>
+                        <p:column headerText="Deposit">
+                            <h:outputText value="#{profit.deposit}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Average buy price (we buy)">
+                            <h:outputText value="#{profit.averageSellStackPrice}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Buy limit price for order">
+                            <h:outputText value="#{profit.sellLimitPrice}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Buy glass last update" style="width:63px">
+                            <h:outputText value="#{profit.sellGlassUpdated}">
+                                <f:convertDateTime pattern="HH:mm:ss"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Average sell price (we sell)">
+                            <h:outputText value="#{profit.averageBuyStackPrice}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Buy limit price for order">
+                            <h:outputText value="#{profit.sellLimitPrice}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Sell limit price for order">
+                            <h:outputText value="#{profit.buyLimitPrice}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Sell glass last update" style="width:63px">
+                            <h:outputText value="#{profit.buyGlassUpdated}">
+                                <f:convertDateTime pattern="HH:mm:ss"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Final coin amount">
+                            <h:outputText value="#{profit.finalCoinsAmount}">
+                                <f:convertNumber minFractionDigits="8" locale="en"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Profit by deposit">
+                            <h:outputText value="#{profit.profit}">
+                                <f:convertNumber pattern="#0.0%" locale="en"/>
+                            </h:outputText>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </p:rowExpansion>
+
+        <!-- START collumns of main table -->
+        <p:column style="width:16px">
+            <p:rowToggler/>
+        </p:column>
+        <p:column headerText="Symbol">
+            <h:outputText value="#{fork.symbol.name}"/>
+        </p:column>
+        <!-- filterBy="#{fork.buyExchangeMeta.exchangeName}" filterMatchMode="contains" -->
+        <p:column headerText="Buy exchange, link to pair market" filterBy="#{fork.buyExchangeMeta.exchangeName}" filterMatchMode="exact">
+            <f:facet name="filter">
+                <p:selectOneMenu onchange="PF('lastForksTable').filter()" >
+                    <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
+                    <f:selectItems value="#{webDataController.exchangeMetaLongList}" />
+                </p:selectOneMenu>
+            </f:facet>
+            #{fork.buyExchangeMeta.exchangeName}
+            <!--<h:outputLink value="#{marketPositionFastCompare.buySymbolExchangeUrl}#{buyMarketPK.exchangeMeta.refParam}" target="_blank">
+
+            </h:outputLink>-->
+        </p:column>
+        <!-- filterBy="#{fork.sellExchangeMeta.exchangeName}" filterMatchMode="contains" -->
+        <p:column headerText="Sell exchange, link to pair market">
+            #{fork.sellExchangeMeta.exchangeName}
+            <!--<h:outputLink value="#{marketPositionFastCompare.sellSymbolExchangeUrl}#{sellMarketPK.exchangeMeta.refParam}" target="_blank">
+
+            </h:outputLink>-->
+        </p:column>
+        <p:column headerText="Deposit">
+            <h:outputText value="#{fork.profits.size() lt 2 ? fork.profits[0].deposit : fork.profits[1].deposit}">
+                <f:convertNumber minFractionDigits="8" locale="en"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Profit by deposit">
+            <h:outputText value="#{fork.profits.size() lt 2 ? fork.profits[0].profit : fork.profits[1].profit}">
+                <f:convertNumber pattern="#0.00%"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Start at">
+            <h:outputText value="#{fork.startTime}">
+                <f:convertDateTime pattern="HH:mm:ss"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Update at">
+            <h:outputText value="#{fork.lastUpdatedTime}">
+                <f:convertDateTime pattern="HH:mm:ss"/>
+            </h:outputText>
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>
+</body>
+</html>
