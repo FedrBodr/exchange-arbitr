@@ -2,6 +2,7 @@ package ru.fedrbodr.exchangearbitr.services.exchangereaders;
 
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
+import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.kucoin.dto.KucoinAdapters;
 import org.knowm.xchange.kucoin.dto.KucoinResponse;
@@ -66,10 +67,11 @@ public class KucoinExchangeReaderImpl implements ExchangeReader {
 	public void readAndSaveMarketPositionsBySummaries() throws JSONException {
 		/*TODO refactor this with aop for all init methods*/
 		KucoinResponse<List<KucoinTicker>> kucoinTickerList = null;
+		KucoinMarketDataService nextExchange = (KucoinMarketDataService) exchangeProxy.getNextExchange();
 		try {
-			kucoinTickerList = ((KucoinMarketDataService) exchangeProxy.getNextExchange().getMarketDataService()).getKucoinTickers();
+			kucoinTickerList = nextExchange.getKucoinTickers();
 		} catch (IOException e) {
-			log.error("Error occurred while getHitbtcTickers ", e);
+			log.error("Error occurred while getKucoinTickers on proxy " + ((Exchange )nextExchange).getExchangeSpecification().getProxyHost(), e);
 		}
 		List<KucoinTicker> tikers = kucoinTickerList.getData();
 		List<MarketPosition> marketPositionList = new ArrayList<>();

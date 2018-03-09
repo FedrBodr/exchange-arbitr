@@ -106,13 +106,6 @@ public class ForkServiceImpl implements ForkService {
 			String[] splitSymbol = depoFork.getSymbolName().split("-");
 			SymbolLong symbol = symbolLongService.getOrCreateNewSymbol(splitSymbol[0], splitSymbol[1]);
 			fork.setSymbol(symbol);
-			List<DepoProfit> depoProfits = calcProfitsByOrderBooks(sellExchangeMeta, buyExchangeMeta, symbol);
-			depoProfits.forEach(depoProfit -> {
-				depoProfit.setFork(fork);
-			});
-			fork.setProfits(depoProfits);
-			fork.setTimestamp(currentForkDetectedTime);
-
 			ru.fedrbodr.exchangearbitr.dao.longtime.domain.Fork lastSameFork = forkRepository.findFirstByBuyExchangeMetaIdAndSellExchangeMetaIdAndSymbolIdOrderByIdDesc(
 					buyExchangeMeta.getId(), sellExchangeMeta.getId(), symbol.getId());
 			if (lastSameFork != null) {
@@ -127,6 +120,14 @@ public class ForkServiceImpl implements ForkService {
 			} else {
 				fork.setForkWindowId((long) 1);
 			}
+
+			List<DepoProfit> depoProfits = calcProfitsByOrderBooks(sellExchangeMeta, buyExchangeMeta, symbol);
+			depoProfits.forEach(depoProfit -> {
+				depoProfit.setFork(fork);
+			});
+			fork.setProfits(depoProfits);
+			fork.setTimestamp(currentForkDetectedTime);
+
 			foundedForks.add(fork);
 
 		}

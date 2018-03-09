@@ -65,7 +65,7 @@ public class VariousAppConfig {
 	}
 
 	@Bean
-	public Map<ExchangeMeta, ExchangeProxy> exchangeMetaToExchangeMap(@Autowired CoinexchangeMarketDataService coinexchangeMarketDataService) {
+	public Map<ExchangeMeta, ExchangeProxy> exchangeMetaToExchangeProxyMap(@Autowired CoinexchangeMarketDataService coinexchangeMarketDataService) {
 		log.info("Before start initMarketDataServices");
 		Map<ExchangeMeta, ExchangeProxy> exchangeMetaToExchangeMap;
 

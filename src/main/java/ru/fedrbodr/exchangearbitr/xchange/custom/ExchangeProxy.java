@@ -12,25 +12,24 @@ import java.util.concurrent.*;
 
 @Slf4j
 public class ExchangeProxy {
-	public static final String COINEXCHANGE = "COINEXCHANGE";
 
 	private List<Exchange> exchangePoll = new ArrayList<>();
 	private List<MarketDataService> marketDataServicePoll = new ArrayList<>();
 	private Integer lastExchangeProsyUsedNum = 0;
-	private int lastMarketDataServiceProsyUsedNum = 0;
-
-	public ExchangeProxy(String exchangeClassName) {
-		exchangePoll.add(ExchangeFactory.INSTANCE.createExchange(exchangeClassName));
-	}
 
 	public ExchangeProxy(List<String> proxyHostPortList, String exchangeClassName) {
 		ExecutorService executorService = Executors.newFixedThreadPool(proxyHostPortList.size());
 		try {
 			for (String proxyHostAndPort : proxyHostPortList) {
 				Callable<Void> tCallable = () -> {
-					String[] split = proxyHostAndPort.split(":");
-					exchangePoll.add(getExchangeProxy(split[0], Integer.parseInt(split[1]), exchangeClassName));
-					return null;
+					try {
+						String[] split = proxyHostAndPort.split(":");
+						exchangePoll.add(getExchangeProxy(split[0], Integer.parseInt(split[1]), exchangeClassName));
+						return null;
+					} catch (Exception e) {
+						log.error("Init proxy error " + proxyHostAndPort +" for exchange "+ exchangeClassName, e);
+						return null;
+					}
 				};
 				executorService.execute(new FutureTask(tCallable));
 			}
@@ -38,9 +37,12 @@ public class ExchangeProxy {
 			try {
 				executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 			} catch (InterruptedException e) {
-				log.error("Init proxy error " + e.getMessage(), e);
+				log.error("Init proxy awaitTermination error " + e.getMessage(), e);
 			}
-		}catch (Exception e){
+			if(exchangePoll.size()==0){
+				throw new IllegalArgumentException("Problem proxy list init - empty exchangePoll recognized.");
+			}
+		} catch (Exception e) {
 			throw new IllegalArgumentException("Proxy list in incorrect format! Must be proxy.list: 185.128.215.224:8000,193.93.60.95:8000,193.93.60.236:8000");
 		}
 	}
@@ -49,19 +51,19 @@ public class ExchangeProxy {
 		marketDataServicePoll.add(marketDataService);
 	}
 
-	public MarketDataService getNextMarketDataService(){
+	public MarketDataService getNextMarketDataService() {
 		MarketDataService nextExchangeProxyForUse = marketDataServicePoll.get(0);
 
 		return nextExchangeProxyForUse;
 	}
 
-	public Exchange getNextExchange(){
+	public Exchange getNextExchange() {
 		Exchange nextExchangeProxyForUse = null;
-		synchronized (lastExchangeProsyUsedNum){
+		synchronized (lastExchangeProsyUsedNum) {
 			nextExchangeProxyForUse = exchangePoll.get(lastExchangeProsyUsedNum);
-			if(lastExchangeProsyUsedNum < exchangePoll.size()-1){
+			if (lastExchangeProsyUsedNum < exchangePoll.size() - 1) {
 				lastExchangeProsyUsedNum++;
-			}else{
+			} else {
 				lastExchangeProsyUsedNum = 0;
 			}
 		}

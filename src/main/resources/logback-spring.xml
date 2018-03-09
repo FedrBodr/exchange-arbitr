@@ -11,20 +11,39 @@
 			</encoder>
 		</appender>
 
+		<appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<file>${catalina.home}/logs/processlog.log</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<FileNamePattern>${catalina.home}/logs/processlog.%d{yyyy-MM-dd}.log</FileNamePattern>
+			</rollingPolicy>
+			<encoder>
+				<pattern>%date{HH:mm:ss.SSS} %-5p [%t] %c{1} - %m%n</pattern>
+			</encoder>
+			<append>true</append>
+		</appender>
 
-		<root level="INFO">
+		<root level="info">
 			<appender-ref ref="CONSOLE_APPENDER"/>
+			<appender-ref ref="ROLLING_FILE"/>
 		</root>
 
 
 		<!-- Define logging for organization applications only -->
-		<logger name="org.knowm.xchange" level="INFO"  additivity="false"/>
+		<logger name="org.knowm.xchange" level="INFO"  additivity="false">
+			<appender-ref ref="CONSOLE_APPENDER"/>
+			<appender-ref ref="ROLLING_FILE"/>
+		</logger>
 		<!--<logger name="si.mazi.rescu" level="TRACE"/>-->
 
 		<logger name="ru.fedrbodr.exchangearbitr.services.impl" level="DEBUG" additivity="false">
 			<appender-ref ref="CONSOLE_APPENDER"/>
+			<appender-ref ref="ROLLING_FILE"/>
 		</logger>
 
+		<logger name="ru.fedrbodr.exchangearbitr" level="INFO" additivity="false">
+			<appender-ref ref="CONSOLE_APPENDER"/>
+			<appender-ref ref="ROLLING_FILE"/>
+		</logger>
 
 	</configuration>
 </springProfile>

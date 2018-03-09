@@ -2,28 +2,28 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
 >
 <h:body>
     <ui:composition template="/template/commonLayout.xhtml">
         <ui:define name="content">
             <h:form>
-                <p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable"
-                             var="marketPositionFastCompare"
-                             value="#{webDataController.topAfter10MarketPositionFastCompareList}"
-                             rows="20"
-                             filteredValue="#{webDataController.filteredCompareList}"
-                             rowStyleClass="#{marketPositionFastCompare.sellMarketPosition.active eq false or
-                                                marketPositionFastCompare.buyMarketPosition.active eq false ? 'notActiveWallet' : null}
-                                            #{marketPositionFastCompare.lieProfitByGlasses ? 'lieProfitByGlasses' : null}"
-                >
-                    <f:facet name="header">
-                        presumably working symbols / предположительно рабочие пары
-                    </f:facet>
-                    <ui:include src="/template/commonTableCollumns.xhtml"/>
-                </p:dataTable>
+                <ui:include src="/template/commonForkTable.xhtml"/>
+
+                <!--<p:dataTable id="marketPositionsCompareTable" styleClass="marketSymbolsCompareTable"-->
+                             <!--var="marketPositionFastCompare"-->
+                             <!--value="#{webDataController.topAfter10MarketPositionFastCompareList}"-->
+                             <!--rows="20"-->
+                             <!--filteredValue="#{webDataController.filteredCompareList}"-->
+                             <!--rowStyleClass="#{marketPositionFastCompare.sellMarketPosition.active eq false or-->
+                                                <!--marketPositionFastCompare.buyMarketPosition.active eq false ? 'notActiveWallet' : null}-->
+                                            <!--#{marketPositionFastCompare.lieProfitByGlasses ? 'lieProfitByGlasses' : null}"-->
+                <!--&gt;-->
+                    <!--<f:facet name="header">-->
+                        <!--presumably working symbols / предположительно рабочие пары-->
+                    <!--</f:facet>-->
+                    <!--<ui:include src="/template/commonTableCollumns.xhtml"/>-->
+                <!--</p:dataTable>-->
             </h:form>
         </ui:define>
     </ui:composition>
