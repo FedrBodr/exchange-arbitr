@@ -131,7 +131,17 @@ spring:
   profiles: hosting
   jpa:
     hibernate.ddl-auto: update
-longtime.datasource.datasource:
-  username: exchange_fedr
-  password: profit3001PUSHKA
+longtime.datasource:
+  url: jdbc:postgresql://104.155.111.23:5432/longtime
+  username: postgres
+  password: fktr7429YOR
+  driver-class-name: org.postgresql.Driver
+  testWhileIdle: true
+  validationQuery: SELECT 1
+  schema: public
+  tomcat:
+    max-active: 150
+    max-idle: 15
+    validation-query: SELECT 1
+    test-while-idle: true
 ---

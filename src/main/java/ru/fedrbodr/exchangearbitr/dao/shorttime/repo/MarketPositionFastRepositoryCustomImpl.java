@@ -97,7 +97,7 @@ public class MarketPositionFastRepositoryCustomImpl implements MarketPositionFas
 				"group by buyOrders.exchange_id, buyOrders.symbol_id\n" +
 				"order by profit desc" +
 				") depoprofits \n" +
-				"where depoprofits.profit > 0.009;";
+				"where depoprofits.profit > 0.005;";
 		Session session = sessionFactory.getCurrentSession();
 		SQLQuery sqlQuery = session.createSQLQuery(sql);
 		sqlQuery.setParameter("deposit", deposit);
