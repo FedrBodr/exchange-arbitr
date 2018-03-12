@@ -7,4 +7,6 @@ public interface LimitOrderService {
 
 	void readConvertCalcAndSaveUniOrders(Symbol symbol, ExchangeMeta exchangeMeta) throws InterruptedException;
 
+	void deleteAll();
+
 }

@@ -82,6 +82,7 @@ public class OrderBooksWorker implements Runnable {
 		log.info("After all orders Load seconds: {}", allOrdersLoadingTime / 1000);
 		/* Start forks calculating for saving statistics */
 		forkService.determineAndPersistForks(allOrdersLoadingTime);
+		log.info("After determineAndPersistForks: {} ms", new Date().getTime() - start.getTime());
 		/*call preinit last forks cache*/
 		ExecutorService executorService = Executors.newSingleThreadExecutor();
 		Callable<Void> tCallable = () -> {
@@ -92,6 +93,8 @@ public class OrderBooksWorker implements Runnable {
 		FutureTask futureTask = new FutureTask(tCallable);
 		executorService.execute(futureTask);
 
+		orderService.deleteAll();
+		log.info("After orderService.deleteAll(): {} ms", new Date().getTime() - start.getTime());
 		long lastCallWas = System.currentTimeMillis() - startPreviousCall.getTime();
 		if (lastCallWas < RUN_MIN_PAUSE) {
 			synchronized (this) { // obtain lock's monitor

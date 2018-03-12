@@ -48,7 +48,7 @@ public class Fork {
 	@JoinColumn(name = "symbol_id")
 	private SymbolLong symbol;
 	/** Creation time, in fact, it is time after getting the response from api and before saving to db. */
-	@Column(nullable = false)
+	@Column(nullable = false, name = "timestamp")
 	private Date timestamp;
 
 	/** Profit list by some deposit */

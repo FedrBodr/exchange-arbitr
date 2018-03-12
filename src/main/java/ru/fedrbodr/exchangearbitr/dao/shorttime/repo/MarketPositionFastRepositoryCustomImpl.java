@@ -83,7 +83,7 @@ public class MarketPositionFastRepositoryCustomImpl implements MarketPositionFas
 				"((min(buyOrders.final_sum)/min(buyOrders.original_sum))*min(coinsForTransferAmount) - :deposit)/:deposit as \"PROFIT\",\n" +
 				"min(sellOrdersCalc.name) as \"symbolName\",\n" +
 				"min(sellOrdersCalc.limit_price1) as \"sellLimitPrice\",\n" +
-				"min(buyOrders.limit_price) as \"buyLimitPrice\"" +
+				"max(buyOrders.limit_price) as \"buyLimitPrice\"" +
 				"from uni_limit_order buyOrders, \n" +
 				"(select exchange_id as sellOrders_exchange_id, min(final_sum), min(limit_price) as limit_price1, :deposit/(min(sellOrders.final_sum)/min(sellOrders.original_sum)) as coinsForTransferAmount, min(sellOrders.final_sum)/min(sellOrders.original_sum) as averageSellStackPrice,\n" +
 				"min(s.name) as name, min(s.id) as sy_id\n" +

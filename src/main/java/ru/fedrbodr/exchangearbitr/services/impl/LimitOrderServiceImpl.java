@@ -34,6 +34,11 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 	private LimitOrderRepository limitOrderRepository;
 
 	@Override
+	public void deleteAll() {
+		limitOrderRepository.deleteAll();
+	}
+
+	@Override
 	public void readConvertCalcAndSaveUniOrders(Symbol symbol, ExchangeMeta exchangeMeta) throws InterruptedException {
 		Date start = new Date();
 		MarketDataService marketDataService;
