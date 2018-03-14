@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
 <body>
 <ui:composition>
@@ -9,8 +10,15 @@
         <p:growl id="messages" showDetail="false"/>
         <p:megaMenu styleClass="eaMenu">
             <p:menuitem value="Donation" outcome="/donation" styleClass="donatBtn"/>
-            <p:menuitem value="Monitoring" outcome="/secure/monitoring"/>
-            <p:menuitem value="Admin" outcome="/secure/admin"/>
+            <c:if  test="#{loginController.authenticated}">
+                <p:menuitem value="Log out" action="#{loginController.logOut}" ajax="false"/>
+            </c:if>
+            <c:if  test="#{!loginController.authenticated}">
+                <p:menuitem value="Login" outcome="/login"/>
+            </c:if>
+            <!--<p:menuitem value="Monitoring" outcome="/secure/monitoring"/>-->
+            <p:menuitem value="#{loginController.currentUser.email}" outcome="/user" rendered="#{loginController.currentUser != null}"/>
+            <p:menuitem value="Admin" outcome="/secure/admin" rendered="#{request.isUserInRole('ROLE_ADMIN')}"/>
             <p:menuitem value="About" outcome="/about"/>
             <p:menuitem value="Index" outcome="/index" onclick="yaCounter47577613.reachGoal('DONATE_CLICK_BTN'); return true;"/>
         </p:megaMenu>

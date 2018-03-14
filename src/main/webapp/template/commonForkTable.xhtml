@@ -11,7 +11,7 @@
     <p:dataTable id="lastForksTable" styleClass="marketSymbolsCompareTable"
                  var="fork"
                  widgetVar="lastForksTable"
-                 value="#{webDataController.currentForks}"
+                 value="#{forksController.currentForks}"
                  filteredValue="#{filteredForkInfos}"
                  rows="20"
 
@@ -129,12 +129,16 @@
         </p:column>
         <p:column headerText="Start at">
             <h:outputText value="#{fork.startTime}">
-                <f:convertDateTime pattern="HH:mm:ss dd.MM"/>
+                <f:convertDateTime pattern="HH:mm:ss dd.MM" timeZone="#{loginController.currentUser !=null ?
+                                                        loginController.currentUser.timeZone :
+                                                        'Etc/GMT+3'}"/>
             </h:outputText>
         </p:column>
         <p:column headerText="Update at">
             <h:outputText value="#{fork.lastUpdatedTime}">
-                <f:convertDateTime pattern="HH:mm:ss dd.MM"/>
+                <f:convertDateTime pattern="HH:mm:ss dd.MM" timeZone="#{loginController.currentUser !=null ?
+                                                        loginController.currentUser.timeZone :
+                                                        'Etc/GMT+3'}"/>
             </h:outputText>
         </p:column>
     </p:dataTable>

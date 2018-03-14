@@ -1,12 +1,15 @@
 package ru.fedrbodr.exchangearbitr.config;
 
+import com.google.common.collect.ImmutableMap;
 import com.sun.faces.config.ConfigureListener;
+import org.springframework.beans.factory.config.CustomScopeConfigurer;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.ServletContextAware;
+import ru.fedrbodr.exchangearbitr.view.scope.ViewScope;
 
 import javax.faces.webapp.FacesServlet;
 import javax.servlet.ServletContext;
@@ -27,13 +30,20 @@ public class FacesConfiguration extends SpringBootServletInitializer implements 
 	@Override
 	public void setServletContext(ServletContext servletContext) {
 		servletContext.setInitParameter("com.sun.faces.forceLoadConfiguration", Boolean.TRUE.toString());
+		servletContext.setInitParameter("javax.faces.FACELETS_SKIP_COMMENTS", "true");
+		servletContext.setInitParameter("javax.faces.FACELETS_LIBRARIES", "/WEB-INF/springsecurity.taglib.xml");
 	}
-
+	@Bean
+	public static CustomScopeConfigurer viewScope() {
+		CustomScopeConfigurer configurer = new CustomScopeConfigurer();
+		configurer.setScopes(
+				new ImmutableMap.Builder<String, Object>().put("view", new ViewScope()).build());
+		return configurer;
+	}
 	@Bean
 	public ServletRegistrationBean facesServletRegistrationBean() {
 		ServletRegistrationBean registration = new ServletRegistrationBean();
 		registration.setServlet(new FacesServlet());
-		registration.addUrlMappings("*.jsf");
 		registration.addUrlMappings("*.xhtml", "*.jsf");
 		registration.setLoadOnStartup(1);
 		registration.setName("facesServlet");

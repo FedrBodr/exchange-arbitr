@@ -1,0 +1,49 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Coming into cryptocurrency arbitr</title>
+    <h:outputStylesheet name="css/styles.css"/>
+</h:head>
+<h:body>
+    <font color="red">
+        <h:outputLabel value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>
+    </font>
+    <h:form>
+        <p:panel header="Sign Up" styleClass="loginPagePanel signUpPanel">
+            <h:outputLabel value="Login:"/>
+            <h:inputText id="login" value="#{singUpController.login}"
+                         maxlength="45" size="36"/>
+            <h:message for="login" styleClass="formUserError"/>
+
+            <h:outputLabel value="Email"/>
+            <h:inputText id="email" value="#{singUpController.email}"
+                         maxlength="255" size="36"
+                         required="true">
+                <!--<f:validator validatorId="EmailValidator"/>-->
+            </h:inputText>
+            <h:message for="email" styleClass="formUserError"/>
+
+            <h:outputLabel for="password" value="Password"/>
+            <h:inputSecret id="password" value="#{singUpController.password}"
+                           maxlength="64" size="36"
+                           required="true" redisplay="true">
+                <f:validateLength minimum="6"/>
+            </h:inputSecret>
+            <h:message for="password" styleClass="formUserError"/>
+
+            <p:outputLabel for="gmtTimeZone" value="Time zone: " />
+            <p:selectOneMenu id="gmtTimeZone" value="#{singUpController.timeZone}" filter="true" filterMatchMode="contains">
+                <f:selectItem itemLabel="Select time zone" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{singUpController.gmtTimeSones}" />
+            </p:selectOneMenu>
+
+            <f:facet name="footer">
+                <h:panelGroup>
+                    <p:commandButton value="Create new user"
+                                     action="#{singUpController.addNewUser}"/>
+                    <p:commandButton value="Reset" type="reset"/>
+                </h:panelGroup>
+            </f:facet>
+        </p:panel>
+    </h:form>
+</h:body>
+</html>

@@ -35,7 +35,7 @@ import static ru.fedrbodr.exchangearbitr.config.CachingConfig.CURRENT_FORKS_CACH
 @Slf4j
 public class ForkServiceImpl implements ForkService {
 	public static final double MIN_PROFIT_TO_LOGGING = 0.003;
-	private static final long FORK_DELIMITER_LATENCY_TIME = 30000;
+	private static final long FORK_DELIMITER_LATENCY_TIME = 60000;
 	public static final int FORK_LAST_UPDATED_SECONDS = 100;
 	@Autowired
 	private MarketPositionFastService marketPositionFastService;

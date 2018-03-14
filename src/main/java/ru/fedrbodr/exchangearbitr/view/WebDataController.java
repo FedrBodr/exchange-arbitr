@@ -1,6 +1,7 @@
 package ru.fedrbodr.exchangearbitr.view;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import ru.fedrbodr.exchangearbitr.dao.longtime.domain.ExchangeMetaLong;
 import ru.fedrbodr.exchangearbitr.dao.longtime.repo.ExchangeMetaLongRepository;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@Scope("session")
 public class WebDataController {
 	@Autowired
 	private MarketPositionFastService marketPositionFastService;

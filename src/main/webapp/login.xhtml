@@ -1,7 +1,7 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
     <title>Coming into cryptocurrency arbitr</title>
-    <h:outputStylesheet name = "css/styles.css" />
+    <h:outputStylesheet name="css/styles.css"/>
 </h:head>
 <h:body>
     <font color="red">
@@ -9,11 +9,19 @@
     </font>
     <form action="${request.contextPath}/appLogin" method="POST">
         <p:panel header="Login into cryptocurrency arbitr secured space" id="adminPanel" styleClass="loginPagePanel">
-        <h:outputLabel value="UserName:" />
-        <input type="text" name="app_username"/><br/><br/>
-        <h:outputLabel value="Password:" />
-        <input type="password" name="app_password"/> <br/><br/>
-        <input type="submit" value="Login"/>
+            <h:outputLabel value="UserName:"/>
+            <input type="text" name="app_username"/>
+            <h:outputLabel value="Password:"/>
+            <input type="password" name="app_password"/>
+
+            <f:facet name="footer">
+                <h:panelGroup>
+                    <input type="submit" value="Login" style="padding: 3px 9px 3px 9px;"
+                           class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"/><br/>
+                    <h:outputLink value="/sign-up.xhtml"> Have nor user? Sing up. </h:outputLink>
+                </h:panelGroup>
+            </f:facet>
+
         </p:panel>
     </form>
 </h:body>

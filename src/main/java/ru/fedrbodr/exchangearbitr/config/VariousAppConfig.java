@@ -13,16 +13,17 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import ru.fedrbodr.exchangearbitr.dao.longtime.domain.Role;
+import ru.fedrbodr.exchangearbitr.dao.longtime.domain.User;
+import ru.fedrbodr.exchangearbitr.dao.longtime.repo.UserRepository;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.xchange.custom.CoinexchangeMarketDataService;
 import ru.fedrbodr.exchangearbitr.xchange.custom.ExchangeProxy;
 
 import javax.annotation.PostConstruct;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
 
 @Configuration
@@ -32,7 +33,6 @@ import java.util.concurrent.*;
 public class VariousAppConfig {
 	@Value("#{'${proxy.list}'.split(',')}")
 	private List<String> proxyList;
-
 	@Autowired
 	@Qualifier("bittrexExchangeReaderImpl")
 	private ExchangeReader bittrexExchangeReader;
@@ -48,10 +48,23 @@ public class VariousAppConfig {
 	@Autowired
 	@Qualifier("kucoinExchangeReaderImpl")
 	private ExchangeReader kucoinExchangeReaderImpl;
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	@Autowired
+	private UserRepository userRepository;
 
 	@PostConstruct
 	public void init() {
-		/*TimeZone.setDefault(TimeZone.getTimeZone("GMT+3"));*/
+		User user = new User("admin",
+				"fedrbodr@gmail.com",
+				passwordEncoder.encode("money3360FLOW"),
+				Arrays.asList(
+						new Role("ROLE_USER"),
+						new Role("ROLE_ADMIN")), TimeZone.getTimeZone("Etc/GMT+3"));
+
+		if (userRepository.findByEmail(user.getEmail()) == null){
+			userRepository.saveAndFlush(user);
+		}
 	}
 
 	@Bean(name = "marketSumTaskExecutor")

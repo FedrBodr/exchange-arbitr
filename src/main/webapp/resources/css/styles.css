@@ -11,10 +11,26 @@
 /* start login page */
 .loginPagePanel {
     text-align: center;
-    width: 400px;
-    height: 207px;
+    width: 27em;
     border: 1px solid dodgerblue;
     margin: 2% auto auto;
+}
+.loginPagePanel input{
+    margin-bottom: 0.3em;
+}
+.signUpPanel .styledSpan{
+    margin-bottom: 0.3em;
+}
+.ui-panel.loginPagePanel .ui-panel-footer {
+    text-align: center;
+}
+/* start sign-up styles*/
+.signUpPanel {
+    width: 36em;
+}
+.loginPagePanel .ui-panel-content{
+    display: grid;
+    grid-template-columns: 80px 18em;
 }
 /* start header */
 .ui-menu .ui-menuitem{
@@ -48,7 +64,7 @@
 }
 .footerCpyRtCnt{
     overflow: auto;
-    width: 27%;
+    width: 41em;
     margin: auto;
 }
 /* start donation styles*/

@@ -1,0 +1,38 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+    <title>Coming into cryptocurrency arbitr</title>
+    <h:outputStylesheet name="css/styles.css"/>
+</h:head>
+<h:body>
+    <ui:composition template="/template/commonLayout.xhtml">
+        <ui:define name="content">
+            <h:form>
+                <p:panel header="User" styleClass="loginPagePanel signUpPanel">
+                    <h:outputLabel value="Login:"/>
+                    <h:outputText id="login" value="#{loginController.currentUser.login}" size="36" styleClass="styledSpan"/>
+
+                    <h:outputLabel value="Email:"/>
+                    <h:outputText id="email" value="#{loginController.currentUser.email}" size="36" styleClass="styledSpan"/>
+
+                    <p:outputLabel for="gmtTimeZone" value="Time zone: "/>
+                    <p:selectOneMenu id="gmtTimeZone" value="#{editUserController.timeZoneName}" filter="true" filterMatchMode="contains">
+                        <f:selectItem itemLabel="Select time zone" itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{singUpController.gmtTimeSones}"/>
+                    </p:selectOneMenu>
+
+                    <f:facet name="footer">
+                        <h:panelGroup>
+                            <p:commandButton value="Update time sone" ajax="false"
+                                             action="#{editUserController.updateTimeSone}"/>
+                        </h:panelGroup>
+                    </f:facet>
+                </p:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>
