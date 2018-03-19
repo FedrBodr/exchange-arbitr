@@ -10,11 +10,11 @@
     <ui:composition template="/template/commonLayout.xhtml">
         <ui:define name="content">
 
-            <p:panel header="Notifications config">
+            <p:panel header="Notifications config" id="notificationsPanel">
                 <c:if test="#{notificationController.tgBulletConfig.tgChatId == null}">
                     <p:button value="Link my notification private bot"
                               onclick="window.open('https://telegram.me/deepforks_bot?start=#{notificationController.tgBulletConfig.uuid}');return false;"/>
-                    <h:outputText> After linking update this page </h:outputText>
+                    <h:outputText value="After linking update this page "></h:outputText>
                 </c:if>
                 <c:if test="#{notificationController.tgBulletConfig.tgChatId != null}">
                     <h:form style="min-height: 14em;">
