@@ -124,3 +124,28 @@
     border: solid 2px rgba(231, 120, 241, 0.65);
     background-image: none;
 }
+/* START notifications page*/
+.newNotificationWrapper{
+    margin: auto;
+    width: 64em;
+}
+
+.newNotificationWrapper .ui-panel-content.ui-widget-content{
+
+}
+.ui-panel.newNotificationWrapper .ui-panel-footer {
+    text-align: center;
+}
+.forkFilterSelect {
+    margin-right: 1em;
+    display: inline-block;
+    vertical-align: middle;
+}
+.forkFilterSelectLabel {
+    display: inline-block;
+    vertical-align: middle;
+}
+.filtersTable{
+    margin: 1em auto 0;
+    width: 70em;
+}

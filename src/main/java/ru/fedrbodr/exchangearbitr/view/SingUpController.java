@@ -33,6 +33,7 @@ public class SingUpController {
 	@Autowired
 	protected AuthenticationManager authenticationManager;
 	private String timeZone;
+
 	public String addNewUser() {
 		User newUser = new User(login,
 				email,
@@ -49,7 +50,7 @@ public class SingUpController {
 		Authentication authenticatedUser = authenticationManager.authenticate(token);
 		SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 
-		return "index.jsf";
+		return "index.xhtml";
 	}
 
 	public Map<String, String> getGmtTimeSones() {

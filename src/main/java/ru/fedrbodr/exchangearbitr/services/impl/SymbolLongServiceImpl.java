@@ -7,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.fedrbodr.exchangearbitr.dao.longtime.domain.SymbolLong;
 import ru.fedrbodr.exchangearbitr.dao.longtime.repo.SymbolLongRepository;
 import ru.fedrbodr.exchangearbitr.services.SymbolLongService;
+
+import java.util.List;
+
 @Service
 public class SymbolLongServiceImpl implements SymbolLongService {
 	@Autowired
@@ -16,6 +19,7 @@ public class SymbolLongServiceImpl implements SymbolLongService {
 	@Transactional
 	@Cacheable("symbolLOngByNameBaseQuote")
 	public SymbolLong getOrCreateNewSymbol(String base, String quote) {
+
 		String symbolName = base + "-" + quote;
 		SymbolLong symbol = symbolRepository.findByName(symbolName);
 		if(symbol == null){
@@ -24,5 +28,9 @@ public class SymbolLongServiceImpl implements SymbolLongService {
 		return symbol;
 	}
 
-
+	@Override
+	@Cacheable("allSymbolLongCache")
+	public List<SymbolLong> getAll() {
+		return symbolRepository.findAllByOrderByBaseNameAscQuoteNameAsc();
+	}
 }

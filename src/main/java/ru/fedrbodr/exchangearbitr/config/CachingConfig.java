@@ -19,6 +19,7 @@ public class CachingConfig {
 	public static final String TOP_PROBLEM_AFTER_10_COMPARE_LIST = "topProblemAfter12CompareListCache";
 	public static final String TOP_COMPARE_LIST = "top30CompareListCache";
 	public static final String CURRENT_FORKS_CACHE = "currentForksCache";
+	public static final String ALL_SYMBOL_LONG_CACHE = "allSymbolLongCache";
 
 	@CacheEvict(allEntries = true, value = {ORDER_LIST_CACHE})
 	@Scheduled(fixedDelay = 1 * 1000, initialDelay = 60 * 1000)
@@ -47,6 +48,12 @@ public class CachingConfig {
 	@CacheEvict(allEntries = true, value = {TOP_COMPARE_LIST})
 	@Scheduled(fixedDelay = 1 * 1000, initialDelay = 30 * 1000)
 	public void topCompareListCacheEvict() {
+
+	}
+
+	@CacheEvict(allEntries = true, value = {ALL_SYMBOL_LONG_CACHE})
+	@Scheduled(fixedDelay = 60 * 1000, initialDelay = 5 * 1000)
+	public void allSymbolLongCacheEvict() {
 
 	}
 

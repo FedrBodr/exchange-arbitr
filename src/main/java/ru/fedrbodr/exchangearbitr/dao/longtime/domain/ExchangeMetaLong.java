@@ -51,16 +51,40 @@ public class ExchangeMetaLong implements Serializable {
 		return id;
 	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getExchangeName() {
 		return exchangeName;
+	}
+
+	public void setExchangeName(String exchangeName) {
+		this.exchangeName = exchangeName;
+	}
+
+	public String getExchangeUrl() {
+		return exchangeUrl;
+	}
+
+	public void setExchangeUrl(String exchangeUrl) {
+		this.exchangeUrl = exchangeUrl;
 	}
 
 	public String getSymbolMarketUrl() {
 		return symbolMarketUrl;
 	}
 
+	public void setSymbolMarketUrl(String symbolMarketUrl) {
+		this.symbolMarketUrl = symbolMarketUrl;
+	}
+
 	public String getRefParam() {
 		return refParam;
+	}
+
+	public void setRefParam(String refParam) {
+		this.refParam = refParam;
 	}
 
 	@Override
@@ -75,5 +99,10 @@ public class ExchangeMetaLong implements Serializable {
 	public int hashCode() {
 
 		return Objects.hash(id);
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s[id=%d]", getClass().getSimpleName(), getId());
 	}
 }

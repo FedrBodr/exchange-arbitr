@@ -22,7 +22,7 @@ import java.util.concurrent.*;
 @Component
 @Slf4j
 public class OrderBooksWorker implements Runnable {
-	public static final int RUN_MIN_PAUSE = 9000;
+	public static final int RUN_MIN_PAUSE = 90000;
 
 	private boolean doGrabbing = false;
 

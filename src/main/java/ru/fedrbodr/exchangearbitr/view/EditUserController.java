@@ -9,7 +9,7 @@ import ru.fedrbodr.exchangearbitr.services.UserService;
 import java.util.TimeZone;
 
 @Component
-@Scope("session")
+@Scope("view")
 public class EditUserController {
 	private String timeZoneName;
 	@Autowired

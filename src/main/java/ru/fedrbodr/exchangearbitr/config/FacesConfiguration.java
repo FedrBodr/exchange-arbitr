@@ -24,7 +24,7 @@ public class FacesConfiguration extends SpringBootServletInitializer implements 
 		servletContext.setInitParameter("primefaces.THEME", "start");
 		servletContext.setInitParameter("primefaces.CLIENT_SIDE_VALIDATION", "true");
 		servletContext.setInitParameter("javax.faces.PROJECT_STAGE", "Development");
-		servletContext.setInitParameter("javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE", "true");
+		/*servletContext.setInitParameter("javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE", "true");*/
 	}
 
 	@Override

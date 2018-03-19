@@ -34,7 +34,7 @@ spring:
     driverClassName: org.h2.Driver
     tomcat.max-active: 300
     tomcat.max-idle: 30
-
+  profiles.active: @activatedProperties@
 # POSTGRE database for TEST monitoring and fast calculating of real-time forks.
 #  datasource:
 #    url: jdbc:postgresql://localhost:5432/shorttime
@@ -71,7 +71,6 @@ spring:
 #    driver-class-name: com.mysql.jdbc.Driver
 #    tomcat.max-active: 150
 #    tomcat.max-idle: 15
-  profiles.active: @activatedProperties@
 # Long time Database POSTGRE
 longtime.datasource:
   url: jdbc:postgresql://localhost:5432/longtime
@@ -132,7 +131,7 @@ spring:
   jpa:
     hibernate.ddl-auto: update
 longtime.datasource:
-  url: jdbc:postgresql://104.155.111.23:5432/longtime
+  url: jdbc:postgresql://104.155.111.23:5432/longtime18
   username: postgres
   password: fktr7429YOR
   driver-class-name: org.postgresql.Driver

@@ -14,7 +14,4 @@ public class ForkInfo extends Fork {
 	private Long id;
 	private Date startTime;
 	private Date lastUpdatedTime;
-
-
-
 }

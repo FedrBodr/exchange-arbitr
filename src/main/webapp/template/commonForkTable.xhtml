@@ -12,7 +12,7 @@
                  var="fork"
                  widgetVar="lastForksTable"
                  value="#{forksController.currentForks}"
-                 filteredValue="#{filteredForkInfos}"
+                 filteredValue="#{forksController.filteredForkInfos}"
                  rows="20"
 
     >
@@ -97,7 +97,6 @@
         <p:column headerText="Symbol">
             <h:outputText value="#{fork.symbol.name}"/>
         </p:column>
-        <!-- filterBy="#{fork.buyExchangeMeta.exchangeName}" filterMatchMode="contains" -->
         <p:column headerText="Buy exchange, link to pair market" filterBy="#{fork.sellExchangeMeta.exchangeName}" filterMatchMode="exact">
             <f:facet name="filter">
                 <p:selectOneMenu onchange="PF('lastForksTable').filter()" >

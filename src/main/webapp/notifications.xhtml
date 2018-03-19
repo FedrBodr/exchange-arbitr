@@ -1,0 +1,83 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Coming into cryptocurrency arbitr</title>
+    <h:outputStylesheet name="css/styles.css"/>
+</h:head>
+<h:body>
+    <ui:composition template="/template/commonLayout.xhtml">
+        <ui:define name="content">
+
+            <p:panel header="Notifications config">
+                <c:if test="#{notificationController.tgBulletConfig.tgChatId == null}">
+                    <p:button value="Link my notification private bot"
+                              onclick="window.open('https://telegram.me/deepforks_bot?start=#{notificationController.tgBulletConfig.uuid}');return false;"/>
+                    <h:outputText> After linking update this page </h:outputText>
+                </c:if>
+                <c:if test="#{notificationController.tgBulletConfig.tgChatId != null}">
+                    <h:form style="min-height: 14em;">
+                        <p:panel header="Create new notification" styleClass="newNotificationWrapper">
+                            <h:outputLabel value="Buy exchange:" styleClass="forkFilterSelectLabel" for="buyExchange"/>
+                            <p:selectOneMenu id="buyExchange" value="#{notificationController.buyExchange}" converter="#{exchangeConverter}" styleClass="forkFilterSelect">
+                                <!--<f:selectItem itemLabel="Select One" itemValue="#{null}" />-->
+                                <f:selectItems value="#{webDataController.exchangeMetaSelectItemsList}" var="exchangeMeta" itemLabel="#{exchangeMeta.label}"/>
+                            </p:selectOneMenu>
+
+                            <h:outputLabel value="Sell exchange:" styleClass="forkFilterSelectLabel"/>
+                            <p:selectOneMenu id="sellExchange" value="#{notificationController.sellExchange}" converter="#{exchangeConverter}"  styleClass="forkFilterSelect">
+                                <!--<f:selectItem itemLabel="Select One" itemValue="#{null}" />-->
+                                <f:selectItems value="#{webDataController.exchangeMetaSelectItemsList}" var="exchangeMetaLong1"
+                                               itemLabel="#{exchangeMetaLong1.label}"/>
+                            </p:selectOneMenu>
+
+                            <h:outputLabel value="Currency pair:" styleClass="forkFilterSelectLabel"/>
+                            <p:selectOneMenu id="symbol" value="#{notificationController.symbol}" height="500" converter="#{symbolConverter}"  styleClass="forkFilterSelect">
+                                <!--<f:selectItem itemLabel="Select One" itemValue="#{null}"/>-->
+                                <f:selectItems value="#{webDataController.symbolSelectItemsList}" var="symbol" itemLabel="#{symbol.lable}"/>
+                            </p:selectOneMenu>
+
+                            <f:facet name="footer">
+                                <h:panelGroup>
+                                    <p:commandButton value="Create" ajax="false"
+                                                     action="#{notificationController.createNewNotification}"/>
+                                </h:panelGroup>
+                            </f:facet>
+
+                        </p:panel>
+
+                        <p:dataTable id="filtersTable" styleClass="filtersTable"
+                                     var="filter"
+                                     widgetVar="filtersTable"
+                                     value="#{notificationController.tgBulletConfig.filters}"
+
+                        >
+                            <f:facet name="header">
+                                You forks filters
+                            </f:facet>
+
+                            <p:column headerText="Buy exchange">
+                                <h:outputText value="#{filter.buyExchangeMeta.exchangeName}"/>
+                            </p:column>
+                            <p:column headerText="Sell exchange">
+                                <h:outputText value="#{filter.sellExchangeMeta.exchangeName}"/>
+                            </p:column>
+                            <p:column headerText="Symbol">
+                                <h:outputText value="#{filter.symbol.name}"/>
+                            </p:column>
+                            <p:column headerText="Delete">
+                                <p:commandButton icon="ui-icon-circle-close" action="#{notificationController.remove(filter)}" update="filtersTable" style="border-color:#FF0000">
+                                </p:commandButton>
+                            </p:column>
+
+                        </p:dataTable>
+                    </h:form>
+                </c:if>
+
+            </p:panel>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

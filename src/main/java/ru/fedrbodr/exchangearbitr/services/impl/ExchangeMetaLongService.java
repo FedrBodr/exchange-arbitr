@@ -31,4 +31,9 @@ public class ExchangeMetaLongService {
 	public ExchangeMetaLong getPersistencedExchangeMetaLong(ExchangeMeta exchangeMeta) {
 		return persistencedExchangeMetaMap.get(exchangeMeta.getId());
 	}
+
+	public ExchangeMetaLong getPersistencedExchangeMetaLong(Integer id) {
+		return exchangeMetaLongRepository.findById(id);
+	}
+
 }

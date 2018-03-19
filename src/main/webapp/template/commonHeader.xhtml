@@ -10,14 +10,15 @@
         <p:growl id="messages" showDetail="false"/>
         <p:megaMenu styleClass="eaMenu">
             <p:menuitem value="Donation" outcome="/donation" styleClass="donatBtn"/>
-            <c:if  test="#{loginController.authenticated}">
-                <p:menuitem value="Log out" action="#{loginController.logOut}" ajax="false"/>
+            <p:menuitem value="Log out" action="#{loginController.logOut}" ajax="false" rendered="#{loginController.authenticated}"/>
+            <p:menuitem value="Login" outcome="/login" rendered="#{!loginController.authenticated}"/>
+            <c:if test="#{loginController.currentUser == null}">
+                <p:menuitem value="Notifications" outcome="/notifications" disabled="true" />
             </c:if>
-            <c:if  test="#{!loginController.authenticated}">
-                <p:menuitem value="Login" outcome="/login"/>
+            <c:if test="#{loginController.currentUser != null}">
+                <p:menuitem value="Notifications" outcome="/notifications" />
+                <p:menuitem value="#{loginController.currentUser.email}" outcome="/user" />
             </c:if>
-            <!--<p:menuitem value="Monitoring" outcome="/secure/monitoring"/>-->
-            <p:menuitem value="#{loginController.currentUser.email}" outcome="/user" rendered="#{loginController.currentUser != null}"/>
             <p:menuitem value="Admin" outcome="/secure/admin" rendered="#{request.isUserInRole('ROLE_ADMIN')}"/>
             <p:menuitem value="About" outcome="/about"/>
             <p:menuitem value="Index" outcome="/index" onclick="yaCounter47577613.reachGoal('DONATE_CLICK_BTN'); return true;"/>
