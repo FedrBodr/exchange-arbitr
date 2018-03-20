@@ -11,7 +11,7 @@ class MvcConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("redirect:/index.jsf");
+        registry.addViewController("/").setViewName("index.jsf");
     }
 
     @Override

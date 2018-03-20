@@ -9,15 +9,16 @@
 <h:body>
     <ui:composition template="/template/commonLayout.xhtml">
         <ui:define name="content">
-
+            <h:form style="min-height: 14em;">
             <p:panel header="Notifications config" id="notificationsPanel">
                 <c:if test="#{notificationController.tgBulletConfig.tgChatId == null}">
                     <p:button value="Link my notification private bot"
                               onclick="window.open('https://telegram.me/deepforks_bot?start=#{notificationController.tgBulletConfig.uuid}');return false;"/>
                     <h:outputText value="After linking update this page "></h:outputText>
+                    <p:poll rendered="notificationsPanel" />
                 </c:if>
                 <c:if test="#{notificationController.tgBulletConfig.tgChatId != null}">
-                    <h:form style="min-height: 14em;">
+
                         <p:panel header="Create new notification" styleClass="newNotificationWrapper">
                             <h:outputLabel value="Buy exchange:" styleClass="forkFilterSelectLabel" for="buyExchange"/>
                             <p:selectOneMenu id="buyExchange" value="#{notificationController.buyExchange}" converter="#{exchangeConverter}" styleClass="forkFilterSelect">
@@ -72,11 +73,11 @@
                             </p:column>
 
                         </p:dataTable>
-                    </h:form>
+
                 </c:if>
 
             </p:panel>
-
+            </h:form>
         </ui:define>
     </ui:composition>
 </h:body>

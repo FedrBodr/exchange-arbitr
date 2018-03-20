@@ -31,14 +31,14 @@
                             </h:outputText>
                         </p:column>
 
-                        <p:column headerText="Average buy price (we buy)">
-                            <h:outputText value="#{profit.averageSellStackPrice}">
+                        <p:column headerText="Buy limit price for order">
+                            <h:outputText value="#{profit.sellLimitPrice}">
                                 <f:convertNumber minFractionDigits="8" locale="en"/>
                             </h:outputText>
                         </p:column>
 
-                        <p:column headerText="Buy limit price for order">
-                            <h:outputText value="#{profit.sellLimitPrice}">
+                        <p:column headerText="Average buy price (we buy)">
+                            <h:outputText value="#{profit.averageSellStackPrice}">
                                 <f:convertNumber minFractionDigits="8" locale="en"/>
                             </h:outputText>
                         </p:column>
@@ -49,14 +49,14 @@
                             </h:outputText>
                         </p:column>
 
-                        <p:column headerText="Average sell price (we sell)">
-                            <h:outputText value="#{profit.averageBuyStackPrice}">
+                        <p:column headerText="Sell limit price for order">
+                            <h:outputText value="#{profit.buyLimitPrice}">
                                 <f:convertNumber minFractionDigits="8" locale="en"/>
                             </h:outputText>
                         </p:column>
 
-                        <p:column headerText="Sell limit price for order">
-                            <h:outputText value="#{profit.buyLimitPrice}">
+                        <p:column headerText="Average sell price (we sell)">
+                            <h:outputText value="#{profit.averageBuyStackPrice}">
                                 <f:convertNumber minFractionDigits="8" locale="en"/>
                             </h:outputText>
                         </p:column>
