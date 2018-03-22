@@ -11,7 +11,6 @@ import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPosition;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionFastRepository;
-import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.services.SymbolService;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
@@ -32,8 +31,6 @@ import static ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils.binanceToUniCur
 public class BinanceExchangeReaderImpl implements ExchangeReader {
 	@Autowired
 	private Map<ExchangeMeta, ExchangeProxy> exchangeMetaToExchangeProxyMap;
-	@Autowired
-	private MarketPositionRepository marketPositionRepository;
 	@Autowired
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
@@ -75,8 +72,6 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 							true)
 			);
 		}
-		/*marketPositionRepository.save(marketPositionList);
-		marketPositionRepository.flush();*/
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositionList));
 		marketPositionFastRepository.flush();
 

@@ -3,8 +3,11 @@ package ru.fedrbodr.exchangearbitr.config;
 import lombok.extern.slf4j.Slf4j;
 import org.knowm.xchange.binance.BinanceExchange;
 import org.knowm.xchange.bittrex.BittrexExchange;
+import org.knowm.xchange.cryptopia.CryptopiaExchange;
 import org.knowm.xchange.hitbtc.v2.HitbtcExchange;
 import org.knowm.xchange.kucoin.KucoinExchange;
+import org.knowm.xchange.kuna.KunaExchange;
+import org.knowm.xchange.livecoin.LivecoinExchange;
 import org.knowm.xchange.poloniex.PoloniexExchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -48,6 +51,15 @@ public class VariousAppConfig {
 	@Autowired
 	@Qualifier("kucoinExchangeReaderImpl")
 	private ExchangeReader kucoinExchangeReaderImpl;
+	@Autowired
+	@Qualifier("cryptopiaExchangeReaderImpl")
+	private ExchangeReader cryptopiaExchangeReaderImpl;
+	@Autowired
+	@Qualifier("kunaExchangeReaderImpl")
+	private ExchangeReader kunaExchangeReaderImpl;
+	@Autowired
+	@Qualifier("livecoinExchangeReaderImpl")
+	private ExchangeReader livecoinExchangeReaderImpl;
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	@Autowired
@@ -109,6 +121,20 @@ public class VariousAppConfig {
 			exchangeMetaToExchangeMap.put(ExchangeMeta.COINEXCHANGE, new ExchangeProxy(coinexchangeMarketDataService));
 			return null;
 		};
+		Callable<Void> bitfinexProxyInitCallable = () -> {
+			exchangeMetaToExchangeMap.put(ExchangeMeta.CRYPTOPIA, new ExchangeProxy(proxyList, CryptopiaExchange.class.getName()));
+			return null;
+		};
+
+		Callable<Void> kunaProxyInitCallable = () -> {
+			exchangeMetaToExchangeMap.put(ExchangeMeta.KUNA, new ExchangeProxy(proxyList, KunaExchange.class.getName()));
+			return null;
+		};
+
+		Callable<Void> livecoinProxyInitCallable = () -> {
+			exchangeMetaToExchangeMap.put(ExchangeMeta.LIVECOIN, new ExchangeProxy(proxyList, LivecoinExchange.class.getName()));
+			return null;
+		};
 
 		executorService.execute(new FutureTask(tCallable));
 		executorService.execute(new FutureTask(tCallable1));
@@ -116,6 +142,8 @@ public class VariousAppConfig {
 		executorService.execute(new FutureTask(tCallable3));
 		executorService.execute(new FutureTask(tCallable4));
 		executorService.execute(new FutureTask(tCallable5));
+		executorService.execute(new FutureTask(bitfinexProxyInitCallable));
+		executorService.execute(new FutureTask(kunaProxyInitCallable));
 
 		executorService.shutdown();
 		try {
@@ -137,6 +165,9 @@ public class VariousAppConfig {
 		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.COINEXCHANGE, coinexchangeExchangeReader);
 		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.HITBTC, hitBtcExchangeReaderImpl);
 		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.KUCOIN, kucoinExchangeReaderImpl);
+		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.CRYPTOPIA, cryptopiaExchangeReaderImpl);
+		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.KUNA, kunaExchangeReaderImpl);
+		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.LIVECOIN, kunaExchangeReaderImpl);
 
 		return exchangeMetaToExchangeSummariesReaderMap;
 	}

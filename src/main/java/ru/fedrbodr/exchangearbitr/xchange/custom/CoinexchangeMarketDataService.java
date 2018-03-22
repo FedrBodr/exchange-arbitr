@@ -56,6 +56,12 @@ public class CoinexchangeMarketDataService implements MarketDataService {
 		log.info(CoinexchangeExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
 
+		initMArketCurrencyToSymolMap();
+		/*TODO refactor this with aop*/
+		log.info(CoinexchangeExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
+	}
+
+	private void initMArketCurrencyToSymolMap() throws IOException {
 		coinexchangeIdToSymbol = new HashMap();
 		symbolToCoinexchangeMarketId = new HashMap();
 		JSONArray markets = getNewJsonObject("https://www.coinexchange.io/api/v1/getmarkets").getJSONArray("result");
@@ -71,8 +77,6 @@ public class CoinexchangeMarketDataService implements MarketDataService {
 
 			symbolToCoinexchangeMarketId.put(symbol, coinexchangeMarketID);
 		});
-		/*TODO refactor this with aop*/
-		log.info(CoinexchangeExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
 	}
 
 	@Override
@@ -94,11 +98,14 @@ public class CoinexchangeMarketDataService implements MarketDataService {
 				lastUsedProxyIndex = 0;
 			}
 		}
-
-		JSONObject sellBuyOrders = getNewJsonObject("https://www.coinexchange.io/api/v1/getorderbook?market_id="+
-				symbolToCoinexchangeMarketId.get(symbolService.getOrCreateNewSymbol(currencyPair.counter.getSymbol(),currencyPair.base.getSymbol())), proxy)
-				.getJSONObject("result");
-
+		JSONObject orderBookResponce = getNewJsonObject("https://www.coinexchange.io/api/v1/getorderbook?market_id=" +
+				symbolToCoinexchangeMarketId.get(symbolService.getOrCreateNewSymbol(currencyPair.base.getCurrencyCode(), currencyPair.counter.getCurrencyCode())), proxy);
+		if(orderBookResponce.isNull("result")){
+			log.info("Not correct result for www.coinexchange.io/api/v1/getorderbook?market_id={} for currencyPair ={}",
+					symbolToCoinexchangeMarketId.get(symbolService.getOrCreateNewSymbol(currencyPair.base.getCurrencyCode(), currencyPair.counter.getCurrencyCode())),
+					currencyPair);
+		}
+		JSONObject sellBuyOrders = orderBookResponce.getJSONObject("result");
 
 		JSONArray sellOrders = sellBuyOrders.getJSONArray("SellOrders");
 		JSONArray buyOrders = sellBuyOrders.getJSONArray("BuyOrders");

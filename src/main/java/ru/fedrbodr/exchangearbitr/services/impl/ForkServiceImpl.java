@@ -65,7 +65,11 @@ public class ForkServiceImpl implements ForkService {
 		}
 		if(CollectionUtils.isNotEmpty(forkInfos)) {
 			Collections.sort(forkInfos, (o1, o2) -> {
-				if (o1.getProfits().size() < 2 && o2.getProfits().size() > 1) {
+				if (o1.getProfits().size() > 0 && o2.getProfits().size() == 0) {
+					return -1;
+				}else if (o1.getProfits().size() == 0 && o2.getProfits().size() > 0) {
+					return 1;
+				}else if (o1.getProfits().size() < 2 && o2.getProfits().size() > 1) {
 					return 1;
 				}else if (o1.getProfits().size() > 1 && o2.getProfits().size() < 2) {
 					return -1;
@@ -151,7 +155,7 @@ public class ForkServiceImpl implements ForkService {
 	 */
 	private List<DepoProfit> calcAddProfitsList(List<UniLimitOrder> sellUniLimitOrders, List<UniLimitOrder> buyUniLimitOrders) {
 		List<DepoProfit> depositProfitList = new ArrayList<>();
-
+		/*TODO determine deposits list by base currency*/
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(0.01)));
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(0.1)));
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(0.25)));
@@ -160,8 +164,13 @@ public class ForkServiceImpl implements ForkService {
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(2)));
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(4)));
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(8)));
-		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(12)));
+		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(10)));
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(15)));
+		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(100)));
+		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(1000)));
+		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(2000)));
+		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(4000)));
+		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(10000)));
 
 		CollectionUtils.filter(depositProfitList, PredicateUtils.notNullPredicate());
 		return depositProfitList;

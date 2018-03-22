@@ -59,7 +59,7 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 				/* USE it when start working with fee
 				 * CurrencyPairMetaData currencyPairMetaData = currencyPairs.get(currencyPair);
 				 * currencyPairMetaData.getTradingFee()*/
-				symbolService.getOrCreateNewSymbol(exchangeSymbol.counter.getSymbol(), exchangeSymbol.base.getSymbol());
+				symbolService.getOrCreateNewSymbol(exchangeSymbol.counter.getCurrencyCode(), exchangeSymbol.base.getCurrencyCode());
 			}
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
@@ -83,7 +83,7 @@ public class HitBtcExchangeReaderImpl implements ExchangeReader {
 		for (String symbol : hitbtcTickers.keySet()) {
 			HitbtcTicker hitbtcTicker = hitbtcTickers.get(symbol);
 			CurrencyPair currencyPair = HitbtcAdapters.adaptSymbol(hitbtcTicker.getSymbol());
-			Symbol uniSymbol = symbolService.getOrCreateNewSymbol(currencyPair.counter.getCurrencyCode(), currencyPair.base.getSymbol());
+			Symbol uniSymbol = symbolService.getOrCreateNewSymbol(currencyPair.counter.getCurrencyCode(), currencyPair.base.getCurrencyCode());
 			marketPositionList.add(new MarketPosition(exchangeMeta, uniSymbol,
 					hitbtcTicker.getLast(), hitbtcTicker.getBid(), hitbtcTicker.getAsk(), isSymbolActive(uniSymbol))
 			);

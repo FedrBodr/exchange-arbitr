@@ -2,6 +2,7 @@ package ru.fedrbodr.exchangearbitr.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.knowm.xchange.Exchange;
+import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.service.marketdata.MarketDataService;
@@ -58,9 +59,12 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 				ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 				Callable<Void> tCallable = () -> {
-					orderBook.set(marketDataService.getOrderBook(
-							SymbolsNamesUtils.getCurrencyPair(symbol.getBaseName(), symbol.getQuoteName()),
-							100));
+					CurrencyPair currencyPair = SymbolsNamesUtils.getCurrencyPairForOrderBokRequest(symbol.getBaseName(), symbol.getQuoteName(), exchangeMeta);
+					if(exchangeMeta.getIntOrderBookParam()) {
+						orderBook.set(marketDataService.getOrderBook(currencyPair, 100));
+					}else{
+						orderBook.set(marketDataService.getOrderBook(currencyPair, 100L));
+					}
 					return null;
 				};
 				FutureTask futureTask = new FutureTask(tCallable);

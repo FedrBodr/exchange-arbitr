@@ -59,7 +59,7 @@ public class SymbolsNamesUtilsTest {
 		assertEquals("https://poloniex.com/exchange/#BTC_ZEC", SymbolsNamesUtils.determineUrlToSymbolMarket(poloniexMarketPosition));
 
 		/* try on non existing exchange */
-		poloniexMarketPosition.getMarketPositionFastPK().setExchangeMeta(new ExchangeMeta(559, "FED", "https://www.FED.com/", "https://www.FED.com/symbol=", ""));
+		poloniexMarketPosition.getMarketPositionFastPK().setExchangeMeta(new ExchangeMeta(559, "FED", "https://www.FED.com/", "https://www.FED.com/symbol=", "",true, true));
 		assertEquals(null, SymbolsNamesUtils.determineUrlToSymbolMarket(poloniexMarketPosition));
 		//Now verify our logging interactions
 		verify(mockAppender).doAppend(captorLoggingEvent.capture());

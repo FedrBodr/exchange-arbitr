@@ -54,6 +54,7 @@ public class PoloniexExchangeReaderImpl implements ExchangeReader {
 		log.info(PoloniexExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
 	}
 
+	/* TODO check bid ask*/
 	public void readAndSaveMarketPositionsBySummaries() throws IOException, JSONException {
 		/* TODO maybe rewrite to use poloniexMarketDataServiceRaw.getAllPoloniexTickers();*/
 		JSONObject json = getNewJsonObject("https://poloniex.com/public?command=returnTicker");

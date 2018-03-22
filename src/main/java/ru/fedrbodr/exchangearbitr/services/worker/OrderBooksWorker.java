@@ -41,7 +41,7 @@ public class OrderBooksWorker implements Runnable {
 	private ExchangeMetaRepository exchangeMetaRepository;
 
 	private Date startPreviousCall;
-	private int threadCount = 40;
+	private int threadCount = 50;
 
 	public OrderBooksWorker() {
 		startPreviousCall = new Date();

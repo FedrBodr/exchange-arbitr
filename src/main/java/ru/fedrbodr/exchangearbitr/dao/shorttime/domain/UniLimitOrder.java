@@ -40,13 +40,13 @@ public class UniLimitOrder implements Serializable {
 	/**
 	 * The limit price
 	 */
-	@Column(name = "limit_price", precision = 15, scale = 8)
+	@Column(name = "limit_price", precision = 17, scale = 8)
 	private BigDecimal limitPrice;
-	@Column(name = "original_amount", precision = 19, scale = 9)
+	@Column(name = "original_amount", precision = 20, scale = 9)
 	private BigDecimal originalAmount;
-	@Column(name = "original_sum", precision = 19, scale = 9)
+	@Column(name = "original_sum", precision = 20, scale = 9)
 	private BigDecimal originalSum;
-	@Column(name = "final_sum", precision = 19, scale = 9)
+	@Column(name = "final_sum", precision = 20, scale = 9)
 	private BigDecimal finalSum;
 	@Column(name = "time_stamp")
 	private Date timeStamp;

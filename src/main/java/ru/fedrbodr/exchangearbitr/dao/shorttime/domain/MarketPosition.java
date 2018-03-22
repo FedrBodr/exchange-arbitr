@@ -19,11 +19,11 @@ public class MarketPosition implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "exchange_id")
 	private ExchangeMeta exchangeMeta;
-	@Column(name = "last_price", precision = 15, scale = 8)
+	@Column(name = "last_price", precision = 17, scale = 8)
 	private BigDecimal lastPrice;
-	@Column(name = "bid_price", precision = 15, scale = 8)
+	@Column(name = "bid_price", precision = 17, scale = 8)
 	private BigDecimal bidPrice;
-	@Column(name = "ask_price", precision = 15, scale = 8)
+	@Column(name = "ask_price", precision = 17, scale = 8)
 	private BigDecimal askPrice;
 	@Column(name = "exchange_time_stamp")
 	private Date exchangeTimeStamp;

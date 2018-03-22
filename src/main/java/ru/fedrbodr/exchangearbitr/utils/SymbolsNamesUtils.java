@@ -104,9 +104,15 @@ public class SymbolsNamesUtils {
 				uniCurrencyName;
 	}
 
-	public static CurrencyPair getCurrencyPair(String base, String quote) {
+	public static CurrencyPair getCurrencyPairForOrderBokRequest(String base, String quote, ExchangeMeta exchangeMeta) {
+		CurrencyPair currencyPair;
+		if(exchangeMeta.getBaseCounterForOrderBook()){
+			currencyPair = new CurrencyPair(base, quote);
+		}else{
+			currencyPair = new CurrencyPair(quote, base);
+		}
 		/*TODO optimise it for use precreated currencies
 		* I am don`t know why but it`s working only changed names*/
-		return new CurrencyPair(quote, base);
+		return currencyPair;
 	}
 }

@@ -20,11 +20,11 @@ import java.util.Objects;
 public class MarketPositionFast implements Serializable{
 	@EmbeddedId
 	protected MarketPositionFastPK marketPositionFastPK;
-	@Column(name = "last_price", precision = 15, scale = 8)
+	@Column(name = "last_price", precision = 17, scale = 8)
 	private BigDecimal lastPrice;
-	@Column(name = "bid_price", precision = 15, scale = 8)
+	@Column(name = "bid_price", precision = 17, scale = 8)
 	private BigDecimal bidPrice;
-	@Column(name = "ask_price", precision = 15, scale = 8)
+	@Column(name = "ask_price", precision = 17, scale = 8)
 	private BigDecimal askPrice;
 	/* TODO think twice when i will review maybe it is not needed(only one exchange return time in ticker23) */
 	@Column(name = "exchange_time_stamp")

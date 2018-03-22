@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import ru.fedrbodr.exchangearbitr.dao.longtime.reports.ForkInfo;
 import ru.fedrbodr.exchangearbitr.services.ForkService;
 
+import java.math.BigDecimal;
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -16,13 +18,39 @@ public class ForksController {
 	private List<ForkInfo> filteredForkInfos;
 	private List<ForkInfo> currentForks;
 
+	private List<ForkInfo> unrealFilteredForkInfos;
+	private List<ForkInfo> unrealCurrentForks;
+
 
 
 	public List<ForkInfo> getCurrentForks(){
 		if(currentForks == null){
-			currentForks = forkService.getCurrentForks();
+			initCurrentForks();
 		}
+
 		return currentForks;
+	}
+
+	public List<ForkInfo> getUnrealCurrentForks(){
+		if(unrealCurrentForks == null){
+			initCurrentForks();
+		}
+
+		return unrealCurrentForks;
+	}
+
+	private void initCurrentForks() {
+		currentForks = new LinkedList<>();
+		unrealCurrentForks = new LinkedList<>();
+		List<ForkInfo> allForks = forkService.getCurrentForks();
+		for (ForkInfo fork : allForks) {
+			if(fork.getProfits().size() > 1 && fork.getProfits().get(1).getProfit().multiply(BigDecimal.valueOf(100)).compareTo(BigDecimal.valueOf(18))>0){
+				unrealCurrentForks.add(fork);
+			}else{
+				currentForks.add(fork);
+			}
+
+		}
 	}
 
 	public List<ForkInfo> getFilteredForkInfos() {
@@ -31,5 +59,13 @@ public class ForksController {
 
 	public void setFilteredForkInfos(List<ForkInfo> filteredForkInfos) {
 		this.filteredForkInfos = filteredForkInfos;
+	}
+
+	public List<ForkInfo> getUnrealFilteredForkInfos() {
+		return unrealFilteredForkInfos;
+	}
+
+	public void setUnrealFilteredForkInfos(List<ForkInfo> unrealFilteredForkInfos) {
+		this.unrealFilteredForkInfos = unrealFilteredForkInfos;
 	}
 }

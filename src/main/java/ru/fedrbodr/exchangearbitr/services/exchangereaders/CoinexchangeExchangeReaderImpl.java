@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPosition;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
-import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.ExchangeMetaRepository;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionFastRepository;
-import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionRepository;
 import ru.fedrbodr.exchangearbitr.services.ExchangeReader;
 import ru.fedrbodr.exchangearbitr.utils.MarketPosotionUtils;
 import ru.fedrbodr.exchangearbitr.xchange.custom.CoinexchangeMarketDataService;
@@ -29,22 +27,10 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 	private MarketPositionFastRepository marketPositionFastRepository;
 	@Autowired
 	private CoinexchangeMarketDataService marketDataService;
-	@Autowired
-	private MarketPositionRepository marketPositionRepository;
-	@Autowired
-	private ExchangeMetaRepository exchangeRepository;
 	private Map<String, Boolean> currencyActivityMap;
 
 	@PostConstruct
 	private void init() {
-		/* TODO move preinit to more convenient place ? */
-		exchangeRepository.save(ExchangeMeta.BITTREX);
-		exchangeRepository.save(ExchangeMeta.COINEXCHANGE);
-		exchangeRepository.save(ExchangeMeta.POLONIEX);
-		exchangeRepository.save(ExchangeMeta.BINANCE);
-		exchangeRepository.save(ExchangeMeta.HITBTC);
-		exchangeRepository.save(ExchangeMeta.KUCOIN);
-		exchangeRepository.flush();
 		/*TODO refactor this with aop for all init methods*/
 		log.info(CoinexchangeExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
@@ -80,8 +66,6 @@ public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 			marketPositions.add(marketPosition);
 		});
 
-		/*marketPositionRepository.save(marketPositions);
-		marketPositionRepository.flush();*/
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositions));
 		marketPositionFastRepository.flush();
 	}
