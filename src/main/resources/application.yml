@@ -131,7 +131,7 @@ spring:
   jpa:
     hibernate.ddl-auto: update
 longtime.datasource:
-  url: jdbc:postgresql://104.155.111.23:5432/longtime18
+  url: jdbc:postgresql://104.155.111.23:5432/longtime22
   username: postgres
   password: fktr7429YOR
   driver-class-name: org.postgresql.Driver
