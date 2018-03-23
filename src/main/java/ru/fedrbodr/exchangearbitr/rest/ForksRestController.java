@@ -8,6 +8,7 @@ import ru.fedrbodr.exchangearbitr.dao.longtime.reports.ForkInfo;
 import ru.fedrbodr.exchangearbitr.rest.dto.ForkInfoDto;
 import ru.fedrbodr.exchangearbitr.services.ForkService;
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +19,20 @@ public class ForksRestController {
 
 	@RequestMapping(value = "/api/forks", method = RequestMethod.GET)
 	public List<ForkInfoDto> getCurrentForks() {
-		return convertToForkInfoDtoList(forkService.getCurrentForks());
+		List<ForkInfo> currentForks = forkService.getCurrentForks();
+		List<ForkInfo> filteredForks = new LinkedList<>();
+		for (ForkInfo fork : currentForks) {
+			if(fork.getProfits().size() > 0 && fork.getProfits().get(0).getProfit().multiply(BigDecimal.valueOf(100)).compareTo(BigDecimal.valueOf(0.54)) < 0){
+				/* hide small profit fork - its used by self for auto raiding */
+			}else if(fork.getProfits().size() > 1 && fork.getProfits().get(1).getProfit().multiply(BigDecimal.valueOf(100)).compareTo(BigDecimal.valueOf(11))>0 ||
+					fork.getProfits().size() > 0 && fork.getProfits().get(0).getProfit().multiply(BigDecimal.valueOf(100)).compareTo(BigDecimal.valueOf(11))>0){
+				// ignore unreal forks for bot
+			}else{
+				filteredForks.add(fork);
+			}
+
+		}
+		return convertToForkInfoDtoList(filteredForks);
 	}
 
 	private List<ForkInfoDto> convertToForkInfoDtoList(List<ForkInfo> currentForks) {

@@ -12,7 +12,7 @@
 		</appender>
 
 		<appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-			<file>${catalina.home}/logs/processlog.log</file>
+			<file>${java.io.tmpdir}/processlog.log</file>
 			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 				<FileNamePattern>${catalina.home}/logs/processlog.%d{yyyy-MM-dd}.log</FileNamePattern>
 			</rollingPolicy>

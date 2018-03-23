@@ -63,7 +63,7 @@ public class MarketPositionFastRepositoryCustomImpl implements MarketPositionFas
 		Session session = sessionFactory.getCurrentSession();
 		return session.createSQLQuery("select {mp1.*}, {mp2.*} from market_position_fast mp1, market_position_fast mp2 " +
 				"where mp1.symbol_id = mp2.symbol_id and mp1.exchange_id != mp2.exchange_id and mp1.ask_price > mp2.bid_price and mp2.active=true and mp1.active=true " +
-				" order by mp2.bid_price/mp1.ask_price asc limit 600;")
+				" order by mp2.bid_price/mp1.ask_price asc limit 700;")
 				.addEntity("mp1", MarketPositionFast.class)
 				.addEntity("mp2", MarketPositionFast.class).list();
 
@@ -97,7 +97,7 @@ public class MarketPositionFastRepositoryCustomImpl implements MarketPositionFas
 				"group by buyOrders.exchange_id, buyOrders.symbol_id\n" +
 				"order by profit desc" +
 				") depoprofits \n" +
-				"where depoprofits.profit > 0.005;";
+				"where depoprofits.profit > 0.0025;";
 		Session session = sessionFactory.getCurrentSession();
 		SQLQuery sqlQuery = session.createSQLQuery(sql);
 		sqlQuery.setParameter("deposit", deposit);

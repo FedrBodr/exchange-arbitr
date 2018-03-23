@@ -68,15 +68,13 @@ public class PoloniexExchangeReaderImpl implements ExchangeReader {
 			JSONObject jsonObject = json.getJSONObject(poloniexMarketName);
 
 			marketPositions.add(new MarketPosition(ExchangeMeta.POLONIEX, symbol,
-					jsonObject.getBigDecimal("last"), jsonObject.getBigDecimal("lowestAsk"), jsonObject.getBigDecimal("highestBid"),
+					jsonObject.getBigDecimal("last"), jsonObject.getBigDecimal("highestBid"), jsonObject.getBigDecimal("lowestAsk"),
 					isSymbolActive(symbol)));
 		}
-
 /*
 		marketPositionRepository.save(marketPositions);
 		marketPositionRepository.flush();
 */
-
 		marketPositionFastRepository.save(MarketPosotionUtils.convertMarketPosotionListToFast(marketPositions));
 		marketPositionFastRepository.flush();
 	}

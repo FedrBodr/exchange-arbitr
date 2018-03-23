@@ -1,18 +1,21 @@
 package ru.fedrbodr.exchangearbitr.view;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import ru.fedrbodr.exchangearbitr.dao.longtime.reports.ForkInfo;
 import ru.fedrbodr.exchangearbitr.services.ForkService;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
 @Controller
 @Scope("view")
-public class ForksController {
+@Slf4j
+public class ForksController implements Serializable {
 	@Autowired
 	private ForkService forkService;
 	private List<ForkInfo> filteredForkInfos;
@@ -44,7 +47,10 @@ public class ForksController {
 		unrealCurrentForks = new LinkedList<>();
 		List<ForkInfo> allForks = forkService.getCurrentForks();
 		for (ForkInfo fork : allForks) {
-			if(fork.getProfits().size() > 1 && fork.getProfits().get(1).getProfit().multiply(BigDecimal.valueOf(100)).compareTo(BigDecimal.valueOf(18))>0){
+			if(fork.getProfits().size()==0 || fork.getProfits().size() > 0 && fork.getProfits().get(0).getProfit().multiply(BigDecimal.valueOf(100)).compareTo(BigDecimal.valueOf(0.54)) < 0){
+				/* hide small profit fork - its used by self for auto raiding */
+			}else if(fork.getProfits().size() > 1 && fork.getProfits().get(1).getProfit().multiply(BigDecimal.valueOf(100)).compareTo(BigDecimal.valueOf(11))>0 ||
+					fork.getProfits().size() > 0 && fork.getProfits().get(0).getProfit().multiply(BigDecimal.valueOf(100)).compareTo(BigDecimal.valueOf(11))>0){
 				unrealCurrentForks.add(fork);
 			}else{
 				currentForks.add(fork);

@@ -70,7 +70,6 @@ public class ExchangeProxy {
 		return nextExchangeProxyForUse;
 	}
 
-
 	private Exchange getExchangeProxy(String proxyHost, int proxyPort, String exchangeClassName) {
 		Exchange exchangeViaProxy = ExchangeFactory.INSTANCE.createExchange(exchangeClassName);
 		ExchangeSpecification exchangeSpec = exchangeViaProxy.getDefaultExchangeSpecification();

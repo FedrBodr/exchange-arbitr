@@ -44,6 +44,7 @@ public class KunaExchangeReaderImpl implements ExchangeReader {
 		log.info(KunaExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
 		exchangeMeta = ExchangeMeta.KUNA;
+		exchangeProxy = exchangeMetaToExchangeProxyMap.get(exchangeMeta);
 		/*List<CurrencyPair> exchangeSymbols = exchangeProxy.getNextExchange().getExchangeSymbols();
 		for (CurrencyPair exchangeSymbol : exchangeSymbols) {
 			*//* USE it when start working with fee

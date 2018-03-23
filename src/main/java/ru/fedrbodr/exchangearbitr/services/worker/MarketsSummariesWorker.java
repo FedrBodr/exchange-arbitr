@@ -48,9 +48,6 @@ public class MarketsSummariesWorker implements Runnable {
 		log.info("After stop run iteration MarketsSummariesWorker total time in  seconds: {}", (new Date().getTime() - start.getTime())/1000);
 	}
 
-
-
-
 	private void readAndSaveAllExchangeSummaries() throws InterruptedException {
 		Date start = new Date();
 		ExecutorService executor = Executors.newFixedThreadPool(exchangeMetaToExchangeSummariesReaderMap.values().size());

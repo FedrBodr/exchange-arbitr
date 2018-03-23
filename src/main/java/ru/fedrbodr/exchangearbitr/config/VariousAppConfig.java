@@ -144,6 +144,7 @@ public class VariousAppConfig {
 		executorService.execute(new FutureTask(tCallable5));
 		executorService.execute(new FutureTask(bitfinexProxyInitCallable));
 		executorService.execute(new FutureTask(kunaProxyInitCallable));
+		executorService.execute(new FutureTask(livecoinProxyInitCallable));
 
 		executorService.shutdown();
 		try {
@@ -167,7 +168,7 @@ public class VariousAppConfig {
 		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.KUCOIN, kucoinExchangeReaderImpl);
 		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.CRYPTOPIA, cryptopiaExchangeReaderImpl);
 		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.KUNA, kunaExchangeReaderImpl);
-		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.LIVECOIN, kunaExchangeReaderImpl);
+		exchangeMetaToExchangeSummariesReaderMap.put(ExchangeMeta.LIVECOIN, livecoinExchangeReaderImpl);
 
 		return exchangeMetaToExchangeSummariesReaderMap;
 	}

@@ -45,7 +45,7 @@ public class LivecoinExchangeReaderImpl implements ExchangeReader {
 		/*TODO refactor this with aop for all init methods*/
 		log.info(LivecoinExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		Date starDate = new Date();
-		exchangeMeta = ExchangeMeta.BITTREX;
+		exchangeMeta = ExchangeMeta.LIVECOIN;
 		exchangeProxy = exchangeMetaToExchangeProxyMap.get(exchangeMeta);
 
 		List<CurrencyPair> exchangeSymbols = exchangeProxy.getNextExchange().getExchangeSymbols();
