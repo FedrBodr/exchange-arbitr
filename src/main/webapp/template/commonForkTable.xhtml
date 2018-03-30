@@ -8,7 +8,25 @@
 >
 <body>
 <ui:composition>
-    <p:dataTable id="lastForksTable" styleClass="marketSymbolsCompareTable"
+    <p:panel styleClass="forkTableFilters">
+        <f:facet name="header">
+            Filters
+        </f:facet>
+        <p:outputLabel for="minDeposit" value="Select min dep: "/>
+        <p:selectOneMenu id="minDeposit" value="#{forksController.minDeposit}" converter="javax.faces.Double" styleClass="prime-vert-middle">
+            <f:selectItems value="#{forksController.depositsFilterList}"/>
+        </p:selectOneMenu>
+<h:outputText value=" "></h:outputText>
+        <p:outputLabel for="minProfit" value="Select min profit by depo: "/>
+        <p:inputText id="minProfit" value="#{forksController.minProfit}"  converter="javax.faces.Double" styleClass="prime-vert-middle" />
+
+        <p:commandButton value="Filter" update="lastForksTable" ajax="false" action="#{forksController.filter}" >
+            <f:param name="minDeposit" value="#{forksController.minDeposit}" />
+            <f:param name="minProfit" value="#{forksController.minProfit}" />
+        </p:commandButton>
+    </p:panel>
+
+    <p:dataTable id="lastForksTable" tableStyleClass="forksTable"
                  var="fork"
                  widgetVar="lastForksTable"
                  value="#{forksController.currentForks}"
@@ -17,7 +35,7 @@
 
     >
         <!-- START collumns of main table -->
-        <p:column style="width:16px">
+        <p:column>
             <p:rowToggler/>
         </p:column>
         <p:column headerText="Symbol">
@@ -25,9 +43,9 @@
         </p:column>
         <p:column headerText="Buy exchange, link to market page" filterBy="#{fork.sellExchangeMeta.exchangeName}" filterMatchMode="exact">
             <f:facet name="filter">
-                <p:selectOneMenu onchange="PF('lastForksTable').filter()" >
-                    <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
-                    <f:selectItems value="#{webDataController.exchangeMetaLongList}" />
+                <p:selectOneMenu onchange="PF('lastForksTable').filter()">
+                    <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems value="#{webDataController.exchangeMetaLongList}"/>
                 </p:selectOneMenu>
             </f:facet>
             #{fork.sellExchangeMeta.exchangeName}
@@ -38,9 +56,9 @@
         <!-- filterBy="#{fork.sellExchangeMeta.exchangeName}" filterMatchMode="contains" -->
         <p:column headerText="Sell exchange, link to market page" filterBy="#{fork.buyExchangeMeta.exchangeName}" filterMatchMode="exact">
             <f:facet name="filter">
-                <p:selectOneMenu onchange="PF('lastForksTable').filter()" >
-                    <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
-                    <f:selectItems value="#{webDataController.exchangeMetaLongList}" />
+                <p:selectOneMenu onchange="PF('lastForksTable').filter()">
+                    <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems value="#{webDataController.exchangeMetaLongList}"/>
                 </p:selectOneMenu>
             </f:facet>
             #{fork.buyExchangeMeta.exchangeName}
@@ -67,6 +85,13 @@
         </p:column>
         <p:column headerText="Update at">
             <h:outputText value="#{fork.lastUpdatedTime}">
+                <f:convertDateTime pattern="HH:mm:ss dd.MM" timeZone="#{loginController.currentUser !=null ?
+                                                        loginController.currentUser.timeZone :
+                                                        'Etc/GMT+3'}"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Life time min">
+            <h:outputText value="#{(fork.startTime.time - fork.lastUpdatedTime.time)/1000/60}">
                 <f:convertDateTime pattern="HH:mm:ss dd.MM" timeZone="#{loginController.currentUser !=null ?
                                                         loginController.currentUser.timeZone :
                                                         'Etc/GMT+3'}"/>
@@ -148,8 +173,8 @@
         </p:rowExpansion>
 
     </p:dataTable>
-<br/>
-<br/>
+    <br/>
+    <br/>
     <p:dataTable id="unrealLastForksTable" styleClass="marketSymbolsCompareTable"
                  var="fork"
                  widgetVar="unrealLastForksTable"
@@ -172,9 +197,9 @@
         </p:column>
         <p:column headerText="Buy exchange, link to market page" filterBy="#{fork.sellExchangeMeta.exchangeName}" filterMatchMode="exact">
             <f:facet name="filter">
-                <p:selectOneMenu onchange="PF('unrealLastForksTable').filter()" >
-                    <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
-                    <f:selectItems value="#{webDataController.exchangeMetaLongList}" />
+                <p:selectOneMenu onchange="PF('unrealLastForksTable').filter()">
+                    <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems value="#{webDataController.exchangeMetaLongList}"/>
                 </p:selectOneMenu>
             </f:facet>
             #{fork.sellExchangeMeta.exchangeName}
@@ -185,9 +210,9 @@
         <!-- filterBy="#{fork.sellExchangeMeta.exchangeName}" filterMatchMode="contains" -->
         <p:column headerText="Sell exchange, link to market page" filterBy="#{fork.buyExchangeMeta.exchangeName}" filterMatchMode="exact">
             <f:facet name="filter">
-                <p:selectOneMenu onchange="PF('unrealLastForksTable').filter()" >
-                    <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
-                    <f:selectItems value="#{webDataController.exchangeMetaLongList}" />
+                <p:selectOneMenu onchange="PF('unrealLastForksTable').filter()">
+                    <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems value="#{webDataController.exchangeMetaLongList}"/>
                 </p:selectOneMenu>
             </f:facet>
             #{fork.buyExchangeMeta.exchangeName}

@@ -26,15 +26,15 @@ public class BulletForkFilter {
 	@JoinColumn(name = "symbol_id")
 	private SymbolLong symbol;
 
-	public BulletForkFilter(ExchangeMetaLong buyExchangeMeta, ExchangeMetaLong sellExchangeMeta) {
-		this.buyExchangeMeta = buyExchangeMeta;
-		this.sellExchangeMeta = sellExchangeMeta;
-	}
+	private Double minDeposit;
+	private Double minProfit;
 
-	public BulletForkFilter(ExchangeMetaLong buyExchangeMeta, ExchangeMetaLong sellExchangeMeta, SymbolLong symbol) {
+	public BulletForkFilter(ExchangeMetaLong buyExchangeMeta, ExchangeMetaLong sellExchangeMeta, SymbolLong symbol, Double minDeposit, Double minProfit) {
 		this.buyExchangeMeta = buyExchangeMeta;
 		this.sellExchangeMeta = sellExchangeMeta;
 		this.symbol = symbol;
+		this.minDeposit = minDeposit;
+		this.minProfit = minProfit;
 	}
 
 	@Override

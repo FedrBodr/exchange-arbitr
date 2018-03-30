@@ -87,7 +87,6 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 
 		for (BittrexMarketSummary bittrexMarketSummary : bittrexMarketSummaries) {
 			String[] split = bittrexMarketSummary.getMarketName().split("-");
-
 			Symbol symbol = symbolService.getOrCreateNewSymbol(
 					bittrexToUniCurrencyName(split[0]), // "BaseCurrency"
 					bittrexToUniCurrencyName(split[1]));//"MarketCurrency"

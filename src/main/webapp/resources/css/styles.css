@@ -1,3 +1,17 @@
+/* For Mobile */
+@media screen and (max-width: 540px) {
+    html {
+        font-size: 0.4em;
+    }
+}
+
+/* For Tablets */
+@media screen and (min-width: 540px) and (max-width: 780px) {
+    html {
+        font-size: 0.7em;
+    }
+}
+
 /* start commons helpers styles*/
 .left{
     float: left;
@@ -92,9 +106,6 @@
     margin-bottom: 3em;
 }
 /* start index page */
-.marketSymbolsCompareTable td:nth-child(1){
-    width: 82px;
-}
 .ordersWrapper{
     display: grid;
     grid-template-columns: 50% 50%;
@@ -112,6 +123,27 @@
     margin-bottom: 0.9em;
 }
 /* START main table stylesheet */
+.forkTableFilters{
+    width: 53em;
+    margin: auto auto 0.3em;
+}
+.forksTable td:nth-child(1),
+.forksTable th:nth-child(1){
+    width: 2em;
+}
+.forksTable td:nth-child(2),
+.forksTable th:nth-child(2){
+    width: 7em;
+}
+.forksTable td:nth-child(3),
+.forksTable th:nth-child(3){
+    width: 12em;
+}
+.forksTable td:nth-child(4),
+.forksTable th:nth-child(4){
+    width: 12em;
+}
+
 .notActiveWallet{
     background-color: #A09BE7;
     background-image: none;
@@ -148,4 +180,7 @@
 .filtersTable{
     margin: 1em auto 0;
     width: 70em;
+}
+.prime-vert-middle{
+    vertical-align: middle;
 }

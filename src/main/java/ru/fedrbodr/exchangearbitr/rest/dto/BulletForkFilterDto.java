@@ -15,12 +15,16 @@ public class BulletForkFilterDto {
 	/** Where we sell */
 	private ExchangeMetaLongDto sellExchangeMeta;
 	private SymbolLongDto symbol;
+	private Double minDeposit;
+	private Double minProfit;
 
 	public BulletForkFilterDto(BulletForkFilter filter) {
 		this.id = filter.getId();
 		this.buyExchangeMeta = new ExchangeMetaLongDto(filter.getBuyExchangeMeta());
 		this.sellExchangeMeta = new ExchangeMetaLongDto(filter.getSellExchangeMeta());
 		this.symbol = new SymbolLongDto(filter.getSymbol());
+		this.minDeposit = filter.getMinDeposit();
+		this.minProfit = filter.getMinProfit();
 	}
 
 	@Override

@@ -39,6 +39,14 @@
                                 <f:selectItems value="#{webDataController.symbolSelectItemsList}" var="symbol" itemLabel="#{symbol.lable}"/>
                             </p:selectOneMenu>
 
+                            <p:outputLabel for="minDeposit" value="Select min dep: "/>
+                            <p:selectOneMenu id="minDeposit" value="#{notificationController.minDeposit}" converter="javax.faces.Double">
+                                <f:selectItems value="#{forksController.depositsFilterList}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel for="minProfit" value="Select min profit by depo: "/>
+                            <p:inputText id="minProfit" value="#{notificationController.minProfit}"  converter="javax.faces.Double"></p:inputText>
+
                             <f:facet name="footer">
                                 <h:panelGroup>
                                     <p:commandButton value="Create" ajax="false"
@@ -66,6 +74,12 @@
                             </p:column>
                             <p:column headerText="Symbol">
                                 <h:outputText value="#{filter.symbol.name}"/>
+                            </p:column>
+                            <p:column headerText="Min deposit">
+                                <h:outputText value="#{filter.minDeposit}"/>
+                            </p:column>
+                            <p:column headerText="Min profit">
+                                <h:outputText value="#{filter.minProfit}"/>
                             </p:column>
                             <p:column headerText="Delete">
                                 <p:commandButton icon="ui-icon-circle-close" action="#{notificationController.remove(filter)}" update="filtersTable" style="border-color:#FF0000">

@@ -33,9 +33,9 @@ public class NotificationController {
 	private ExchangeMetaLong buyExchange;
 	/** We sell */
 	private ExchangeMetaLong sellExchange;
-	/** We sell */
 	private SymbolLong symbol;
-
+	private Double minDeposit = Double.valueOf(0);
+	private Double minProfit = new Double(0.5);
 
 	@PostConstruct
 	public void init(){
@@ -65,7 +65,7 @@ public class NotificationController {
 			filters = new LinkedList<>();
 			tgBulletConfig.setFilters(filters);
 		}
-		BulletForkFilter bulletForkFilter = new BulletForkFilter(exchangeMetaLongService.getPersistencedExchangeMetaLong(buyExchange.getId()), sellExchange, symbol);
+		BulletForkFilter bulletForkFilter = new BulletForkFilter(exchangeMetaLongService.getPersistencedExchangeMetaLong(buyExchange.getId()), sellExchange, symbol,minDeposit,minProfit);
 		bulletForkFilterRepository.save(bulletForkFilter);
 		filters.add(bulletForkFilter);
 		tgBulletConfig.setFilters(filters);
@@ -115,4 +115,19 @@ public class NotificationController {
 		this.symbol = symbol;
 	}
 
+	public Double getMinDeposit() {
+		return minDeposit;
+	}
+
+	public void setMinDeposit(Double minDeposit) {
+		this.minDeposit = minDeposit;
+	}
+
+	public Double getMinProfit() {
+		return minProfit;
+	}
+
+	public void setMinProfit(Double minProfit) {
+		this.minProfit = minProfit;
+	}
 }
