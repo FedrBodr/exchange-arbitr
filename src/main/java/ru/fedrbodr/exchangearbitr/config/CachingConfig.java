@@ -29,7 +29,7 @@ public class CachingConfig {
 	}
 
 	@CacheEvict(allEntries = true, value = {FREE_CURRENT_FORKS_CACHE})
-	@Scheduled(fixedDelay = 2 * 60 * 1000, initialDelay = 60 * 1000)
+	@Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 60 * 1000)
 	public void currentForksCacheEvict() {
 
 	}

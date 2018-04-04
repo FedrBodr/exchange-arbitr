@@ -84,7 +84,7 @@ public class ForkServiceImpl implements ForkService {
 	@Override
 	public List<ForkInfo> getFreeCurrentForks() {
 		List<ForkInfo> forkInfos = getCurrentForks();
-		List<String> strings = Arrays.asList("DeepForks", "Ecopole", "dfExchange", "LublinoMarketPlace", "FedCryptoBank", "SteelBriefsBank", "zapiski8");
+		List<String> strings = Arrays.asList("DeepForks", "Ecopole", "S41MarketPlace", "LublinoMarketPlace", "FedCryptoBank", "SteelBriefsBank", "zapiski8");
 		Iterator<String> iterator = strings.iterator();
 
 		for (ForkInfo forkInfo : forkInfos) {

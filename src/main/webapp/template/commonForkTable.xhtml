@@ -92,9 +92,6 @@
         </p:column>
         <p:column headerText="Life time min">
             <h:outputText value="#{(fork.startTime.time - fork.lastUpdatedTime.time)/1000/60}">
-                <f:convertDateTime pattern="HH:mm:ss dd.MM" timeZone="#{loginController.currentUser !=null ?
-                                                        loginController.currentUser.timeZone :
-                                                        'Etc/GMT+3'}"/>
             </h:outputText>
         </p:column>
 
