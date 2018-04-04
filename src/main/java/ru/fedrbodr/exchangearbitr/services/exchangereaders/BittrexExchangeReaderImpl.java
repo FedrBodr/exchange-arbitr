@@ -1,9 +1,7 @@
 package ru.fedrbodr.exchangearbitr.services.exchangereaders;
 
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.knowm.xchange.bittrex.dto.marketdata.BittrexCurrency;
 import org.knowm.xchange.bittrex.dto.marketdata.BittrexMarketSummary;
 import org.knowm.xchange.bittrex.service.BittrexMarketDataServiceRaw;
@@ -25,7 +23,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
 import static ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils.bittrexToUniCurrencyName;
 
 /**
@@ -60,19 +57,23 @@ public class BittrexExchangeReaderImpl implements ExchangeReader {
 		Date starDate = new Date();
 		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation start");
 		currencyMap = new HashMap<>();
-		BittrexCurrency[] bittrexCurrencies = getMarketDataService().getBittrexCurrencies();
-		for (BittrexCurrency bittrexCurrency : bittrexCurrencies) {
-			currencyMap.put(bittrexCurrency.getCurrency(), bittrexCurrency);
+		try {
+			BittrexCurrency[] bittrexCurrencies = getMarketDataService().getBittrexCurrencies();
+			for (BittrexCurrency bittrexCurrency : bittrexCurrencies) {
+				currencyMap.put(bittrexCurrency.getCurrency(), bittrexCurrency);
+			}
+		}catch (Exception e){
+			log.error("ExchangeArbitr " + e.getMessage(), e);
 		}
 
-		JSONObject json = getNewJsonObject("https://bittrex.com/api/v2.0/pub/Markets/GetMarketSummaries");
+		/*JSONObject json = getNewJsonObject("https://bittrex.com/api/v2.0/pub/Markets/GetMarketSummaries");
 		JSONArray result = json.getJSONArray("result");
 		for(int i = result.length()-1; i>=0; i--) {
 			JSONObject market = result.getJSONObject(i).getJSONObject("Market");
 			symbolService.getOrCreateNewSymbol(
 					bittrexToUniCurrencyName(market.getString("BaseCurrency")),
 					bittrexToUniCurrencyName(market.getString("MarketCurrency")));
-		}
+		}*/
 		/* TODO refactor this with aop */
 		log.info(BittrexExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
 	}

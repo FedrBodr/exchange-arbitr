@@ -19,6 +19,7 @@ public class CachingConfig {
 	public static final String TOP_PROBLEM_AFTER_10_COMPARE_LIST = "topProblemAfter12CompareListCache";
 	public static final String TOP_COMPARE_LIST = "top30CompareListCache";
 	public static final String CURRENT_FORKS_CACHE = "currentForksCache";
+	public static final String FREE_CURRENT_FORKS_CACHE = "freeCurrentForksCache";
 	public static final String ALL_SYMBOL_LONG_CACHE = "allSymbolLongCache";
 
 	@CacheEvict(allEntries = true, value = {ORDER_LIST_CACHE})
@@ -27,11 +28,11 @@ public class CachingConfig {
 
 	}
 
-	/*@CacheEvict(allEntries = true, value = {CURRENT_FORKS_CACHE})
-	@Scheduled(fixedDelay = 20 * 1000, initialDelay = 60 * 1000)
+	@CacheEvict(allEntries = true, value = {FREE_CURRENT_FORKS_CACHE})
+	@Scheduled(fixedDelay = 2 * 60 * 1000, initialDelay = 60 * 1000)
 	public void currentForksCacheEvict() {
 
-	}*/
+	}
 
 	@CacheEvict(allEntries = true, value = {TOP_AFTER_10_COMPARE_LIST})
 	@Scheduled(fixedDelay = 1 * 1000, initialDelay = 30 * 1000)
@@ -52,7 +53,7 @@ public class CachingConfig {
 	}
 
 	@CacheEvict(allEntries = true, value = {ALL_SYMBOL_LONG_CACHE})
-	@Scheduled(fixedDelay = 60 * 1000, initialDelay = 5 * 1000)
+	@Scheduled(fixedDelay = 2 * 60 * 1000, initialDelay = 5 * 1000)
 	public void allSymbolLongCacheEvict() {
 
 	}

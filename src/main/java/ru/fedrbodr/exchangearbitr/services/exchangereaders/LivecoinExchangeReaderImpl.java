@@ -48,13 +48,13 @@ public class LivecoinExchangeReaderImpl implements ExchangeReader {
 		exchangeMeta = ExchangeMeta.LIVECOIN;
 		exchangeProxy = exchangeMetaToExchangeProxyMap.get(exchangeMeta);
 
-		List<CurrencyPair> exchangeSymbols = exchangeProxy.getNextExchange().getExchangeSymbols();
-		for (CurrencyPair exchangeSymbol : exchangeSymbols) {
-			/* USE it when start working with fee
-			 CurrencyPairMetaData currencyPairMetaData = currencyPairs.get(currencyPair);
-			 * currencyPairMetaData.getTradingFee()*/
-			symbolService.getOrCreateNewSymbol(exchangeSymbol.counter.getCurrencyCode(), exchangeSymbol.base.getCurrencyCode());
-		}
+//		List<CurrencyPair> exchangeSymbols = exchangeProxy.getNextExchange().getExchangeSymbols();
+//		for (CurrencyPair exchangeSymbol : exchangeSymbols) {
+//			/* USE it when start working with fee
+//			 CurrencyPairMetaData currencyPairMetaData = currencyPairs.get(currencyPair);
+//			 * currencyPairMetaData.getTradingFee()*/
+//			symbolService.getOrCreateNewSymbol(exchangeSymbol.counter.getCurrencyCode(), exchangeSymbol.base.getCurrencyCode());
+//		}
 		/*TODO refactor this with aop*/
 		log.info(LivecoinExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
 	}

@@ -13,10 +13,10 @@
             <p:menuitem value="Log out" action="#{loginController.logOut}" ajax="false" rendered="#{loginController.authenticated}"/>
             <p:menuitem value="Login" outcome="/login" rendered="#{!loginController.authenticated}"/>
             <c:if test="#{loginController.currentUser == null}">
-                <p:menuitem value="Notifications" outcome="/notifications" disabled="true" />
+                <p:menuitem value="TG notifications" outcome="/notifications" disabled="true" title="Only paid users can use"/>
             </c:if>
             <c:if test="#{loginController.currentUser != null}">
-                <p:menuitem value="Notifications" outcome="/notifications" />
+                <p:menuitem value="TG notifications" outcome="/notifications" />
                 <p:menuitem value="#{loginController.currentUser.email}" outcome="/user" />
             </c:if>
             <p:menuitem value="Admin" outcome="/secure/admin" rendered="#{request.isUserInRole('ROLE_ADMIN')}"/>

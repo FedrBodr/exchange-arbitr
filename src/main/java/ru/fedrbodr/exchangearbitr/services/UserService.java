@@ -50,6 +50,12 @@ public class UserService implements UserDetailsService {
 		return currentUser;
 	}
 
+	public static boolean isUserHasRole(User currentUserOrNull, String role) {
+		if(currentUserOrNull == null) return false;
+
+		return currentUserOrNull.getRoles().stream().filter(o -> o.getName().equals(role)).findFirst().isPresent();
+	}
+
 	public boolean isAuthenticated() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();

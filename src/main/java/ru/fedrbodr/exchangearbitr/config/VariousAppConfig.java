@@ -72,6 +72,7 @@ public class VariousAppConfig {
 				passwordEncoder.encode("money3360FLOW"),
 				Arrays.asList(
 						new Role("ROLE_USER"),
+						new Role("ROLE_PAYED"),
 						new Role("ROLE_ADMIN")), TimeZone.getTimeZone("Etc/GMT+3"));
 
 		if (userRepository.findByEmail(user.getEmail()) == null){

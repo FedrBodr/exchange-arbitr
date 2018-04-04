@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import ru.fedrbodr.exchangearbitr.dao.longtime.domain.DepoProfit;
+import ru.fedrbodr.exchangearbitr.dao.longtime.domain.User;
 import ru.fedrbodr.exchangearbitr.dao.longtime.reports.ForkInfo;
 import ru.fedrbodr.exchangearbitr.services.ForkService;
+import ru.fedrbodr.exchangearbitr.services.UserService;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -22,6 +24,8 @@ public class ForksController implements Serializable {
 	public static double HIGEST_PROFIT_FOR_REAL_FORKS = 11;
 	@Autowired
 	private ForkService forkService;
+	@Autowired
+	private UserService userService;
 	private List<ForkInfo> filteredForkInfos;
 	private List<ForkInfo> currentForks;
 	private Double minDeposit = Double.valueOf(0);
@@ -49,7 +53,14 @@ public class ForksController implements Serializable {
 	private void initCurrentForks() {
 		currentForks = new LinkedList<>();
 		unrealCurrentForks = new LinkedList<>();
-		List<ForkInfo> allForks = forkService.getCurrentForks();
+		User currentUserOrNull = userService.getCurrentUserOrNull();
+		List<ForkInfo> allForks;
+		if(userService.isUserHasRole(currentUserOrNull, "ROLE_PAYED")){
+			allForks = forkService.getCurrentForks();
+		}else{
+			allForks = forkService.getFreeCurrentForks();
+		}
+
 		for (ForkInfo fork : allForks) {
 			if (fork.getProfits().size() == 0 || fork.getProfits().size() > 0 && fork.getProfits().get(0).getProfit().multiply(BigDecimal.valueOf(100)).compareTo(BigDecimal.valueOf(0.54)) < 0) {
 				/* hide small profit fork - its used by self for auto raiding */
