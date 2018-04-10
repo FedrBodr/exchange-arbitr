@@ -55,11 +55,7 @@ public class ForksController implements Serializable {
 		unrealCurrentForks = new LinkedList<>();
 		User currentUserOrNull = userService.getCurrentUserOrNull();
 		List<ForkInfo> allForks;
-		if(userService.isUserHasRole(currentUserOrNull, "ROLE_PAYED")){
-			allForks = forkService.getCurrentForks();
-		}else{
-			allForks = forkService.getFreeCurrentForks();
-		}
+		allForks = forkService.getCurrentForks();
 
 		for (ForkInfo fork : allForks) {
 			if (fork.getProfits().size() == 0 || fork.getProfits().size() > 0 && fork.getProfits().get(0).getProfit().multiply(BigDecimal.valueOf(100)).compareTo(BigDecimal.valueOf(0.54)) < 0) {
@@ -72,7 +68,6 @@ public class ForksController implements Serializable {
 			} else {
 				// not show
 			}
-
 		}
 	}
 

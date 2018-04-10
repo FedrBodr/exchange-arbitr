@@ -55,7 +55,6 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 			try {
 				AtomicReference<OrderBook> orderBook = new AtomicReference<>();
 
-
 				ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 				Callable<Void> tCallable = () -> {

@@ -91,7 +91,7 @@
             </h:outputText>
         </p:column>
         <p:column headerText="Life time min">
-            <h:outputText value="#{(fork.startTime.time - fork.lastUpdatedTime.time)/1000/60}">
+            <h:outputText value="#{(fork.lastUpdatedTime.time - fork.startTime.time)/1000/60}">
             </h:outputText>
         </p:column>
 

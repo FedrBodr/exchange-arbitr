@@ -19,18 +19,11 @@ public class CachingConfig {
 	public static final String TOP_PROBLEM_AFTER_10_COMPARE_LIST = "topProblemAfter12CompareListCache";
 	public static final String TOP_COMPARE_LIST = "top30CompareListCache";
 	public static final String CURRENT_FORKS_CACHE = "currentForksCache";
-	public static final String FREE_CURRENT_FORKS_CACHE = "freeCurrentForksCache";
 	public static final String ALL_SYMBOL_LONG_CACHE = "allSymbolLongCache";
 
 	@CacheEvict(allEntries = true, value = {ORDER_LIST_CACHE})
 	@Scheduled(fixedDelay = 1 * 1000, initialDelay = 60 * 1000)
 	public void reportCacheEvict() {
-
-	}
-
-	@CacheEvict(allEntries = true, value = {FREE_CURRENT_FORKS_CACHE})
-	@Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 60 * 1000)
-	public void currentForksCacheEvict() {
 
 	}
 

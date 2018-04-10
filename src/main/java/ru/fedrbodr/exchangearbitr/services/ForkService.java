@@ -10,8 +10,6 @@ import java.util.List;
 public interface ForkService {
 	List<ForkInfo> getCurrentForks();
 
-	List<ForkInfo> getFreeCurrentForks();
-
 	void determineAndPersistForks(long lastOrdersLoadingTime);
 
 	List<Fork> calcForks(long lastOrdersLoadingTime, List<DepoFork> depoForks, Date currentForkDetectedTime);

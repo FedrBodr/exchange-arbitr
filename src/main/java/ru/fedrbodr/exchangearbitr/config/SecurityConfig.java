@@ -33,8 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 						"/index.xhtml");
 
 		http.authorizeRequests().
-				antMatchers("/secure/**").access("hasRole('ROLE_ADMIN')").
-				antMatchers("/**").permitAll().
+				antMatchers("/**").access("hasRole('ROLE_ADMIN')").
 				and().formLogin().  //login configuration
 				loginPage("/login.xhtml").
 				loginProcessingUrl("/appLogin").

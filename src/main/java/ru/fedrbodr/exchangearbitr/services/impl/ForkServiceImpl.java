@@ -24,10 +24,12 @@ import ru.fedrbodr.exchangearbitr.services.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static ru.fedrbodr.exchangearbitr.config.CachingConfig.CURRENT_FORKS_CACHE;
-import static ru.fedrbodr.exchangearbitr.config.CachingConfig.FREE_CURRENT_FORKS_CACHE;
 
 @Service
 @Slf4j
@@ -76,28 +78,6 @@ public class ForkServiceImpl implements ForkService {
 				}
 				return -o1.getProfits().get(0).getProfit().compareTo(o2.getProfits().get(0).getProfit());
 			});
-		}
-		return forkInfos;
-	}
-
-	@Cacheable(FREE_CURRENT_FORKS_CACHE)
-	@Override
-	public List<ForkInfo> getFreeCurrentForks() {
-		List<ForkInfo> forkInfos = getCurrentForks();
-		List<String> strings = Arrays.asList("DeepForks", "Ecopole", "S41MarketPlace", "LublinoMarketPlace", "FedCryptoBank", "SteelBriefsBank", "zapiski8");
-		Iterator<String> iterator = strings.iterator();
-
-		for (ForkInfo forkInfo : forkInfos) {
-			String exchangeName = "fedCryptoBank";
-			if(iterator.hasNext()){
-				exchangeName = iterator.next();
-			}else{
-				iterator = strings.iterator();
-				exchangeName = iterator.next();
-			}
-
-			forkInfo.getBuyExchangeMeta().setExchangeName(exchangeName);
-			forkInfo.getSymbol().setName(forkInfo.getSymbol().getName().replace("BTC", "FedCoin").replace("USDT", "deepCoin").replace("ETH", "deepCoin"));
 		}
 		return forkInfos;
 	}
