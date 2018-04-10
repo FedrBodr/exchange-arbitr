@@ -30,10 +30,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 				.invalidateHttpSession(true)
 				.logoutSuccessUrl(
-						"/index.xhtml");
+						"/login.xhtml");
 
 		http.authorizeRequests().
-				antMatchers("/**").access("hasRole('ROLE_ADMIN')").
+				antMatchers("/secure/**").access("hasRole('ROLE_ADMIN')").
+				antMatchers("/**").permitAll().
 				and().formLogin().  //login configuration
 				loginPage("/login.xhtml").
 				loginProcessingUrl("/appLogin").

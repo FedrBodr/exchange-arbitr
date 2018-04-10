@@ -50,9 +50,7 @@
                             <f:facet name="footer">
                                 <h:panelGroup>
                                     <p:commandButton value="Create" ajax="false"
-                                                     action="#{notificationController.createNewNotification}" rendered="#{request.isUserInRole('ROLE_PAYED')}"/>
-                                    <p:commandButton value="Create" ajax="false" disabled="true" title="Only paid users can use"
-                                                     action="#{notificationController.createNewNotification}" rendered="#{!request.isUserInRole('ROLE_PAYED')}"/>
+                                                     action="#{notificationController.createNewNotification}"/>
                                 </h:panelGroup>
                             </f:facet>
 
