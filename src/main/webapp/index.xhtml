@@ -7,11 +7,8 @@
 <h:body>
     <ui:composition template="/template/commonLayout.xhtml">
         <ui:define name="content">
-            <h:form rendered="#{request.isUserInRole('ROLE_PAYED')}">
+            <h:form>
                 <ui:include src="/template/commonForkTable.xhtml"/>
-            </h:form>
-            <h:form rendered="#{!request.isUserInRole('ROLE_PAYED')}">
-                <ui:include src="/template/freeForkTable.xhtml"/>
             </h:form>
         </ui:define>
     </ui:composition>

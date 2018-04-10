@@ -15,7 +15,9 @@ rowStyleClass="#{marketPositionFastCompare.sellMarketPosition.active eq false or
 <h:body>
     <ui:composition template="/template/commonLayout.xhtml">
         <ui:define name="content">
-            <ui:include src="/template/commonForkTable.xhtml"/>
+            <h:form>
+                <ui:include src="/template/commonForkTable.xhtml"/>
+            </h:form>
         </ui:define>
     </ui:composition>
 </h:body>
