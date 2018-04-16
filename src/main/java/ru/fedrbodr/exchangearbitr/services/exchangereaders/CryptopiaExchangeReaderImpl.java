@@ -8,7 +8,6 @@ import org.knowm.xchange.cryptopia.service.CryptopiaMarketDataServiceRaw;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.utils.jackson.CurrencyPairDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPosition;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
@@ -28,7 +27,7 @@ import java.util.Map;
 /**
  * Cryptopia market summaries reader
  */
-@Service
+//@Service
 @Slf4j
 public class CryptopiaExchangeReaderImpl implements ExchangeReader {
 	private ExchangeProxy exchangeProxy;

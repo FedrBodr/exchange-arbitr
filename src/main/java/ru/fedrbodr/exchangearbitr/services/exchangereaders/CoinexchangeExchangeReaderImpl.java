@@ -5,7 +5,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPosition;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
@@ -20,7 +19,7 @@ import java.util.*;
 
 import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
 
-@Service
+//@Service
 @Slf4j
 public class CoinexchangeExchangeReaderImpl implements ExchangeReader {
 	@Autowired

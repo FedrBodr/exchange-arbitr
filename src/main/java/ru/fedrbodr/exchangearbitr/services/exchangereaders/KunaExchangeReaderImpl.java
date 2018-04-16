@@ -8,7 +8,6 @@ import org.knowm.xchange.kuna.dto.KunaTimeTicker;
 import org.knowm.xchange.kuna.service.KunaMarketDataServiceRaw;
 import org.knowm.xchange.kuna.util.KunaUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPosition;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
@@ -25,7 +24,7 @@ import java.util.*;
 /**
  * Kuna market summaries reader
  */
-@Service
+//@Service
 @Slf4j
 public class KunaExchangeReaderImpl implements ExchangeReader {
 	private ExchangeProxy exchangeProxy;

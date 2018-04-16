@@ -25,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * For testing set downloadCount > 0
-*
 * */
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)

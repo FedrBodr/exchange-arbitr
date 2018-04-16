@@ -8,7 +8,6 @@ import org.knowm.xchange.poloniex.PoloniexExchange;
 import org.knowm.xchange.poloniex.dto.marketdata.PoloniexCurrencyInfo;
 import org.knowm.xchange.poloniex.service.PoloniexMarketDataServiceRaw;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPosition;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
@@ -27,7 +26,7 @@ import static ru.fedrbodr.exchangearbitr.utils.JsonObjectUtils.getNewJsonObject;
  * Universal symbol format is BTC-BCN Poloniex is BTC_BCN
  *
  * */
-@Service
+//@Service
 @Slf4j
 public class PoloniexExchangeReaderImpl implements ExchangeReader {
 	@Autowired

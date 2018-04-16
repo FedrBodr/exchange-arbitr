@@ -8,7 +8,6 @@ import org.knowm.xchange.livecoin.LivecoinAdapters;
 import org.knowm.xchange.livecoin.dto.marketdata.LivecoinTicker;
 import org.knowm.xchange.livecoin.service.LivecoinMarketDataServiceRaw;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPosition;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
@@ -28,7 +27,7 @@ import java.util.Map;
 /**
  * Livecoin market summaries reader
  */
-@Service
+//@Service
 @Slf4j
 public class LivecoinExchangeReaderImpl implements ExchangeReader {
 	private ExchangeProxy exchangeProxy;

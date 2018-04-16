@@ -28,7 +28,7 @@ spring:
 
 # In-Memory H2 database for monitoring and fast calculating of real-time forks.
   datasource:
-    url: jdbc:h2:mem:shorttime2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE
+    url: jdbc:h2:mem:shorttime1004;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE
     username: fe
     password: noMONEY0607noHoney
     driverClassName: org.h2.Driver
@@ -73,7 +73,7 @@ spring:
 #    tomcat.max-idle: 15
 # Long time Database POSTGRE
 longtime.datasource:
-  url: jdbc:postgresql://localhost:5432/longtime
+  url: jdbc:postgresql://localhost:5432/longtime1004
   username: postgres
   password: 351
   driver-class-name: org.postgresql.Driver
@@ -117,7 +117,7 @@ longtime.datasource:
       settings:
         trace: false
         web-allow-others: false
-proxy.list: 185.128.215.224:8000,193.93.60.95:8000,193.93.60.236:8000,194.242.127.221:8000,193.93.60.25:8000,194.242.127.67:8000,91.234.11.57:8000,194.242.127.36:8000
+proxy.list: 185.128.215.224:8000,193.93.60.95:8000,193.93.60.236:8000,194.242.127.221:8000,193.93.60.25:8000,194.242.127.67:8000,91.234.11.57:8000,194.242.127.36:8000,37.139.49.37:8000,37.139.49.15:8000,37.139.51.243:8000,37.139.53.103:8000,37.139.49.126:8000
 ---
 spring:
   profiles: dev
@@ -131,7 +131,7 @@ spring:
   jpa:
     hibernate.ddl-auto: update
 longtime.datasource:
-  url: jdbc:postgresql://104.155.111.23:5432/longtime22
+  url: jdbc:postgresql://104.155.111.23:5432/longtime1004
   username: postgres
   password: fktr7429YOR
   driver-class-name: org.postgresql.Driver
