@@ -1,0 +1,1397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?latexml searchpaths="/opt/mocassin/patched-tex,/home/linglab/projects/thirdparty/arxmliv/sty"?>
+<?latexml options="11pt,reqno" class="amsart"?>
+<?latexml package="pdfsync"?>
+<?latexml package="xcolor"?>
+<?latexml package="framed"?>
+<?latexml RelaxNGSchema="LaTeXML"?>
+<document xmlns="http://dlmf.nist.gov/LaTeXML" labels="LABEL:end LABEL:firstpage">
+  <creator role="author">
+    <personname>
+      <text font="italic">И.Е. Ануфриев, В.Г. Корнеев</text>
+    </personname>
+  </creator>
+  <date name="Date:" role="creation"/>
+  <acknowledgements>Работа выполнена при финансовой поддержке
+Российского фонда фундаментальных исследований
+(проект № 00-01-00772), программы ‘‘Университеты России’’ (проект
+№ УР.03.01.017) и гранта для молодых кандидатов наук Санкт-Петербурга
+(№ PD03-1.1-22).</acknowledgements>
+  <ERROR class="undefined">\colorlet</ERROR>
+  <para xml:id="p1">
+    <p>shadecoloryellow!30<?latexml options="T2A" package="fontenc"?><?latexml options="russian,english" package="babel"?><?latexml options="cp866" package="inputenc"?><?latexml package="izvuz3"?><?latexml package="amssymb"?><?latexml package="graphicx"?></p>
+  </para>
+  <!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 25 ****
+     %\newcommand{\bc }[1]{\mbox{\boldmath{$\mathcal {#1}$}}}
+     %\newcommand{\bca}{\boldsymbol{\cal A}}
+     %\newcommand{\bi}[1]{\mbox{\boldmath $ {#1} $}} % Bold italic type
+     %\renewcommand{\baselinestretch}{0.97}
+     %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 50 ****-->
+  <ERROR class="undefined">\god</ERROR>
+  <para xml:id="p2">
+    <p>20051 (512)<ERROR class="undefined">\nomer</ERROR><!-- %Remove in Eng.
+     %\nomer{Vol.\,49, No.\,1}%    Set in Eng.--></p>
+  </para>
+  <!-- %NB: ^^ remove in Eng. -->
+  <ERROR class="undefined">\tit</ERROR>
+  <para xml:id="p3">
+    <p>Численноетестированиеметодадекомпозиции<break/>для_MathID_F2_0_-версииМКЭ</p>
+  </para>
+  <!-- %\pagestyle{myheadings}  %         Set in Eng.
+     %Remove in Eng.-->
+  <ERROR class="undefined">\udk</ERROR>
+  <para xml:id="p4">
+    <p>517.929</p>
+  </para>
+  <!-- %\thispagestyle{plain}%          Set in Eng. -->
+  <ERROR class="undefined">\maketit</ERROR>
+  <!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 75 **** -->
+  <section xml:id="Sx1" labels="LABEL:intro">
+    <title>Введение</title>
+    <para xml:id="Sx1.p1">
+      <p>Известно, что применение _MathID_F2_1_-версии метода конечных элементов для
+решения эллиптических краевых задач дает ряд преимуществ по сравнению
+с _MathID_F2_2_-версией. В частности, скорость ее сходимости как правило выше, а
+в ряде важных для приложений случаев она обладает экспоненциальной
+скоростью сходимости <cite>[<bibref bibrefs="bs1987" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="schwab1998" separator="," show="Number" yyseparator=","/>]</cite>. Это позволяет
+сократить число неизвестных при решении сложных инженерных задач. В
+то же время матрицы жесткости _MathID_F2_3_-версии существенно более заполнены
+и имеют более сложную структуру. Поэтому в полной мере ее
+достоинства могут быть реализованы только при наличии быстрых алгоритмов
+решения соответствующих
+систем линейных алгебраических уравнений.</p>
+    </para>
+    <para xml:id="Sx1.p2">
+      <p>Предположим, _MathID_F1_4_ — симметричная
+положительно определенная (с. п. о.) система алгебраических уравнений с
+_MathID_F2_5_-матрицей, и _MathID_F2_6_ — параметр. Алгоритм решения этой
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 100 **** -->задачи назовем <text font="italic">быстрым</text> или (асимптотически)
+<text font="italic">почти оптимальным</text>, если он требует _MathID_F2_7_
+арифметических операций с фиксированным и
+небольшим _MathID_F2_8_. Если _MathID_F2_9_, то алгоритм называется <text font="italic">оптимальным</text>.
+Для решения часто применяется предобусловленный метод сопряженных
+градиентов (ПМСГ) с некоторым предобусловливателем _MathID_F2_10_.
+Под (общей) <text font="italic">арифметической или вычислительной стоимостью
+предобусловливателя</text> понимается арифметическая стоимость
+решения системы ПМСГ за исключением умножений матрицы _MathID_F2_11_ на
+векторы, неизбежных при итерационном решении. Иными словами,
+эффективность предобусловливателя измеряется не только
+относительной обусловленностью, но и стоимостью решения системы
+с матрицей в виде предобусловливателя. Соответственно общей арифметической
+стоимости предобусловливатель называется быстрым, почти оптимальным и
+оптимальным. Для краткости алгоритмы решения систем линейных
+алгебраических уравнений называются также <text font="italic">солверами</text>.
+В этой работе рассматриваются только иерархические
+_MathID_F2_12_-дискретизации эллиптических уравнений второго порядка. Их
+конечные элементы предполагаются ассоциироваными с квадратными
+базисными элементами, координатные функции которых определяются
+посредством произведений интегрированных полиномов Лежандра.
+Поэтому по умолчанию всегда подразумевается этот тип
+дискретизаций.</p>
+    </para>
+    <para xml:id="Sx1.p3">
+      <p>Активное использование предобусловливателей и солверов МДО _MathID_F2_13_-версии
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 125 **** -->началось в90-х гг., когда для _MathID_F2_14_-дискретизаций такие алгоритмы были
+уже достаточно хорошо изучены (см., напр.,
+<cite>[<bibref bibrefs="nepomnyaschikh:91" separator="," show="Number" yyseparator=","/>]</cite> (1991), <cite>[<bibref bibrefs="smithbjorstadgropp:96" separator="," show="Number" yyseparator=","/>]</cite> (1996)
+и ссылки в них). По
+иерархическим _MathID_F2_15_-дискретизациям в 1994–97 гг. был выполнен ряд работ,
+в которых рассматривались вопросы, связанные c блочно-диагональными
+предобусловливателями, в которых блок неизвестных в вершинах
+элементов независим от остальных, с предобусловливанием дополнений
+Шура, с двухуровневыми МДО и МДО с перекрытием областей и т.п. (см.
+<cite>[<bibref bibrefs="babuskacraigmandelpitkaranta:91" separator="," show="Number" yyseparator=","/>]</cite>–<cite>[<bibref bibrefs="guo" separator="," show="Number" yyseparator=","/>]</cite>).
+Наиболее разработанная схема построения МДО-предобусловливателя
+типа Дирихле–Дирихле для двумерных эллиптических задач была представлена
+в <cite>[<bibref bibrefs="ki1995" separator="," show="Number" yyseparator=","/>]</cite>–<cite>[<bibref bibrefs="ki1996" separator="," show="Number" yyseparator=","/>]</cite> и
+была развита затем в <cite>[<bibref bibrefs="kj1997" separator="," show="Number" yyseparator=","/>]</cite>–<cite>[<bibref bibrefs="kj1999a" separator="," show="Number" yyseparator=","/>]</cite>.
+Основные достижения этих работ заключались
+в трех моментах. Один — обоснование возможности предобусловливания с
+потерей _MathID_F2_16_ в относительной обусловленности матрицей из двух
+независимых блоков, соответствующих неизвестным в вершинах элементов и
+остальным неизвестным (см. также <cite>[<bibref bibrefs="babuskacraigmandelpitkaranta:91" separator="," show="Number" yyseparator=","/>]</cite>).
+Два других — получениe эффективных предобусловливателей
+конечно-разностного вида для внутренних задач на подобластях декомпозиции и
+предобусловливателей-солверов для интерфейсных задач. Наиболее трудоемкой
+компонентой алгоритмов МДО для _MathID_F2_17_-версии является решение локальных
+задач Дирихле на подобластях декомпозиции. Хотя использование полученного
+конечно-разностного предобусловливателя уменьшало вычислительную
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 150 **** -->стоимость этой компоненты, построить на его основе почти оптимальные
+солверы для локальных задач Дирихле удалось лишь в более поздних работах
+<cite>[<bibref bibrefs="k2001" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="k2002" separator="," show="Number" yyseparator=","/>]</cite>. Они представляют
+собой вторичные итерационные процессы МДО для конечно-разностной задачи,
+соответствующей предобусловливателю. В целом эти результаты привели к
+нескольким предобусловливателям-солверам МДО
+для иерархических _MathID_F2_18_-дискретизаций эллиптических уравнений
+второго порядка, имеющим арифметическую стоимость
+_MathID_F2_19_ c _MathID_F1_20_. Они представлены
+в работах <cite>[<bibref bibrefs="korneev:02b" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="kxa2002" separator="," show="Number" yyseparator=","/>]</cite>.</p>
+    </para>
+    <para xml:id="Sx1.p4">
+      <p>В данной работе рассматривается одна из версий почти
+оптимального МДО алгоритма, положенного в основу
+разрабатываемого нами пакета программ. Основным ее содержанием
+является описание алгоритмов пакета и результатов их анализа и обсуждение
+результатов достаточно обширных численных экспериментов. Основной целью
+тестирования МДО солвера в целом и всех его основных компонент
+было на данном этапе установление асимптотик по _MathID_F2_21_ их практической
+трудоемкости и сравнение их с априорными оценками. Насколько
+известно, в работе впервые представлены численные результаты,
+полученные с помощью комплекса программ МДО на базе _MathID_F2_22_-версии.
+Проделан ряд экспериментов со всеми
+компонентами МДО-предобусловливателя с целью подтверждения
+полученных ранее в <cite>[<bibref bibrefs="kj1999" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="kj1999a" separator="," show="Number" yyseparator=","/>]</cite>,
+<cite>[<bibref bibrefs="kxa2002" separator="," show="Number" yyseparator=","/>]</cite> априорных оценок
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 175 **** -->спектральной эквивалентности и объема вычислительной работы. Как
+известно, основными компонентами являются следующие.</p>
+    </para>
+    <para xml:id="Sx1.p5">
+      <p>1. Солверы для локальных задач Дирихле на подобластях
+декомпозиции — конечных элементах.</p>
+    </para>
+    <para xml:id="Sx1.p6">
+      <p>2. Процедуры продолжения и ограничения с межэлементной
+границы внутрь конечных элементов.</p>
+    </para>
+    <para xml:id="Sx1.p7">
+      <p>3. Предобусловливатель-солвер для дополнения Шура,
+получаемого после конденсации внутренних для конечных элементов
+неизвестных.</p>
+    </para>
+    <para xml:id="Sx1.p8">
+      <p>4. Солвер для решения систем с матрицей, являющейся блоком матрицы
+жесткости, соответствующим
+неизвестным в вершинах конечных элементов.</p>
+    </para>
+    <para xml:id="Sx1.p9">
+      <p>Заметим, что ни конденсация внутренних неизвестных, ни дополнение
+Шура в алгоритме не используются. Мы не рассматриваем алгоритмы
+для четвертой компоненты, поскольку указанный блок является
+матрицей жесткости для ансамбля конечных элементов первого
+порядка. Для систем с такими матрицами можно использовать целый
+набор быстрых алгоритмов, полученных для _MathID_F2_23_-версии.</p>
+    </para>
+    <para xml:id="Sx1.p10">
+      <p>Тестирование производилось для весьма широкого диапазона
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 200 **** -->значений _MathID_F2_24_, в некоторых экспериментах до _MathID_F2_25_, выходящих за
+пределы, характерные в настоящее время для практики решения прикладных
+задач. Однако это позволило во всех экспериментах достичь
+асимптотических зон и
+установить асимптотическое поведение исследуемых величин для
+их сравнения с теоретическими оценками.</p>
+    </para>
+    <para xml:id="Sx1.p11">
+      <p>Представленный в данной работе алгоритм допускает глубокое
+распараллеливание. Основной объем вычислений может производиться
+независимо для каждого конечного элемента, каждой стороны и
+подзадачи для неизвестных в вершинах. Если для локальных задач
+на конечных элементах применяется вторичный МДО, то возможно
+дальнейшее распараллеливание. С указанным свойством связано не
+менее важное другое: описываемый алгоритм МДО
+удобен для использования в адаптивных режимах. Он не
+теряет в быстродействии, если порядки пространств внутренних
+координатных функций на каждом элементе и пространств следов
+конечно-элементных функций на каждой стороне различны.</p>
+    </para>
+  </section>
+  <section refnum="1" xml:id="S1" labels="LABEL:MDO">
+    <title><tag>1 </tag>Алгоритм МДО и его основные компоненты</title>
+    <para xml:id="S1.p1">
+      <p>1.1. <text font="italic">Иерархическая _MathID_F2_26_-версия</text>. Рассмотрим
+обобщенную постановку задачи Дирихле для эллиптического уравнения второго
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 225 **** -->порядка в области _MathID_F2_27_:
+найти функцию _MathID_F2_28_ такую, что</p>
+      <equation xml:id="S1.Ex1">
+        _MathID_F1_29_
+      </equation>
+      <p>Билинейная форма _MathID_F2_30_ предполагается симметричной,
+ограниченной и коэрцитивной. Граница области _MathID_F2_31_ состоит из
+конечного числа гладких кривых, углы между которыми лежат в
+интервале _MathID_F2_32_. Тогда для любого достаточно малого параметра
+сетки _MathID_F2_33_ область _MathID_F2_34_<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\ov</XMTok></ERROR> представима в виде
+объединения _MathID_F1_35_ непересекающихся совместных
+криволинейных четырехугольников _MathID_F1_36_<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\ov</XMTok></ERROR>,
+причем совместные явно заданные отображения _MathID_F1_37_
+квадрата _MathID_F1_38_ на четырехугольники
+_MathID_F1_39_ невырождены и удовлетворяют обобщенным условиям
+квазиоднородности (напр., <cite>[<bibref bibrefs="kj1999" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="kj1999a" separator="," show="Number" yyseparator=","/>]<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\ov</XMTok></ERROR></cite>). Базисный конечный
+элемент _MathID_F2_40_ есть квадрат _MathID_F2_41_ с базисом
+_MathID_F1_42_, _MathID_F1_43_, где
+_MathID_F1_44_, функции _MathID_F2_45_ для _MathID_F2_46_ являются
+интегрированными полиномами Лежандра с нормировочным множителем</p>
+      <equation xml:id="S1.Ex2">
+        _MathID_F1_47_
+      </equation>
+      <p>а _MathID_F1_48_, _MathID_F1_49_
+— линейные ‘‘узловые’’ функции.</p>
+    </para>
+    <para xml:id="S1.p2">
+      <p>Представим множество _MathID_F2_50_ в виде объединения подмножеств
+<text font="italic">внутренних координатных функций</text> _MathID_F1_51_, _MathID_F1_52_, <text font="italic">координатных функций сторон</text>
+_MathID_F1_53_, _MathID_F2_54_, _MathID_F1_55_ или _MathID_F2_56_, _MathID_F1_57_
+и <text font="italic">координатных функций вершин</text>
+_MathID_F1_58_, _MathID_F2_59_, _MathID_F2_60_. Введем обычным
+способом конечноэлементное пространство</p>
+      <equation xml:id="S1.Ex3">
+        _MathID_F1_61_
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\ov</XMTok>
+        </ERROR>
+      </equation>
+      <p>и его базис _MathID_F1_62_
+разобъем на три подмножества _MathID_F2_63_,
+_MathID_F2_64_ и _MathID_F2_65_. Подмножество внутренних базисных
+функций _MathID_F2_66_ состоит из функций _MathID_F2_67_, каждая из которых
+отличается от нуля только на одном элементе _MathID_F2_68_ и
+_MathID_F2_69_. В подмножество базисных функций
+сторон _MathID_F2_70_ входят функции _MathID_F2_71_, которые отличны от нуля на
+паре конечных элементов _MathID_F2_72_, _MathID_F2_73_ с общей
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 275 **** -->стороной и _MathID_F2_74_.
+Подмножество базисных функций вершин _MathID_F2_75_
+составляют функции _MathID_F2_76_, не равные нулю только на конечных
+элементах _MathID_F2_77_ с общей вершиной, на которых
+_MathID_F2_78_. Аналогично разобьем неизвестные
+и обозначим через _MathID_F2_79_,
+_MathID_F2_80_,
+_MathID_F2_81_ векторы внутренних
+неизвестных и неизвестных сторон и вершин соответственно, где
+_MathID_F1_82_ — общее число
+неизвестных. Принятому упорядочению соответствует представление
+конечноэлементной системы алгебраических уравнений</p>
+      <equation frefnum="(1)" refnum="1" xml:id="S1.E1" labels="LABEL:slau">
+        _MathID_F1_83_
+      </equation>
+      <p>в блочном виде</p>
+      <equation xml:id="S1.Ex4">
+        _MathID_F1_84_
+      </equation>
+    </para>
+    <para xml:id="S1.p3">
+      <p>1.2. <text font="italic">Структура предобусловливателя МДО</text>.  Следуя
+<cite>[<bibref bibrefs="kj1999" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="kj1999a" separator="," show="Number" yyseparator=","/>]<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\wh</XMTok></ERROR><ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\wh</XMTok></ERROR><ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\wh</XMTok></ERROR><ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\wh</XMTok></ERROR><ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\wh</XMTok></ERROR><ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\wh</XMTok></ERROR></cite> для построения предобусловливателя МДО введем
+более простую матрицу, чем _MathID_F2_85_. Свяжем с каждым элементом
+_MathID_F2_86_ матрицу _MathID_F1_87_ или _MathID_F1_88_
+где _MathID_F2_89_ — матрица жесткости базисного элемента _MathID_F2_90_,
+индуцируемая билинейной формой
+_MathID_F1_91_, a _MathID_F2_92_ — его матрица массы при локальной
+нумерации неизвестных.
+Обозначим через _MathID_F2_93_ глобальную матрицу, получающуюся в
+результате процедуры сборки (аналогичной сборке _MathID_F2_94_) матриц
+_MathID_F2_95_, и представим ее в блочном виде с учетом разделения
+неизвестных на внутренние, неизвестные сторон и вершин</p>
+      <equation frefnum="(2)" refnum="2" xml:id="S1.E2" labels="LABEL:Lambda">
+        _MathID_F1_96_
+      </equation>
+      <p>Спектральная эквивалентность матриц _MathID_F2_97_ и _MathID_F2_98_
+следует <cite>[<bibref bibrefs="k1977" separator="," show="Number" yyseparator=","/>]</cite> из условий обобщенной квазиоднородности.
+Кроме того, матрица</p>
+      <equation xml:id="S1.Ex5">
+        _MathID_F1_99_
+      </equation>
+      <p>полученная при помощи обнуления блоков взаимодействия
+функций вершин с остальными, является <cite>[<bibref bibrefs="kj1999" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="kj1999a" separator="," show="Number" yyseparator=","/>]</cite> почти
+спектрально-эквивалентной _MathID_F2_100_:
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 350 **** --></p>
+      <equation xml:id="S1.Ex6">
+        _MathID_F2_101_
+      </equation>
+      <p>Знак _MathID_F2_102_ используем для записи неравенств, выполняющихся с
+точностью до не зависящих от _MathID_F2_103_ и _MathID_F2_104_ постоянных.</p>
+    </para>
+    <para xml:id="S1.p4">
+      <p>Глобальный МДО-предобусловливатель _MathID_F2_105_ для
+_MathID_F2_106_ определяем через обратный к нему, приняв</p>
+      <equation frefnum="(3)" refnum="3" xml:id="S1.E3" labels="LABEL:globprec">
+        _MathID_F1_107_
+      </equation>
+      <p>Основной версии пакета соответствуют</p>
+      <equation xml:id="S1.Ex7">
+        _MathID_F1_108_
+      </equation>
+      <p>где _MathID_F2_109_ — неявно заданные матрицы,
+являющиеся результатом применения неточных итерационных солверов
+с фиксированным и небольшим числом итераций
+для решения систем с матрицами _MathID_F2_110_.
+В _MathID_F2_111_ и _MathID_F2_112_
+можно, вообще говоря, использовать _MathID_F1_113_,
+_MathID_F1_114_, т. е. псевдообратные матрицы к соответствующим блокам
+матрицы _MathID_F2_115_, однако это предполагает
+точные методы решения систем с матрицами _MathID_F2_116_. Пусть _MathID_F2_117_ — блок матрицы _MathID_F2_118_, определенный на внутренних
+неизвестных. Поскольку
+_MathID_F1_119_, то решение системы с
+матрицей _MathID_F2_120_ требует решения _MathID_F2_121_ систем с матрицей
+_MathID_F2_122_ и соответственно предобусловливатель локальных задач
+Дирихле определяется как блочно-диагональная матрица с _MathID_F2_123_
+одинаковыми блоками _MathID_F1_124_<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\wt</XMTok></ERROR><ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\wt</XMTok></ERROR><ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\wt</XMTok></ERROR>. Здесь
+_MathID_F2_125_<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\wt</XMTok></ERROR> — оператор, являющийся результатом
+применения некоторого вторичного итерационного процесса с небольшим
+числом итераций для решения системы с матрицей _MathID_F2_126_.
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 400 **** -->Всюду в статье используем волну в обозначении операторов,
+порожденных вторичным
+итерационным процессом для решения системы линейных уравнений.</p>
+    </para>
+    <para xml:id="S1.p5">
+      <p>Определение предобусловливателя интерфейсных задач _MathID_F2_127_ связано с разложением</p>
+      <equation xml:id="S1.Ex8">
+        _MathID_F1_128_
+      </equation>
+      <p>где _MathID_F1_129_ —
+дополнение Шура. В дальнейшем будем использовать блочно-диагональный
+предобусловливатель _MathID_F2_130_ для дополнения Шура с одинаковыми
+блоками для каждой из сторон триангуляции (при условии однотипной
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 425 **** -->нумерации неизвестных каждой из сторон), т. е. _MathID_F1_131_. При этом он удовлетворяет
+неравенствам</p>
+      <equation frefnum="(4)" refnum="4" xml:id="S1.E4" labels="LABEL:specshur">
+        _MathID_F2_132_
+      </equation>
+    </para>
+    <para xml:id="S1.p6">
+      <p>Пусть _MathID_F2_133_
+— оператор продолжения такой, что для любого вектора _MathID_F2_134_ выполняется
+неравенство</p>
+      <equation frefnum="(5)" refnum="5" xml:id="S1.E5" labels="LABEL:prolongoper">
+        _MathID_F1_135_
+      </equation>
+      <p>c _MathID_F2_136_ постоянной или слабо зависящей от _MathID_F2_137_.
+Полагаем _MathID_F1_138_.
+Обозначим через _MathID_F2_139_ ограничение оператора _MathID_F2_140_ на
+элемент с номером _MathID_F2_141_. В силу свойств матриц _MathID_F2_142_ и _MathID_F2_143_ все эти ограничения одинаковы при условии идентичности
+локальных нумераций внутренних координатных функций на всех
+элементах и координатных функций сторон на всех сторонах,
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 450 **** -->т. е. _MathID_F1_144_ —
+оператор продолжения для базисного элемента. Более того,
+если для блоков матрицы _MathID_F2_145_ ввести аналогичную
+(<ref labelref="LABEL:Lambda"/>) индексацию и использовать обозначения</p>
+      <equation xml:id="S1.Ex9">
+        _MathID_F1_146_
+      </equation>
+      <p>то (<ref labelref="LABEL:prolongoper"/>) эквивалентно неравенству</p>
+      <equation frefnum="(6)" refnum="6" xml:id="S1.E6" labels="LABEL:prolongoperE">
+        _MathID_F1_147_
+      </equation>
+    </para>
+    <para xml:id="S1.p7">
+      <p>Описанный способ построения МДО-предобусловливателей
+использовался в <cite>[<bibref bibrefs="ki1996" separator="," show="Number" yyseparator=","/>]</cite>–<cite>[<bibref bibrefs="kj1999a" separator="," show="Number" yyseparator=","/>]</cite>.
+Справедлива теорема (<cite>[<bibref bibrefs="kj1999a" separator="," show="Number" yyseparator=","/>]</cite>, теорема 5.2),
+свидетельствующая о том, что предобусловливатель _MathID_F2_148_
+почти оптимален в смысле относительного числа обусловленности.</p>
+    </para>
+    <!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 475 **** -->
+    <theorem class="theorems" frefnum="Теорема 1.1" refnum="1.1" xml:id="S1.Thmtheorems1" labels="LABEL:PSPR LABEL:TeorGlobPrec LABEL:ss:1.3">
+      <title font="bold"><tag>Теорема 1.1</tag>.</title>
+      <para xml:id="S1.Thmtheorems1.p1">
+        <p>
+          <text font="italic">Пусть _MathID_F2_149_ для _MathID_F1_150_ и выполняются
+неравенства _MathID_F2_151_ и неравенство _MathID_F2_152_ с
+постоянной _MathID_F2_153_.  Тогда</text>
+        </p>
+        <equation xml:id="S1.Ex10">
+          _MathID_F2_154_
+        </equation>
+      </para>
+    </theorem>
+    <para xml:id="S1.p8">
+      <p>Для решения системы (<ref labelref="LABEL:slau"/>) применим
+ПМСГ с предобусловливателем, обратный к которому
+имеет вид (<ref labelref="LABEL:globprec"/>),</p>
+    </para>
+    <para xml:id="S1.p9">
+      <p>_MathID_F1_155_, _MathID_F1_156_,
+_MathID_F1_157_, _MathID_F1_158_,
+_MathID_F1_159_</p>
+    </para>
+    <para xml:id="S1.p10">
+      <p><text framed="underline" font="bold">for</text> _MathID_F1_160_</p>
+    </para>
+    <para xml:id="S1.p11">
+      <p>_MathID_F1_161_</p>
+    </para>
+    <para xml:id="S1.p12">
+      <p><text framed="underline" font="bold">if</text> _MathID_F2_162_</p>
+    </para>
+    <para xml:id="S1.p13">
+      <p>_MathID_F1_163_</p>
+    </para>
+    <para xml:id="S1.p14">
+      <p><text framed="underline" font="bold">endif</text></p>
+    </para>
+    <para xml:id="S1.p15">
+      <p>_MathID_F1_164_,
+_MathID_F1_165_,
+_MathID_F1_166_,
+_MathID_F1_167_</p>
+    </para>
+    <para xml:id="S1.p16">
+      <p><text framed="underline" font="bold">endfor</text>.</p>
+    </para>
+    <para xml:id="S1.p17">
+      <p>В последнее время проблеме устойчивости итерационных методов решения систем
+линейных уравнений при предобусловливании посредством вторичных
+точных и неточных солверов уделяется много внимания. В ряде работ
+она рассматривалась с чисто алгебраической точки зрения
+(напр., <cite>[<bibref bibrefs="ggk" separator="," show="Number" yyseparator=","/>]</cite>–<cite>[<bibref bibrefs="go" separator="," show="Number" yyseparator=","/>]</cite>). В  <cite>[<bibref bibrefs="ge" separator="," show="Number" yyseparator=","/>]</cite> был предложен вариант
+ПМСГ, менее чувствительный к
+ошибкам решения системы с предобусловливателем. В этом варианте,
+который также реализован в пакете программ и использовался в наших
+численных экспериментах, итерационный параметр _MathID_F2_168_
+вычисляется по формуле</p>
+      <equation frefnum="(7)" refnum="7" xml:id="S1.E7" labels="LABEL:betak">
+        _MathID_F1_169_
+      </equation>
+    </para>
+    <para xml:id="S1.p18">
+      <p>Далее рассмотрим основные компоненты МДО-предобусловливателя
+_MathID_F2_170_, которые определим таким образом, что
+вычислительная стоимость решения системы с матрицей _MathID_F2_171_ будет почти оптимальной.</p>
+    </para>
+    <para xml:id="S1.p19">
+      <p>1.3. <text font="italic">Предобусловливание локальных задач Дирихле</text>.
+Как следует из предыдущей секции, умножение _MathID_F2_172_
+требует лишь решения _MathID_F2_173_ систем с матрицей _MathID_F2_174_.
+Известные приемы построения быстрых предобусловливателей-солверов
+_MathID_F2_175_
+(см. <cite>[<bibref bibrefs="b2002" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="bss2002" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="k2001" separator="," show="Number" yyseparator=","/>]</cite>–<cite>[<bibref bibrefs="korneev:02b" separator="," show="Number" yyseparator=","/>]</cite>)
+основаны на спектрально эквивалентном предобусловливателе
+конечно-разностного вида, полученном в <cite>[<bibref bibrefs="ki1996" separator="," show="Number" yyseparator=","/>]</cite>,
+который будем называть <text font="italic">базовым</text>.
+Для простоты изложения считаем _MathID_F2_176_ с целым _MathID_F2_177_ и разобьем множество
+внутренних координатных функций базисного элемента на четыре
+подмножества в соответствии с четностью-нечетностью их порядков по каждой
+из двух переменных: _MathID_F1_178_,
+где</p>
+      <equationgroup xml:id="A0.EGx1">
+        <equation xml:id="S1.Ex11">
+          <MathFork>
+            _MathID_F1_179_
+            <MathBranch>
+              <td align="right">
+                _MathID_F1_180_
+              </td>
+              <td align="left">
+                _MathID_F1_181_
+              </td>
+            </MathBranch>
+          </MathFork>
+        </equation>
+        <equation xml:id="S1.Ex12">
+          <MathFork>
+            _MathID_F1_182_
+            <MathBranch>
+              <td align="right">
+                _MathID_F1_183_
+              </td>
+              <td align="left">
+                _MathID_F1_184_
+              </td>
+            </MathBranch>
+          </MathFork>
+        </equation>
+        <equation xml:id="S1.Ex13">
+          <MathFork>
+            _MathID_F1_185_
+            <MathBranch>
+              <td align="right">
+                _MathID_F1_186_
+              </td>
+              <td align="left">
+                _MathID_F1_187_
+              </td>
+            </MathBranch>
+          </MathFork>
+        </equation>
+        <equation xml:id="S1.Ex14">
+          <MathFork>
+            _MathID_F1_188_
+            <MathBranch>
+              <td align="right">
+                _MathID_F1_189_
+              </td>
+              <td align="left">
+                _MathID_F1_190_
+              </td>
+            </MathBranch>
+          </MathFork>
+        </equation>
+      </equationgroup>
+      <p>После этого матрица жесткости внутренних функций _MathID_F2_191_
+базисного элемента становится блочно-диагональной: _MathID_F1_192_ (см. <cite>[<bibref bibrefs="ki1996" separator="," show="Number" yyseparator=","/>]</cite>). Блоки базового блочно-диагонального
+предобусловливателя
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 575 **** -->_MathID_F1_193_ определим соотношениями</p>
+      <equation xml:id="S1.Ex15">
+        _MathID_F1_194_
+      </equation>
+      <p>в которых _MathID_F2_195_, _MathID_F2_196_ принимают значения _MathID_F2_197_, _MathID_F2_198_ и</p>
+      <equationgroup xml:id="A0.EGx2">
+        <equation xml:id="S1.Ex16">
+          _MathID_F1_199_
+        </equation>
+        <equation xml:id="S1.Ex17">
+          _MathID_F1_200_
+        </equation>
+      </equationgroup>
+      <p>Этот предобусловливатель спектрально-эквивалентен матрице жесткости
+внутренних функций базисного элемента <cite>[<bibref bibrefs="kj1997" separator="," show="Number" yyseparator=","/>]</cite>:
+_MathID_F2_201_.
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 600 **** -->Кроме того, все блоки _MathID_F2_202_ спектрально-эквивалентны друг
+другу, поэтому можно также положить _MathID_F1_203_
+c _MathID_F2_204_ или _MathID_F2_205_. Таким образом, для получения быстрого солвера для
+матрицы _MathID_F2_206_ достаточно получить
+такой солвер для _MathID_F2_207_.</p>
+    </para>
+    <para xml:id="S1.p20">
+      <p>В <cite>[<bibref bibrefs="ki1996" separator="," show="Number" yyseparator=","/>]</cite>, как и в <cite>[<bibref bibrefs="ivanovkorneev:95" separator="," show="Number" yyseparator=","/>]</cite>, ставилась цель получить
+предобусловливатель конечно-разностного вида. Очевидно,
+_MathID_F2_208_ является матрицей конечно-разностной аппроксимации
+на квадратной сетке с шагом _MathID_F1_209_ (и пятиточечным
+шаблоном) эллиптического уравнения второго порядка</p>
+      <equation xml:id="S1.Ex18">
+        _MathID_F1_210_
+      </equation>
+      <p>в квадрате _MathID_F1_211_. Коэффициенты этого уравнения
+вырождаются, а коэффициенты при младших
+членах имеют, кроме того, особенности. Это явилось причиной того,
+что быстрые солверы для матрицы _MathID_F2_212_ появились лишь
+в последние годы в статьях <cite>[<bibref bibrefs="b2002" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="k2001" separator="," show="Number" yyseparator=","/>]</cite>–<cite>[<bibref bibrefs="korneev:02b" separator="," show="Number" yyseparator=","/>]</cite>
+и препринте <cite>[<bibref bibrefs="bss2002" separator="," show="Number" yyseparator=","/>]</cite>. Они относятся к трем типам:
+МДО для конечно-разностной аппроксимации, многосеточный метод и метод,
+основанный на специальной многоуровневой вэйвлетной декомпозиции
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 625 **** -->пространства кусочно-линейных функций на равномерной сетке. Во всех
+из них сначала строятся
+близкие к _MathID_F2_213_ модифицированные предобусловливатели, более
+приспособленные к конкретному солверу. Например, для построения МДО
+предобусловливателя-солвера в <cite>[<bibref bibrefs="k2001" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="k2002" separator="," show="Number" yyseparator=","/>]</cite> была введена
+более крупная ортогональная декомпозиционная сетка, сгущающаяся по
+каждой из переменных _MathID_F2_214_, _MathID_F2_215_ специальным образом к нулю
+так, что на каждой ее ячейке коэффициенты отличаются от постоянных
+на одну и ту же (относительно) часть, т. е. фактически _MathID_F2_216_ заменялся спектрально эквивалентным
+предобусловливателем _MathID_F2_217_, соответствующим
+дифференциальному оператору _MathID_F2_218_ с кусочно-постоянными
+коэффициентами, для которого строился МДО. В <cite>[<bibref bibrefs="b2002" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="bss2002" separator="," show="Number" yyseparator=","/>]</cite>
+многоуровневые алгоритмы строились для упрощенного с потерей спектральной
+эквивалентности предобусловливателя</p>
+      <equation frefnum="(8)" refnum="8" xml:id="S1.E8" labels="LABEL:Gbeu">
+        _MathID_F1_219_
+      </equation>
+      <p>для которого _MathID_F2_220_.
+Он является конечно-разностной аппроксимацией оператора краевой задачи</p>
+      <equation xml:id="S1.Ex19">
+        _MathID_F1_221_
+      </equation>
+      <p>Один из модулей пакета реализует также обобщение многоуровневого алгоритма на
+случай произвольного _MathID_F2_222_.<note mark="1" role="footnote">Этот алгоритм и модуль разработаны
+А.Б. Смирновым и Е.Н. Смирновой.</note></p>
+    </para>
+    <para xml:id="S1.p21">
+      <p>Общая вычислительная стоимость предобусловливателей-солверов
+_MathID_F2_223_ и _MathID_F2_224_ для матрицы _MathID_F2_225_
+колеблется в зависимости от версии солвера от _MathID_F2_226_
+до _MathID_F2_227_. За более подробным описанием и результатами
+исследования этих солверов мы отсылаем
+к цитированным выше работам.</p>
+    </para>
+    <para xml:id="S1.p22">
+      <p>1.4. <text font="italic">Предобусловливание дополнения Шура и продолжения с
+интерфейса</text>.
+Для построения _MathID_F2_228_ нужны: предобусловливатель
+_MathID_F2_229_ для дополнения Шура _MathID_F2_230_
+и оператор продолжения _MathID_F2_231_,
+удовлетворяющие условиям (<ref labelref="LABEL:specshur"/>) и (<ref labelref="LABEL:prolongoperE"/>).
+Для определения блока
+_MathID_F2_232_ матрицы _MathID_F2_233_ достаточно, следуя
+<cite>[<bibref bibrefs="kj1997" separator="," show="Number" yyseparator=","/>]</cite>, рассмотреть предобусловливание дополнения
+Шура _MathID_F2_234_ базисного элемента. Будем считать,
+не нарушая общности, что _MathID_F2_235_. Переупорядочим координатные функции
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 675 **** -->сторон базисного элемента, представив множество функций сторон в виде
+_MathID_F1_236_ так, что каждое
+из _MathID_F2_237_ будет содержать координатные функции _MathID_F2_238_-ой
+стороны, пронумерованные с учетом четности-нечетности индексов,</p>
+      <equation frefnum="(9)" refnum="9" xml:id="S1.E9" labels="LABEL:sideren">
+        _MathID_F1_239_
+      </equation>
+      <p>Предобусловливатель для _MathID_F2_240_ выбираем в виде
+_MathID_F1_241_, где каждый блок
+_MathID_F2_242_ отвечает одной из сторон базисного элемента.
+Определение _MathID_F2_243_ связано с различными
+представлениями полинома _MathID_F2_244_ степени _MathID_F2_245_ на отрезке</p>
+      <equation xml:id="S1.Ex20">
+        _MathID_F1_246_
+      </equation>
+      <p>Введем матрицу _MathID_F1_247_
+и верхние треугольные матрицы
+_MathID_F2_248_, _MathID_F2_249_, которые соответствуют преобразованиям</p>
+      <equation xml:id="S1.Ex21">
+        _MathID_F1_250_
+      </equation>
+      <p>Пусть _MathID_F1_251_. Матрица _MathID_F2_252_
+определяется как матрица _MathID_F2_253_
+с вычеркнутыми строками и столбцами, соответствующими _MathID_F2_254_ и _MathID_F2_255_,
+т. е. первым двум функциям _MathID_F2_256_ и _MathID_F2_257_.</p>
+    </para>
+    <theorem class="theorems" frefnum="Теорема 1.2" refnum="1.2" xml:id="S1.Thmtheorems2" labels="LABEL:TeorSE">
+      <title font="bold"><tag>Теорема 1.2</tag> (mn<ERROR class="undefined">\series</ERROR><ERROR class="undefined">\shape</ERROR><cite>[<bibref bibrefs="kj1999" separator="," show="Number" yyseparator=","/>]</cite>, теорема 3.1).</title>
+      <para xml:id="S1.Thmtheorems2.p1">
+        <p>
+          <text font="italic">Справедливы неравенства _MathID_F2_258_ при _MathID_F1_259_<ERROR class="undefined"><XMTok role="UNKNOWN">\wh</XMTok></ERROR>, _MathID_F2_260_
+и при _MathID_F1_261_<ERROR class="undefined"><XMTok role="UNKNOWN">\wh</XMTok></ERROR><ERROR class="undefined"><XMTok role="UNKNOWN">\wh</XMTok></ERROR>, _MathID_F2_262_.</text>
+        </p>
+      </para>
+    </theorem>
+    <!-- %%%% ^^^^^ remove extra { } -->
+    <para xml:id="S1.p23">
+      <p>Заметим, что из теоремы <ref labelref="LABEL:TeorSE"/> следует (<ref labelref="LABEL:specshur"><ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\wh</XMTok></ERROR></ref>),
+если при сборке _MathID_F2_263_ использовались матрицы _MathID_F1_264_.</p>
+    </para>
+    <para xml:id="S1.p24">
+      <p>Остановимся на некоторых особенностях реализации предобусловливателя
+_MathID_F2_265_. Принятая
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 750 **** -->перенумерация координатных функций сторон (<ref labelref="LABEL:sideren"/>) приводит
+к тому, что матрицы _MathID_F2_266_ и _MathID_F2_267_
+распадаются на два независимых подблока для неизвестных,
+соответствующих четным и нечетным базисным функциям. Cледовательно,</p>
+      <equation xml:id="S1.Ex22">
+        _MathID_F1_268_
+      </equation>
+      <p>где _MathID_F1_269_,
+_MathID_F1_270_.
+Таким образом, предобусловливание интерфейсной задачи на каждом шаге
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 775 **** -->внешнего итерационного процесса требует решения _MathID_F2_271_ систем
+вида _MathID_F1_272_, где _MathID_F2_273_ получаем
+вычеркиванием первой строки из матрицы</p>
+      <equation xml:id="S1.Ex23">
+        _MathID_F1_274_
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\ov</XMTok>
+        </ERROR>
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\ov</XMTok>
+        </ERROR>
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\ov</XMTok>
+        </ERROR>
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\ov</XMTok>
+        </ERROR>
+      </equation>
+      <p>в которой либо _MathID_F1_275_<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\ov</XMTok></ERROR> и
+_MathID_F1_276_<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\ov</XMTok></ERROR>, либо _MathID_F1_277_<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\ov</XMTok></ERROR> и _MathID_F1_278_<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\ov</XMTok></ERROR>.
+Простой прием помогает избежать перемножения матриц с последующим
+вычеркиванием первой строки и столбца и решением систем с
+полностью заполненными матрицами. Обозначим через
+_MathID_F2_279_ и _MathID_F2_280_ решения вспомогательных систем</p>
+      <equation frefnum="(10)" refnum="10" xml:id="S1.E10" labels="LABEL:helpsys">
+        _MathID_F1_281_
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\ov</XMTok>
+        </ERROR>
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\ov</XMTok>
+        </ERROR>
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\ov</XMTok>
+        </ERROR>
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\ov</XMTok>
+        </ERROR>
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\ov</XMTok>
+        </ERROR>
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\ov</XMTok>
+        </ERROR>
+      </equation>
+      <p>Первую из них достаточно решить один раз перед началом итерационного
+процесса. Компоненты решения системы _MathID_F1_282_
+находятся по формулам _MathID_F1_283_ для
+_MathID_F1_284_. Следовательно, обращение предобусловливателя
+интерфейсных задач _MathID_F2_285_ сводится к решению систем с треугольными и
+диагональной матрицами для каждой стороны триангуляции, и его вычислительная
+стоимость составляет
+_MathID_F1_286_, где _MathID_F2_287_ — число сторон.</p>
+    </para>
+    <para xml:id="S1.p25">
+      <p>Выбор оператора продолжения _MathID_F2_288_, эквивалентно _MathID_F2_289_,
+существенно определяет эффективность интерфейсной компоненты
+_MathID_F2_290_. Положим
+_MathID_F1_291_<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\wt</XMTok></ERROR>,
+где _MathID_F2_292_<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\wt</XMTok></ERROR> является оператором,
+порожденным итерационным процессом</p>
+      <equation frefnum="(11)" refnum="11" xml:id="S1.E11" labels="LABEL:inexact1">
+        _MathID_F1_293_
+      </equation>
+      <p>для приближенного решения систем
+_MathID_F1_294_ для каждого конечного элемента
+_MathID_F2_295_, в котором _MathID_F1_296_ и _MathID_F2_297_ — чебышевские
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 825 **** -->итерационные параметры, _MathID_F2_298_ — быстрый
+предобусловливатель-солвер для матрицы _MathID_F2_299_.</p>
+    </para>
+    <para xml:id="S1.p26">
+      <p>Таким образом, формально определяется матрица</p>
+      <equation xml:id="S1.Ex24">
+        _MathID_F1_300_
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\wt</XMTok>
+        </ERROR>
+      </equation>
+      <p>В <cite>[<bibref bibrefs="kxa2002" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="kxa2002p" separator="," show="Number" yyseparator=","/>]</cite> доказано, что для выполнения
+свойства (<ref labelref="LABEL:prolongoper"/>) оператора продолжения достаточно сделать
+_MathID_F1_301_ итераций
+в (<ref labelref="LABEL:inexact1"/>), где _MathID_F2_302_ — коэффициент сжатия невязки на одной
+итерации. Для метода простых итераций
+с постоянным итерационным параметром _MathID_F1_303_ имеем
+_MathID_F1_304_, где _MathID_F2_305_ и _MathID_F2_306_ — максимальное и
+минимальное собственные числа обобщенной проблемы _MathID_F1_307_. Такой выбор оператора
+продолжения приводит к тому, что</p>
+      <equation xml:id="S1.Ex25">
+        _MathID_F1_308_
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\wt</XMTok>
+        </ERROR>
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\wt</XMTok>
+        </ERROR>
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\wt</XMTok>
+        </ERROR>
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\wt</XMTok>
+        </ERROR>
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\wt</XMTok>
+        </ERROR>
+      </equation>
+    </para>
+    <para xml:id="S1.p27">
+      <p>Умножение _MathID_F2_309_ во внешнем итерационном процессе на
+текущем шаге на вектор невязки</p>
+      <equation xml:id="S1.Ex26">
+        _MathID_F1_310_
+      </equation>
+      <p>не требует предварительной сборки матриц и
+состоит из трех этапов.</p>
+    </para>
+    <!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 875 **** -->
+    <para xml:id="S1.p28">
+      <p>1. <text font="italic">Сужение</text></p>
+      <equation frefnum="(12)" refnum="12" xml:id="S1.E12" labels="LABEL:restr">
+        _MathID_F1_311_
+        <ERROR class="undefined">
+          <XMTok role="UNKNOWN" font="italic">\wt</XMTok>
+        </ERROR>
+      </equation>
+      <p>Операция _MathID_F2_312_<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\wt</XMTok></ERROR> требует
+решения _MathID_F2_313_ систем _MathID_F1_314_
+при помощи _MathID_F2_315_ итераций предобусловленного
+итерационного процесса (<ref labelref="LABEL:inexact1"/>). Умножение
+_MathID_F2_316_ также выполняется
+поэлементно _MathID_F2_317_
+для всех _MathID_F2_318_, полученные векторы затем собираются.</p>
+    </para>
+    <para xml:id="S1.p29">
+      <p>2. <text font="italic">Предобусловливание дополнения Шура</text></p>
+      <equation xml:id="S1.Ex27">
+        _MathID_F1_319_
+      </equation>
+      <p>требует решения систем вида (<ref labelref="LABEL:helpsys"/>) независимо для каждой
+стороны триангуляции.</p>
+    </para>
+    <para xml:id="S1.p30">
+      <p>3. <text font="italic">Продолжение</text></p>
+      <equation frefnum="(13)" refnum="13" xml:id="S1.E13" labels="LABEL:prolong">
+        _MathID_F1_320_
+      </equation>
+      <p>заключается в поэлементных умножениях
+_MathID_F1_321_<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\ov</XMTok></ERROR> с
+подвекторами сторон элементов и поэлементном решении систем с матрицей
+_MathID_F1_322_<ERROR class="undefined"><XMTok role="UNKNOWN" font="italic">\ov</XMTok></ERROR>
+так же, как и в п. 1.</p>
+    </para>
+    <para xml:id="S1.p31">
+      <p>Матрица взаимодействия внутренних функций с координатными функциями сторон
+_MathID_F2_323_ имеет сильно разреженную структуру</p>
+      <equation xml:id="S1.Ex28">
+        _MathID_F1_324_
+      </equation>
+      <p>При этом блок _MathID_F2_325_ состоит из диагональных матриц
+_MathID_F2_326_ и матриц _MathID_F2_327_ размера _MathID_F2_328_, в каждой из
+которых только один ненулевой коэффициент _MathID_F1_329_
+при всех _MathID_F1_330_. Структура матриц _MathID_F2_331_, _MathID_F2_332_ и _MathID_F2_333_ совпадает со структурой _MathID_F2_334_ с точностью до перестановки блочных столбцов
+<cite>[<bibref bibrefs="agks2002" separator="," show="Number" yyseparator=","/>]</cite>. Следовательно, умножение матрицы _MathID_F2_335_ на вектор требует
+_MathID_F2_336_ арифметических действий, если умножение
+производится только для ненулевых коэффициентов.</p>
+    </para>
+    <!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 950 **** -->
+    <para xml:id="S1.p32">
+      <p>Общая вычислительная стоимость операции _MathID_F1_337_ складывается из стоимости решения системы с
+матрицей _MathID_F2_338_ (см. выше) и стоимости операций
+продолжения и сужения. При этом последняя является наибольшей и
+определяет главный член общей вычислительной стоимости. Она есть
+произведение числа итераций (<ref labelref="LABEL:inexact1"/>), которое при использовании
+любого из указанных солверов для внутренних задач Дирихле не превосходит
+_MathID_F2_339_, и числа действий на одной итерации,
+требуемых для решения внутренних задач Дирихле.</p>
+    </para>
+    <theorem class="theorems" frefnum="Теорема 1.3" refnum="1.3" xml:id="S1.Thmtheorems3" labels="LABEL:T:gcost">
+      <title font="bold"><tag>Теорема 1.3</tag>.</title>
+      <para xml:id="S1.Thmtheorems3.p1">
+        <p>
+          <text font="italic">Пусть для решения локальных задач Дирихле применяется быстрый солвер
+c общей вычислительной стоимостью _MathID_F2_340_, а
+предобусловливание дополнения Шура и продолжение с интерфейса
+осуществляется согласно п. _MathID_F2_341_. Пусть также _MathID_F2_342_ — область,
+составленная из прямоугольников, и сетка конечных элементов прямоугольная.
+Тогда общая вычислительная стоимость солвера МДО для системы
+_MathID_F2_343_ оценивается в
+_MathID_F2_344_ арифметических действий.</text>
+        </p>
+      </para>
+    </theorem>
+    <para xml:id="S1.p33">
+      <p>В численных экспериментах, представленных в разделе <ref labelref="LABEL:s:exper"/>,
+локальные задачи Дирихле решались посредством версий, описанных в п. 1.3,
+многоуровневого солвера и солвера типа МДО с крайними из указанных в
+п. 1.3 вычислительными стоимостями, соответствующими _MathID_F2_345_ и _MathID_F2_346_.
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 975 **** -->Заметим, что в общем случае (криволинейные конечные элементы, переменные
+коэффициенты эллиптического уравнения) оценка теоремы <ref labelref="LABEL:T:gcost"/>
+сохраняется без учета стоимости операций умножения на каждой итерации
+на матрицу _MathID_F2_347_.</p>
+    </para>
+  </section>
+  <section refnum="2" xml:id="S2" labels="LABEL:IPCG LABEL:s:exper">
+    <title><tag>2 </tag>Результаты численных экспериментов</title>
+    <para xml:id="S2.p1">
+      <p>2.1. <text font="italic">Общая характеристика</text>. Численные эксперименты производились
+с отдельными компонентами — солверами МДО, и с МДО в целом.</p>
+    </para>
+    <para xml:id="S2.p2">
+      <p>Основной и, как правило, наиболее трудоемкой компонентой МДО является
+солвер для локальных задач Дирихле. Для солвера,
+основанного на вторичном МДО <cite>[<bibref bibrefs="k2001" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="k2002" separator="," show="Number" yyseparator=","/>]</cite>, который
+используется при решении систем с предобусловливателем локальных
+задач Дирихле, приводим часть результатов тестирования,
+полученых А. Рытовым.
+Результаты численных экспериментов с многосеточным солвером можно
+найти в <cite>[<bibref bibrefs="b2002" separator="," show="Number" yyseparator=","/>]</cite> и <cite>[<bibref bibrefs="kxa2002" separator="," show="Number" yyseparator=","/>]</cite>. Практическая трудоемкость
+обоих солверов в широком диапазоне значений _MathID_F2_348_ подтверждает, что
+они относятся к классу быстрых.</p>
+    </para>
+    <para xml:id="S2.p3">
+      <p>Довольно обширное экспериментирование производилось с операциями
+продолжения с интерфейса посредством вторичных итерационных
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1000 **** -->процессов с предобусловливателями–солверами локальных задач
+Дирихле. Здесь также подтвердился основной вывод из априорных
+оценок, согласно которому для обеспечения сходимости внешнего
+итерационного процесса и ее ускорения число итераций при
+продолжении должно быть в _MathID_F2_349_ раз больше, чем при
+непосредственном решении локальных задач Дирихле.
+Была также численно исследована зависимость обобщенного числа
+обусловленности дополнения Шура при предобусловливании посредством
+описанного в п. 1.4 предобусловливателя.</p>
+    </para>
+    <para xml:id="S2.p4">
+      <p>Эффективность МДО в целом проверялась по отношению к
+целому ряду его параметров. Решались задачи Дирихле в квадратной и
+_MathID_F2_350_-образной областях. При этом нас интересовали зависимости
+числа глобальных итераций предобусловленного метода сопряженных
+градиентов и времени счета от _MathID_F2_351_ и количества вторичных итераций.
+Наконец, сравнивались затраты процессорного времени по отношению к
+погрешности решений, получаемых посредством описанного в работе
+МДО на базе _MathID_F2_352_-версии и многосеточного солвера коммерческого
+пакета ANSYS для _MathID_F2_353_-версии.</p>
+    </para>
+    <para xml:id="S2.p5">
+      <p>2.2. <text font="italic">Решение локальных задач Дирихле</text>.
+Приводим часть результатов, которые
+касаются почти оптимального солвера, основанного на вторичной
+декомпозиции <cite>[<bibref bibrefs="k2001" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="k2002" separator="," show="Number" yyseparator=","/>]</cite>. Применялась наиболее
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1025 **** -->простая для программирования версия алгоритма, для которого
+априорная оценка вычислительной стоимости имеет вид _MathID_F2_354_, <cite>[<bibref bibrefs="k2001" separator="," show="Number" yyseparator=","/>]</cite>, <cite>[<bibref bibrefs="k2002" separator="," show="Number" yyseparator=","/>]</cite>. Время решения
+(в сек.) системы линейных алгебраических уравнений с
+предобусловливателем в качестве матрицы и постоянной правой частью
+в зависимости от _MathID_F2_355_ (_MathID_F2_356_) приведено на рис. 1.
+Маркерами отмечены значения, соответствующие _MathID_F2_357_. Вычисления проводились на компьютере Pentium IV 2.4 GHz
+с 1 GB оперативной памяти. Как видно из графика, на практике солвер
+оказывается более быстродействующим по сравнению с прогнозом на
+основе априорной оценки.</p>
+    </para>
+    <para xml:id="S2.p6">
+      <p>2.3. <text font="italic">Операции продолжения–сужения</text>.
+Продолжения (<ref labelref="LABEL:prolong"/>) и сужения (<ref labelref="LABEL:restr"/>) выполнялись
+посредством вторичного итерационного процесса — предобусловленного
+метода сопряженных градиентов с предобусловливателем (<ref labelref="LABEL:Gbeu"/>) и
+выбором итерационного параметра _MathID_F2_358_ в соответствии
+с (<ref labelref="LABEL:betak"/>). При этом варьировалось число вторичных итераций.
+Численные эксперименты позволили установить оптимальную (в смысле
+уменьшения вычислительных затрат глобального итерационного
+солвера) зависимость количества итераций _MathID_F2_359_ вторичного итерационного
+солвера от _MathID_F2_360_ (см. рис. 2a)), которая полностью согласуется с
+теоретической оценкой _MathID_F1_361_.
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1050 **** --></p>
+    </para>
+    <!-- %\begin{figure}[htbp]
+     %\hspace{2cm}
+     %\special{em:graph ak-pic1.bmp}
+     %\vspace{5.5cm}
+     %\caption{ëç¨á«¨â¥«ì­ ï áâ®¨¬®áâì á®«¢¥à  ¤«ï «®ª «ì­ëå § ¤ ç ¨à¨å«¥.}
+     %\label{LDP}
+     %\end{figure}-->
+    <para xml:id="S2.p7">
+      <picture fill="black" height="176.407074pt" stroke="black" unitlength="2.845276pt" width="483.696838pt" xml:id="S2.p7.pic1" tex="\begin{picture}(170.0,62.0)\put(45.0,62.0){\special{em:graph ak-pic1.bmp}} \put(18.0,0.0){\mbox{Р}ис.\, 1. Вычислительная стоимость солвера длялокальных задач Дирихле}\end{picture}" class="centering">
+        <!-- %% width, heigth, added 5 mm for signature
+     %% left X, upper Y-->
+        <g transform="translate(51.21,0)">
+          <text>Р</text>
+          <text>ис. 1. Вычислительная стоимость солвера для
+локальных задач Дирихле</text>
+        </g>
+      </picture>
+    </para>
+    <!-- %\begin{figure}[htbp]
+     %\special{em:graph np_AND_N_63_2c.bmp}
+     %\caption{ a) ®¯â¨¬ «ì­®¥ ç¨á«® ¨â¥à æ¨© $n_{pr}$ ¢â®à¨ç­®£® ¨â¥à æ¨®­­®£® á®«¢¥à  ¢ § ¢¨á¨¬®áâ¨ ®â $p$;
+     %¡) § ¢¨á¨¬®áâì ­¥¢ï§ª¨ ¯à¨¡«¨¦¥­­®£® à¥è¥­¨ï ®â ç¨á«  ¨â¥à æ¨© £«®¡ «ì­®£® á®«¢¥à .}
+     %\label{fignp}
+     %\end{figure}
+     %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1075 ****-->
+    <para xml:id="S2.p8">
+      <picture fill="black" height="190.633453pt" stroke="black" unitlength="2.845276pt" width="483.696838pt" xml:id="S2.p8.pic1" tex="\begin{picture}(170.0,67.0)\put(2.0,67.0){\special{em:graph ak-pic2.bmp}} \put(2.0,5.0){\mbox{Р}ис.\, 2. a) оптимальное число итераций $n_{{pr}}$вторичного итерационного солвера в зависимости}\put(0.0,0.0){\mbox{о}т $p$; б) зависимость невязки приближенного решения от числа итерацийглобального солвера}\end{picture}" class="centering">
+        <!-- %% width, heigth, added 5 mm for signature
+     %% left X, upper Y-->
+        <g transform="translate(5.69,14.22)">
+          <text>Р</text>
+          <text>ис. 2. a) оптимальное число итераций _MathID_F2_362_
+вторичного итерационного солвера в зависимости</text>
+        </g>
+        <g transform="translate(0,0)">
+          <text>о</text>
+          <text>т _MathID_F2_363_; б) зависимость невязки приближенного решения от числа итераций
+глобального солвера</text>
+        </g>
+      </picture>
+    </para>
+    <para xml:id="S2.p9">
+      <p>Исследование влияния числа итераций _MathID_F2_364_ во вторичном солвере,
+применяемом в продолжениях и сужениях, на эффективность глобального
+итерационного солвера позволяет сделать также следующие выводы.
+Уменьшение _MathID_F2_365_ приводит к потере сходимости внешнего итерационного
+процесса. При увеличении _MathID_F2_366_ во вторичном солвере число итераций
+_MathID_F2_367_ внешнего процесса уменьшается, однако общие вычислительные затраты
+возрастают. На рис. 2б) представлено уменьшение невязки в евклидовой
+норме _MathID_F1_368_ при решении системы (<ref labelref="LABEL:slau"/>) в зависимости
+от числа итераций глобального солвера _MathID_F2_369_ для _MathID_F2_370_ и различных
+значений _MathID_F2_371_. Аналогичные результаты получаются и для
+других значений _MathID_F2_372_.
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1100 **** --></p>
+    </para>
+    <para xml:id="S2.p10">
+      <p>2.4. <text font="italic">Предобусловливание дополнения Шура</text>.
+Решалась задача на собственные значения
+_MathID_F1_373_ и обобщенная
+задача на собственные значения
+_MathID_F1_374_. Для случая _MathID_F1_375_ зависимость числа обусловленности
+дополнения Шура от _MathID_F2_376_
+приведена на рис. 3a), а рис. 3б) содержит зависимость от _MathID_F2_377_ обобщенного
+числа обусловленности _MathID_F2_378_.
+Графики приведены раздельно по причине существенной разницы в скоростях
+роста этих чисел обусловленности. Численные эксперименты полностью
+подтвердили априорные оценки теоремы <ref labelref="LABEL:TeorSE"/>
+асимптотического поведения обобщенного числа обусловленности.</p>
+    </para>
+    <para xml:id="S2.p11">
+      <p>2.5. <text font="italic">МДО для задачи Дирихле в _MathID_F2_379_-образной области</text>.
+Для _MathID_F2_380_-образной области, изображенной на рис. 4, решалась задача Дирихле
+для уравнения Пуассона</p>
+      <equation frefnum="(14)" refnum="14" xml:id="S2.E14" labels="LABEL:pois">
+        _MathID_F1_381_
+      </equation>
+      <p>с однородными краевыми условиями для _MathID_F1_382_. Система линейных
+алгебраических уравнений _MathID_F2_383_-версии (<ref labelref="LABEL:slau"/>) решалась при помощи
+ПМСГ, описанного в п. 1.2, с предобусловливателем МДО и итерационным
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1125 **** -->параметром _MathID_F2_384_, определенным по формуле (<ref labelref="LABEL:betak"/>).
+Число _MathID_F2_385_ итерацийПМСГ, необходимых для уменьшения погрешности по
+невязке в евклидовой норме в _MathID_F2_386_ раз, в зависимости от _MathID_F2_387_ приведено на
+рис. 5а), а время решения системы _MathID_F2_388_ (в сек.) на компьютере
+Pentium III-733 Mhz c 768 Mb оперативной памяти
+— на рис. 5б). Поведение числа итераций и вычислительных затрат
+согласуется с априорными оценками.</p>
+    </para>
+    <!-- %\begin{figure}[htpb]
+     %\special{em:graph shur_AND_precshur_2c.bmp}
+     %\caption{ ) § ¢¨á¨¬®áâì ç¨á«  ®¡ãá«®¢«¥­­®áâ¨ ¤®¯®«­¥­¨ï ãà  $\mbox{cond}(\mbb{S}_{\mathcal E})$
+     %®â $p$; ¡) § ¢¨á¨¬®áâì ®¡®¡é¥­­®£® ç¨á«  ®¡ãá«®¢«¥­­®áâ¨ $\mbox{cond}(\bi{\mathcal S}_{\cal
+     %E}^{-1}\mbb{S}_{\mathcal E})$ ®â $p$.}
+     %\label{figshur}
+     %\end{figure}-->
+    <para xml:id="S2.p12">
+      <picture fill="black" height="190.633453pt" stroke="black" unitlength="2.845276pt" width="483.696838pt" xml:id="S2.p12.pic1" tex="\begin{picture}(170.0,67.0)\put(5.0,67.0){\special{em:graph ak-pic3.bmp}} \put(15.0,5.0){\mbox{Р}ис.\, 3. а) зависимость числа обусловленности дополненияШура $\operatorname{cond}(\mathbb{S}_{{\mathcal{E}}})$ от $p$;}\put(23.0,0.0){\mbox{б}) зависимость обобщенного числаобусловленности $\operatorname{cond}(\boldsymbol{\mathcal{S}}_{{\cal E}}^{{-1}}\mathbb{S}_{{\mathcal{E}}})$ от $p$}\end{picture}" class="centering">
+        <!-- %% width, heigth, added 5 mm for signature
+     %%left X, upper Y-->
+        <g transform="translate(42.67,14.22)">
+          <text>Р</text>
+          <text>ис. 3. а) зависимость числа обусловленности дополнения
+Шура _MathID_F2_389_ от _MathID_F2_390_;</text>
+        </g>
+        <g transform="translate(65.44,0)">
+          <text>б</text>
+          <text>) зависимость обобщенного числа
+обусловленности _MathID_F2_391_ от _MathID_F2_392_</text>
+        </g>
+        <!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1150 **** -->
+      </picture>
+    </para>
+    <!-- %\begin{figure}[h!]
+     %\hspace{6cm}
+     %\special{em:graph Lshape_2c.bmp}
+     %\vspace{4cm}
+     %\caption{$L$__®¡à §­ ï ®¡« áâì.}
+     %\label{figLSD}
+     %\end{figure}-->
+    <para xml:id="S2.p13">
+      <picture fill="black" height="128.037399pt" stroke="black" unitlength="2.845276pt" width="483.696838pt" xml:id="S2.p13.pic1" tex="\begin{picture}(170.0,45.0)\put(65.0,45.0){\special{em:graph ak-pic4.bmp}} \put(60.0,0.0){\mbox{Р}ис.\, 4. $L$-образная область}\end{picture}" class="centering">
+        <!-- %% width, heigth, added 5 mm for signature
+     %% left X, upper Y,-->
+        <g transform="translate(170.71,0)">
+          <text>Р</text>
+          <text>ис. 4. _MathID_F2_393_-образная область</text>
+        </g>
+      </picture>
+    </para>
+    <!-- %\begin{figure}[h!]
+     %\hspace{0.5cm}
+     %\special{em:graph LIterP_AND_LIterT_2c.bmp}
+     %\vspace{5.6cm}
+     %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1175 ****
+     %\caption{ ) § ¢¨á¨¬®áâì ç¨á«  ¨â¥à æ¨©  ®â $p$;
+     %¡) § ¢¨á¨¬®áâì ¢à¥¬¥­¨ à¥è¥­¨ï á¨áâ¥¬ë «¨­¥©­ëå ãà ¢­¥­¨© $p$__¢¥àá¨¨ ®â $p$.}
+     %\label{figLIterP}
+     %\end{figure}-->
+    <para xml:id="S2.p14">
+      <picture fill="black" height="190.633453pt" stroke="black" unitlength="2.845276pt" width="483.696838pt" xml:id="S2.p14.pic1" tex="\begin{picture}(170.0,67.0)\put(5.0,67.0){\special{em:graph ak-pic5.bmp}} \put(40.0,5.0){\mbox{Р}ис.\, 5. а) зависимость числа итераций ПМСГ от $p$;}\put(16.0,0.0){\mbox{б}) зависимость времени решения системы линейных уравнений$p$-версии от $p$}\end{picture}" class="centering">
+        <!-- %% width, heigth, added 5 mm for signature
+     %% left X, upper Y-->
+        <g transform="translate(113.81,14.22)">
+          <text>Р</text>
+          <text>ис. 5. а) зависимость числа итераций ПМСГ от _MathID_F2_394_;</text>
+        </g>
+        <g transform="translate(45.52,0)">
+          <text>б</text>
+          <text>) зависимость времени решения системы линейных уравнений
+_MathID_F2_395_-версии от _MathID_F2_396_</text>
+        </g>
+      </picture>
+    </para>
+    <para xml:id="S2.p15">
+      <p>2.6. _MathID_F2_397_<text font="italic">- и _MathID_F2_398_-версии в задаче с гладким решением</text>.
+В случае гладких решений скорость сходимости _MathID_F2_399_-версии, как правило,
+выше скорости сходимости _MathID_F2_400_-версии (напр., <cite>[<bibref bibrefs="bs1987" separator="," show="Number" yyseparator=","/>]</cite>,
+<cite>[<bibref bibrefs="schwab1998" separator="," show="Number" yyseparator=","/>]</cite>). Представляет интерес сравнение времени
+решения систем линейных алгебраических уравнений для _MathID_F2_401_- и
+_MathID_F2_402_-дискретизаций, необходимых для получения приближенного решения
+с одинаковой относительной погрешностью в энергетической норме. В
+нашем численном эксперименте решалась однородная граничная задача
+Дирихле для уравнения Пуассона (<ref labelref="LABEL:pois"/>) в квадрате _MathID_F2_403_
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1200 **** -->c правой частью _MathID_F1_404_, соответствующей
+точному решению _MathID_F1_405_.</p>
+    </para>
+    <para xml:id="S2.p16">
+      <p>Временные затраты _MathID_F2_406_ (в сек.) на решение систем линейных уравнений
+в зависимости от числа степеней свободы _MathID_F2_407_ приведены на
+рис. 6a) (для _MathID_F2_408_-версии) и рис. 6б) (для
+_MathID_F2_409_-версии). Отметим, что для _MathID_F2_410_-версии _MathID_F1_411_,
+а в случае _MathID_F2_412_-версии _MathID_F1_413_. Решение системы
+линейных уравнений _MathID_F2_414_-версии осуществлялось в ANSYS при помощи
+многосеточного солвера (Algebraic multigrid solver). В нашем пакете
+программ реализован итерационный солвер с МДО-предобусловливателем,
+описанный в пп. 1.2–1.4. Рисунок 7a) содержит сравнение вычислительных
+затрат _MathID_F2_415_ (в сек.) прямого и итерационного солверов для решения систем
+линейных уравнений, соответственно _MathID_F2_416_- и _MathID_F2_417_-дискретизаций, в зависимости
+от относительной ошибки приближенного решения в энергетической норме.
+<!-- %\begin{figure}[h!]
+     %\hspace{0.5cm}
+     %\special{em:graph hTime_AND_pTime_2c.bmp}
+     %\vspace{5.6cm}
+     %\caption{ ) ¢à¥¬ï à¥è¥­¨ï á¨áâ¥¬ë «¨­¥©­ëå ãà ¢­¥­¨© $h$__¢¥àá¨¨ ¢ § ¢¨á¨¬®áâ¨ ®â ç¨á«  áâ¥¯¥­¥© á¢®¡®¤ë;
+     %¡) ¢à¥¬ï à¥è¥­¨ï á¨áâ¥¬ë «¨­¥©­ëå ãà ¢­¥­¨© $p$__¢¥àá¨¨ ¢ § ¢¨á¨¬®áâ¨ ®â ç¨á«  áâ¥¯¥­¥©
+     %á¢®¡®¤ë.}
+     %\label{fighTime}
+     %\end{figure}
+     %\begin{figure}[h!]
+     %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1225 ****
+     %\hspace{0.5cm}
+     %\special{em:graph hpEnTime_AND_energy_2c.bmp}
+     %\vspace{5.6cm}
+     %\caption{ ) á®¯®áâ ¢«¥­¨¥ ¢ëç¨á«¨â¥«ì­ëå § âà â ­  à¥è¥­¨¥ á¨áâ¥¬ «¨­¥©­ëå ãà ¢­¥­¨© $p$ ¨ $h$__¢¥àá¨©;
+     %¡) § ¢¨á¨¬®áâì ®â­®á¨â¥«ì­®© ¯®£à¥è­®áâ¨ ª®­¥ç­®í«¥¬¥­â­®£® à¥è¥­¨ï ¢ í­¥à£¥â¨ç¥áª®© ­®à¬¥ ®â ç¨á« 
+     %áâ¥¯¥­¥© á¢®¡®¤ë $N_{DOF}$.}
+     %\label{fighpEnTime}
+     %\end{figure}--></p>
+    </para>
+    <para xml:id="S2.p17">
+      <picture fill="black" height="204.859833pt" stroke="black" unitlength="2.845276pt" width="483.696838pt" xml:id="S2.p17.pic1" tex="\begin{picture}(170.0,72.0)\put(2.0,72.0){\special{em:graph ak-pic6.bmp}} \put(5.0,10.0){\mbox{Р}ис.\, 6. а) время решения системы линейных уравнений$h$-версии в зависимости от числа}\put(4.0,5.0){\mbox{с}тепеней свободы; б) время решениясистемы линейных уравнений $p$-версии в зависимости}\put(60.0,0.0){\mbox{о}т числа степеней свободы}\end{picture}" class="centering">
+        <!-- %% width, heigth, added 5 mm for signature
+     %% left X, upper Y-->
+        <g transform="translate(14.22,28.45)">
+          <text>Р</text>
+          <text>ис. 6. а) время решения системы линейных уравнений
+_MathID_F2_418_-версии в зависимости от числа</text>
+        </g>
+        <g transform="translate(11.38,14.22)">
+          <text>с</text>
+          <text>тепеней свободы; б) время решения
+системы линейных уравнений _MathID_F2_419_-версии в зависимости</text>
+        </g>
+        <g transform="translate(170.71,0)">
+          <text>о</text>
+          <text>т числа степеней свободы</text>
+        </g>
+      </picture>
+    </para>
+    <para xml:id="S2.p18">
+      <picture fill="black" height="204.859833pt" stroke="black" unitlength="2.845276pt" width="483.696838pt" xml:id="S2.p18.pic1" tex="\begin{picture}(170.0,72.0)\put(2.0,72.0){\special{em:graph ak-pic7.bmp}} \put(4.0,10.0){\mbox{Р}ис.\, 7. а) сопоставление вычислительных затрат нарешение систем линейных уравнений $p$-}\put(10.0,5.0){\mbox{и} $h$-версий; б) зависимостьотносительной погрешности конечноэлементного решения}\put(30.0,0.0){\mbox{в} энергетическойнорме от числа степеней свободы $N_{{DOF}}$}\end{picture}" class="centering">
+        <!-- %% width, heigth, added 5 mm for signature
+     %% left X, upper Y
+     %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1250 ****-->
+        <g transform="translate(11.38,28.45)">
+          <text>Р</text>
+          <text>ис. 7. а) сопоставление вычислительных затрат на
+решение систем линейных уравнений _MathID_F2_420_-</text>
+        </g>
+        <g transform="translate(28.45,14.22)">
+          <text>и</text>
+          _MathID_F2_421_
+          <text>-версий; б) зависимость
+относительной погрешности конечноэлементного решения</text>
+        </g>
+        <g transform="translate(85.35,0)">
+          <text>в</text>
+          <text>энергетической
+норме от числа степеней свободы _MathID_F2_422_</text>
+        </g>
+      </picture>
+    </para>
+    <para xml:id="S2.p19">
+      <p>Исследовалось также уменьшение относительной погрешности в энергетической
+норме _MathID_F2_423_ при увеличении числа степеней свобод _MathID_F2_424_. Решение
+при помощи _MathID_F2_425_-версии было получено в пакете ANSYS, а для _MathID_F2_426_-версии
+использовался наш пакет. Полученные результаты (см. рис. 7б)) полностью
+согласуются с априорными оценками скорости сходимости _MathID_F2_427_- и
+_MathID_F2_428_-версий метода конечных элементов.</p>
+    </para>
+  </section>
+  <bibliography xml:id="bib">
+    <title>Список литературы</title>
+    <biblist>
+      <bibitem key="bs1987" xml:id="bib.bib1">
+        <bibtag role="refnum">1</bibtag>
+        <bibblock> <!-- %1 -->Babuška I., Suri M. <text font="italic">The _MathID_F2_429_-_MathID_F2_430_ version of the finite element
+method with quasiuniform meshes</text> // Math. Mod. Numer. Anal. –
+1987. – V. 21. – P. 199–238.
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1275 **** --></bibblock>
+      </bibitem>
+      <bibitem key="schwab1998" xml:id="bib.bib2">
+        <bibtag role="refnum">2</bibtag>
+        <bibblock> <!-- %2 -->Schwab Ch. _MathID_F2_431_<text font="italic">- and _MathID_F2_432_-finite element methods. Theory and
+applications in solid and fluid mechanics</text>. – Clarendon Press. Oxford,
+1998. – 374 p.
+</bibblock>
+      </bibitem>
+      <bibitem key="nepomnyaschikh:91" xml:id="bib.bib3">
+        <bibtag role="refnum">3</bibtag>
+        <bibblock> <!-- %3 -->Nepomnyaschikh S.V. <text font="italic">Method of splitting into subspaces for solving
+elliptic boundary value problems in complex-form domains</text> //
+Russian (cont. Sov.) J. Numer. Anal. and
+Math. Model. – 1991. – V. 6. – № 2. – P. 151–168.
+</bibblock>
+      </bibitem>
+      <bibitem key="smithbjorstadgropp:96" xml:id="bib.bib4">
+        <bibtag role="refnum">4</bibtag>
+        <bibblock> <!-- %4 -->Smith B., Bjørstad P., Gropp W. <text font="italic">Domain decomposition_MathID_F2_433_
+parallel multilevel methods for elliptic partial differential
+equations</text>. – Cambride University Press, 1996. – 224 p. <!-- %% (+xii) --></bibblock>
+      </bibitem>
+      <bibitem key="babuskacraigmandelpitkaranta:91" xml:id="bib.bib5">
+        <bibtag role="refnum">5</bibtag>
+        <bibblock> <!-- %5 -->Babuška I., Craig A., Mandel J., Pitkäranta J. <text font="italic">Efficient
+preconditioning for the _MathID_F2_434_-version finite element method in two
+dimensions</text> // SIAM J. Numer. Anal. – 1991. – V. 28. – № 3.
+– P. 624–661.
+</bibblock>
+      </bibitem>
+      <bibitem key="pavarino:94" xml:id="bib.bib6">
+        <bibtag role="refnum">6</bibtag>
+        <bibblock> <!-- %6 -->Pavarino L.F. <text font="italic">Additive Schwartz methods for the _MathID_F2_435_-version finite
+element method</text> // Numer. Math. – 1994. – V. 66. – № 4.
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1300 **** -->– P. 493–515.
+</bibblock>
+      </bibitem>
+      <bibitem key="ainsworth" xml:id="bib.bib7">
+        <bibtag role="refnum">7</bibtag>
+        <bibblock> <!-- %7 -->Ainsworth M.
+<text font="italic">A preconditioner based on domain decomposition for _MathID_F2_436_-_MathID_F2_437_
+finite element approximation on quasi-uniform meshes</text> //
+SIAM J. Numer. Anal. – 1996. – V. 33. – P. 1358–1376.
+</bibblock>
+      </bibitem>
+      <bibitem key="ainsworthsenior" xml:id="bib.bib8">
+        <bibtag role="refnum">8</bibtag>
+        <bibblock> <!-- %8 -->Ainsworth M., Senior B.
+<text font="italic">Aspects of an adaptive _MathID_F2_438_-finite element method_MathID_F2_439_ Adaptive
+strategy, conforming approximation and efficient solvers</text> //
+Comp. Methods Appl. Mech. Engrg. – 1997. – V. 150. – P. 65–87.
+</bibblock>
+      </bibitem>
+      <bibitem key="guo" xml:id="bib.bib9">
+        <bibtag role="refnum">9</bibtag>
+        <bibblock> <!-- %9 -->Guo B., Cao W. <text font="italic">Inexact solvers on element surfaces for the _MathID_F2_440_
+and _MathID_F2_441_-_MathID_F2_442_ finite element method</text> // Comput.
+Methods Appl. Mech. – 1997. – V. 150. – P. 173–191.
+</bibblock>
+      </bibitem>
+      <bibitem key="ki1995" xml:id="bib.bib10">
+        <bibtag role="refnum">10</bibtag>
+        <bibblock> <!-- %10 -->Ivanov S.A., Korneev V.G. <text font="italic">On the preconditioning in the domain
+decomposition technique for the _MathID_F2_443_-version finite element method</text>.
+I // Technishe Universität
+Chemnitz-Zwickau. Preprint SPC 95-35. – 1995. – № 12. – P. 1–15.
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1325 **** --></bibblock>
+      </bibitem>
+      <bibitem key="ki1995a" xml:id="bib.bib11">
+        <bibtag role="refnum">11</bibtag>
+        <bibblock> <!-- %11 -->Ivanov S.A., Korneev V.G. <text font="italic">On the preconditioning in the domain
+decomposition technique for the _MathID_F2_444_-version finite element method</text>.
+II // Technishe Universität
+Chemnitz-Zwickau. Preprint SPC 95-36. – 1995. – № 12. – P. 1–14.
+</bibblock>
+      </bibitem>
+      <bibitem key="ki1996" xml:id="bib.bib12">
+        <bibtag role="refnum">12</bibtag>
+        <bibblock> <!-- %12 -->Ivanov S.A., Korneev V.G. <text font="italic">Preconditioning in the domain decomposition
+methods for the _MathID_F2_445_-version with the hierarchical bases</text> //
+Матем. моделир. – 1996. – Т. 8. – № 9. – С. 63–73.
+</bibblock>
+      </bibitem>
+      <bibitem key="kj1997" xml:id="bib.bib13">
+        <bibtag role="refnum">13</bibtag>
+        <bibblock> <!-- %13 -->Korneev V.G., Jensen S. <text font="italic">On domain decomposition preconditioning in
+the hierarchical _MathID_F2_446_-version of the finite element method</text> // Comput.
+Methods. Appl. Mech. Eng. – 1997. – V. 150. – P. 215–238.
+</bibblock>
+      </bibitem>
+      <bibitem key="kj1999" xml:id="bib.bib14">
+        <bibtag role="refnum">14</bibtag>
+        <bibblock> <!-- %14 -->Корнеев В.Г., Енсен С. <text font="italic">Эффективное предобусловливание методом
+декомпозиции области для _MathID_F2_447_-версии с
+иерархическим базисом</text>. I // Изв. вузов. Математика. –
+1999. – № 5. – C. 37–56.
+</bibblock>
+      </bibitem>
+      <bibitem key="kj1999a" xml:id="bib.bib15">
+        <bibtag role="refnum">15</bibtag>
+        <bibblock> <!-- %15 -->Корнеев В.Г., Енсен С. <text font="italic">Эффективное предобусловливание методом
+декомпозиции области для _MathID_F2_448_-версии с
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1350 **** -->иерархическим базисом</text>. II // Изв. вузов. Математика. –
+1999. – № 11. – C. 24–40.
+</bibblock>
+      </bibitem>
+      <bibitem key="k2001" xml:id="bib.bib16">
+        <bibtag role="refnum">16</bibtag>
+        <bibblock> <!-- %16 -->Корнеев В.Г. <text font="italic">Почти оптимальный метод решения задач Дирихле на
+подобластях декомпозиции иерархической _MathID_F2_449_-версии</text> // Дифференц.
+уравнения. – 2001. – Т. 37. – № 7. – С. 1–10.
+</bibblock>
+      </bibitem>
+      <bibitem key="k2002" xml:id="bib.bib17">
+        <bibtag role="refnum">17</bibtag>
+        <bibblock> <!-- %17 -->Korneev V.G. <text font="italic">Local Dirichlet problems on subdomains of decomposition
+in _MathID_F2_450_ discretizations, and optimal algorithms for their solution</text> //
+Матем. моделир. – 2002. – Т.14. – № 5. – С. 51–74.
+</bibblock>
+      </bibitem>
+      <bibitem key="korneev:02b" xml:id="bib.bib18">
+        <bibtag role="refnum">18</bibtag>
+        <bibblock> <!-- %18 -->Korneev V.G. <text font="italic">Fast domain decomposition solvers for _MathID_F2_451_
+discretizations of _MathID_F2_452_-nd order elliptic equations</text> // In Proceedings
+of the International Conference
+on Computational Mathematics. 24–28 of June, 2002, Novosibirsk. Institute
+of Computational Mechanics and Mathematical Geophysics of
+Sibirian Branch of Russian Acad. of Sci.: Novosibirsk, 2002. – P. 536–547.
+</bibblock>
+      </bibitem>
+      <bibitem key="kxa2002" xml:id="bib.bib19">
+        <bibtag role="refnum">19</bibtag>
+        <bibblock> <!-- %19 -->Korneev V.G., Xanthis L., Anoufriev I.E.
+<text font="italic">Solving finite element _MathID_F2_453_ discretizations of elliptic problems by fast
+DD algorithms</text> // Тр. СПбГПУ. – 2002. – № 485. – С. 126–153.
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1375 **** --></bibblock>
+      </bibitem>
+      <bibitem key="k1977" xml:id="bib.bib20">
+        <bibtag role="refnum">20</bibtag>
+        <bibblock> <!-- %20 -->Корнеев В.Г. <text font="italic">Схемы метода конечных элементов высоких порядков
+точности</text>. – Л.: Изд-во ЛГУ, 1977. – 205 с.
+</bibblock>
+      </bibitem>
+      <bibitem key="ggk" xml:id="bib.bib21">
+        <bibtag role="refnum">21</bibtag>
+        <bibblock> <!-- %21 -->Giladi E., Golub G., Keller J. <text font="italic">Inner and outer iterations for the
+Chebyshev algorithm</text> // SIAM J. on Numer. Anal. – 1998. –
+V. 35. – № 1. – P. 300–319.
+</bibblock>
+      </bibitem>
+      <bibitem key="ge" xml:id="bib.bib22">
+        <bibtag role="refnum">22</bibtag>
+        <bibblock> <!-- %22 -->Golub G.H., Ye Q. <text font="italic">Inexact preconditioned conjugate gradient method
+with inner–outer iteration</text> // SIAM J. Sc. Comp. – 1999. –
+V. 21. – № 4. – P. 1305–1320.
+</bibblock>
+      </bibitem>
+      <bibitem key="go" xml:id="bib.bib23">
+        <bibtag role="refnum">23</bibtag>
+        <bibblock> <!-- %23 -->Golub G., Overton M. <text font="italic">The convergence of inexact Chebyshev and
+Richardson iterative methods for solving linear systems</text> // Numer. Math.
+– 1988. – V. 53. – P. 571–593.
+</bibblock>
+      </bibitem>
+      <bibitem key="b2002" xml:id="bib.bib24">
+        <bibtag role="refnum">24</bibtag>
+        <bibblock> <!-- %24 -->Beuchler S. <text font="italic">Multigrid solver for the inner problem in domain
+decomposition methods for _MathID_F2_454_-FEM</text> //
+SIAM J. Numer. Anal. – 2002. – V. 40. – № 4. – P. 928–944.
+<!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1400 **** --></bibblock>
+      </bibitem>
+      <bibitem key="bss2002" xml:id="bib.bib25">
+        <bibtag role="refnum">25</bibtag>
+        <bibblock> <!-- %25 -->Beuchler S., Schneider R., Schwab C.
+<text font="italic">Multiresolution weighted norm equivalence and applications</text> //
+Preprint SFB393/02-09, Technische Universität Chemnitz, 2002.
+</bibblock>
+      </bibitem>
+      <bibitem key="ivanovkorneev:95" xml:id="bib.bib26">
+        <bibtag role="refnum">26</bibtag>
+        <bibblock> <!-- %26 -->Иванов С.А., Корнеев В.Г. <text font="italic">Выбор координатных функций высоких
+порядков и предобусловливание в рамках метода декомпозиции области</text> //
+Изв. вузов. Mатематика. – 1995. – № 4. – С. 62–81.
+</bibblock>
+      </bibitem>
+      <bibitem key="kxa2002p" xml:id="bib.bib27">
+        <bibtag role="refnum">27</bibtag>
+        <bibblock> <!-- %27 -->Korneev V., Xantis L., Anoufriev I. <text font="italic">Hierarchical and Lagrange _MathID_F2_455_
+discretizations and fast domain decomposition solvers for them</text> //
+Johannes Kepler Universität Linz. SFB-Report
+№ 02-18, 2002. – 30 p.
+</bibblock>
+      </bibitem>
+      <bibitem key="agks2002" xml:id="bib.bib28">
+        <bibtag role="refnum">28</bibtag>
+        <bibblock> <!-- %28 -->Ануфриев И.Е., Головин О.А., Константинов В., Смирнова Е.Н.
+<text font="italic">Численный эксперимент с эффективным предобусловливанием интерфейсной
+задачи в _MathID_F2_456_-версии</text> //
+Тр. СПбГПУ. – 2002. – № 485. – С. 3–16.
+</bibblock>
+      </bibitem>
+    </biblist>
+  </bibliography>
+  <!-- %**** ../../../../../../../../mocassin/patched-tex/ivm2.tex Line 1425 **** -->
+  <para xml:id="p5">
+    <break/>
+  </para>
+</document>

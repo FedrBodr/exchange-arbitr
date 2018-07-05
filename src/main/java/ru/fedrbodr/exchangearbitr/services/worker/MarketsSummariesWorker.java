@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class MarketsSummariesWorker implements Runnable {
 	public static final int REQUESTS_PAUSE = 8000;
-	public static final int BINANCE_ALL_TICKERS_PAUSE = 20000;
-	private boolean doGrabbing = false;
+	public static final int BINANCE_ALL_TICKERS_PAUSE = 15000;
+	private volatile boolean doGrabbing = false;
 	private Date startPreviousCall;
 	private Date startPreviousBitrixCall;
 	@Autowired
@@ -50,26 +50,25 @@ public class MarketsSummariesWorker implements Runnable {
 
 	private void readAndSaveAllExchangeSummaries() throws InterruptedException {
 		Date start = new Date();
-		ExecutorService executor = Executors.newFixedThreadPool(exchangeMetaToExchangeSummariesReaderMap.values().size());
+		ExecutorService executorService = Executors.newFixedThreadPool(exchangeMetaToExchangeSummariesReaderMap.values().size());
 		List<FutureTask<Void>> taskList = new ArrayList<>();
 
 		Collection<ExchangeReader> values = exchangeMetaToExchangeSummariesReaderMap.values();
 		for (ExchangeReader value : values) {
-			addReaderTaskFutureTaskToTaskList(executor, taskList, value);
+			addReaderTaskFutureTaskToTaskList(executorService, taskList, value);
 		}
 
 		/*TODO refactor this to configarable limits for each exchange
 		* and start wright wiki or project documentation*/
 		long lastCallWas = System.currentTimeMillis() - startPreviousBitrixCall.getTime();
 		if( lastCallWas > BINANCE_ALL_TICKERS_PAUSE){
-			addReaderTaskFutureTaskToTaskList(executor, taskList, binanceExchangeReader);
+			addReaderTaskFutureTaskToTaskList(executorService, taskList, binanceExchangeReader);
 			startPreviousBitrixCall = new Date();
 		}
 
-		executor.shutdown();
-
+		executorService.shutdown();
 		try {
-			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+			executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 		} catch (InterruptedException e) {
 			log.error(e.getMessage(), e);
 		}

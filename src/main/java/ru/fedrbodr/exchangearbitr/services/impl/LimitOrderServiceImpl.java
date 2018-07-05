@@ -21,7 +21,6 @@ import ru.fedrbodr.exchangearbitr.xchange.custom.ExchangeProxy;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
@@ -44,9 +43,9 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 		Date start = new Date();
 		MarketDataService marketDataService;
 		Exchange exchange = null;
-		if(exchangeMeta.equals(ExchangeMeta.COINEXCHANGE)){
+		if (exchangeMeta.equals(ExchangeMeta.COINEXCHANGE)) {
 			marketDataService = exchangeMetaToExchangeProxyMap.get(exchangeMeta).getNextMarketDataService();
-		}else{
+		} else {
 			exchange = exchangeMetaToExchangeProxyMap.get(exchangeMeta).getNextExchange();
 			marketDataService = exchange.getMarketDataService();
 		}
@@ -55,26 +54,18 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 			try {
 				AtomicReference<OrderBook> orderBook = new AtomicReference<>();
 
-				ExecutorService executorService = Executors.newSingleThreadExecutor();
+				CurrencyPair currencyPair = SymbolsNamesUtils.getCurrencyPairForOrderBokRequest(symbol.getBaseName(), symbol.getQuoteName(), exchangeMeta);
 
-				Callable<Void> tCallable = () -> {
-					CurrencyPair currencyPair = SymbolsNamesUtils.getCurrencyPairForOrderBokRequest(symbol.getBaseName(), symbol.getQuoteName(), exchangeMeta);
-					if(exchangeMeta.getIntOrderBookParam()) {
-						orderBook.set(marketDataService.getOrderBook(currencyPair, 100));
-					}else{
-						orderBook.set(marketDataService.getOrderBook(currencyPair, 100L));
-					}
-					return null;
-				};
-				FutureTask futureTask = new FutureTask(tCallable);
-				executorService.execute(futureTask);
-				executorService.shutdown();
+				if (exchangeMeta.getIntOrderBookParam()) {
+					orderBook.set(marketDataService.getOrderBook(currencyPair, 20));
+				} else {
+					orderBook.set(marketDataService.getOrderBook(currencyPair, 20L));
+				}
 
-				executorService.awaitTermination(MAX_TIMEOUT_FOR_GETING_ORDER_BOOK_REQUESTR, TimeUnit.MILLISECONDS);
 
 				if (orderBook.get() == null) {
 					log.error("LONG getting order bok detected time {} for exchange {} and symbol {} by proxy {}",
-							(new Date().getTime() - start.getTime()), exchangeMeta.getExchangeName(), symbol.getName(), exchange==null? "null exchange local ip":exchange.getExchangeSpecification().getProxyHost());
+							(new Date().getTime() - start.getTime()), exchangeMeta.getExchangeName(), symbol.getName(), exchange == null ? "null exchange local ip" : exchange.getExchangeSpecification().getProxyHost());
 				} else {
 					/*TODO refactor to service */
 					Date orderReadingTimeStamp = new Date();
@@ -84,7 +75,7 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 						/*log.info("DELETE on exchange {} {}  and symbol {} {}",
 								exchangeMeta.getExchangeName(), exchangeMeta.getId(), symbol.getName(),symbol.getId());*/
 						limitOrderRepository.deleteByExchangeMetaAndSymbol(exchangeMeta, symbol);
-					}catch (ObjectOptimisticLockingFailureException e){
+					} catch (ObjectOptimisticLockingFailureException e) {
 						// something weird - i am cannot understand where but hibernate persistence scope not equal to the db
 						log.error("New ObjectOptimisticLockingFailureException occured while try to deleteByExchangeMetaAndSymbol on exchange {} and symbol {}",
 								exchangeMeta.getExchangeName(), symbol.getName());
@@ -92,7 +83,6 @@ public class LimitOrderServiceImpl implements LimitOrderService {
 
 
 					limitOrderRepository.save(uniAsks);
-					limitOrderRepository.flush();
 					List<UniLimitOrder> uniBids = LimitOrderUtils.convertToUniLimitOrderListWithCalcSums(orderBook.get().getBids(), exchangeMeta, symbol, orderReadingTimeStamp, Order.OrderType.BID);
 					limitOrderRepository.save(uniBids);
 					limitOrderRepository.flush();

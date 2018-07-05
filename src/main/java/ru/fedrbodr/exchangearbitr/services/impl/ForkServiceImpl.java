@@ -35,7 +35,7 @@ import static ru.fedrbodr.exchangearbitr.config.CachingConfig.CURRENT_FORKS_CACH
 @Slf4j
 public class ForkServiceImpl implements ForkService {
 	public static final double MIN_PROFIT_TO_LOGGING = 0.003;
-	private static final long FORK_DELIMITER_LATENCY_TIME = 60000;
+	private static final long FORK_DELIMITER_LATENCY_TIME = 40000;
 	public static final int FORK_LAST_UPDATED_SECONDS = 100;
 	@Autowired
 	private MarketPositionFastService marketPositionFastService;
@@ -156,6 +156,8 @@ public class ForkServiceImpl implements ForkService {
 	private List<DepoProfit> calcAddProfitsList(List<UniLimitOrder> sellUniLimitOrders, List<UniLimitOrder> buyUniLimitOrders) {
 		List<DepoProfit> depositProfitList = new ArrayList<>();
 		/*TODO determine deposits list by base currency*/
+		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(0.002)));
+		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(0.004)));
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(0.01)));
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(0.1)));
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(0.25)));
@@ -168,9 +170,8 @@ public class ForkServiceImpl implements ForkService {
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(15)));
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(100)));
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(1000)));
-		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(2000)));
 		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(4000)));
-		depositProfitList.add(calculateAddProfitByGlassesByDeposit(sellUniLimitOrders, buyUniLimitOrders, new BigDecimal(10000)));
+
 
 		CollectionUtils.filter(depositProfitList, PredicateUtils.notNullPredicate());
 		return depositProfitList;

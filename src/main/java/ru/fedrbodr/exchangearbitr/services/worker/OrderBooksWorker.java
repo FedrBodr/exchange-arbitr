@@ -1,17 +1,15 @@
 package ru.fedrbodr.exchangearbitr.services.worker;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.ExchangeMeta;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.MarketPositionFast;
 import ru.fedrbodr.exchangearbitr.dao.shorttime.domain.Symbol;
-import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.ExchangeMetaRepository;
-import ru.fedrbodr.exchangearbitr.dao.shorttime.repo.MarketPositionFastRepositoryCustom;
 import ru.fedrbodr.exchangearbitr.services.ForkService;
 import ru.fedrbodr.exchangearbitr.services.LimitOrderService;
 import ru.fedrbodr.exchangearbitr.services.MarketPositionFastService;
-import ru.fedrbodr.exchangearbitr.services.SymbolService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +20,7 @@ import java.util.concurrent.*;
 @Component
 @Slf4j
 public class OrderBooksWorker implements Runnable {
-	public static final int RUN_MIN_PAUSE = 90000;
+	public static final int RUN_MIN_PAUSE = 10000;
 
 	private boolean doGrabbing = false;
 
@@ -32,16 +30,10 @@ public class OrderBooksWorker implements Runnable {
 	@Autowired
 	private LimitOrderService orderService;
 	@Autowired
-	private MarketPositionFastRepositoryCustom marketPositionFastRepositoryCustom;
-	@Autowired
 	private MarketPositionFastService marketPositionFastService;
-	@Autowired
-	private SymbolService symbolService;
-	@Autowired
-	private ExchangeMetaRepository exchangeMetaRepository;
 
 	private Date startPreviousCall;
-	private int threadCount = 50;
+	private int orderBookLoaderThreadCount = 100;
 
 	public OrderBooksWorker() {
 		startPreviousCall = new Date();
@@ -63,8 +55,9 @@ public class OrderBooksWorker implements Runnable {
 	}
 
 	public void readAndSaveOrderBooksByTopMarketPositions() throws InterruptedException {
-		Date start = new Date();
-		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+		StopWatch stopWatchAll = StopWatch.createStarted();
+		StopWatch stopWatch = StopWatch.createStarted();
+		ExecutorService executor = Executors.newFixedThreadPool(orderBookLoaderThreadCount);
 		List<FutureTask<Void>> taskList = new ArrayList<>();
 
 		/* Do not be surprised MarketPositionFastPK is suitable for check exchangeMeta and symbol uniqueness */
@@ -78,11 +71,12 @@ public class OrderBooksWorker implements Runnable {
 		} catch (InterruptedException e) {
 			log.error(e.getMessage(), e);
 		}
-		long allOrdersLoadingTime = (new Date().getTime() - start.getTime());
-		log.info("After all orders Load seconds: {}", allOrdersLoadingTime / 1000);
+		log.info("After all orders Load seconds: {}", stopWatch.getTime() / 1000);
+		stopWatch.reset();
 		/* Start forks calculating for saving statistics */
-		forkService.determineAndPersistForks(allOrdersLoadingTime);
-		log.info("After determineAndPersistForks: {} ms", new Date().getTime() - start.getTime());
+		forkService.determineAndPersistForks(stopWatch.getTime());
+		log.info("After determineAndPersistForks: {} ms", stopWatch.getTime());
+		stopWatch.reset();
 		/*call preinit last forks cache*/
 		ExecutorService executorService = Executors.newSingleThreadExecutor();
 		Callable<Void> tCallable = () -> {
@@ -94,7 +88,7 @@ public class OrderBooksWorker implements Runnable {
 		executorService.execute(futureTask);
 
 		orderService.deleteAll();
-		log.info("After orderService.deleteAll(): {} ms", new Date().getTime() - start.getTime());
+		log.info("After orderService.deleteAll(): {} ms", stopWatch.getTime());
 		long lastCallWas = System.currentTimeMillis() - startPreviousCall.getTime();
 		if (lastCallWas < RUN_MIN_PAUSE) {
 			synchronized (this) { // obtain lock's monitor
@@ -103,17 +97,14 @@ public class OrderBooksWorker implements Runnable {
 		}
 		startPreviousCall = new Date();
 
-		long lastOrderLoadingTimeMillis = (new Date().getTime() - start.getTime());
-		log.info("After stop readAndSaveOrderBooksByTopMarketPositions total time in  seconds: {}", lastOrderLoadingTimeMillis / 1000);
+		log.info("After stop readAndSaveOrderBooksByTopMarketPositions total time in  seconds: {}", stopWatchAll.getTime() / 1000);
 	}
 
 	private void addOrderBookReaderFutureTaskToTaskList(ExecutorService executorForSynk, List<FutureTask<Void>> taskList, MarketPositionFast marketPosition) {
 		Symbol symbol = marketPosition.getMarketPositionFastPK().getSymbol();
 		ExchangeMeta exchangeMeta = marketPosition.getMarketPositionFastPK().getExchangeMeta();
 
-		FutureTask<Void> exchangeReaderBuyExchangeTask = new FutureTask<>(() -> {
-			return getaVoid(symbol, exchangeMeta);
-		});
+		FutureTask<Void> exchangeReaderBuyExchangeTask = new FutureTask<>(() -> getaVoid(symbol, exchangeMeta));
 		taskList.add(exchangeReaderBuyExchangeTask);
 		executorForSynk.submit(exchangeReaderBuyExchangeTask);
 	}

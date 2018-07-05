@@ -18,7 +18,6 @@ import ru.fedrbodr.exchangearbitr.xchange.custom.ExchangeProxy;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.*;
 
 import static ru.fedrbodr.exchangearbitr.utils.SymbolsNamesUtils.binanceToUniCurrencyName;
@@ -59,7 +58,7 @@ public class BinanceExchangeReaderImpl implements ExchangeReader {
 		log.info(BinanceExchangeReaderImpl.class.getSimpleName() + " initialisation end, execution time: {}", new Date().getTime() - starDate.getTime());
 	}
 
-	public void readAndSaveMarketPositionsBySummaries() throws IOException, JSONException, ParseException {
+	public void readAndSaveMarketPositionsBySummaries() throws IOException, JSONException {
 		/*TODO refactor this with aop for all init methods*/
 		List<BinanceTicker24h> binanceTicker24hList = getMarketDataService().ticker24h();
 		List<MarketPosition> marketPositionList = new ArrayList<>();

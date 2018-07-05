@@ -25,11 +25,13 @@ public class ExchangeMeta implements Serializable {
 	public static ExchangeMeta COINEXCHANGE = new ExchangeMeta(3, "COINEXCHANGE", "https://www.coinexchange.io", "https://www.coinexchange.io/market/", "?r=96594b96", true, false);
 	public static ExchangeMeta BINANCE = new ExchangeMeta(4, "BINANCE", "https://www.binance.com", "https://www.binance.com/trade.html?symbol=", "", false, true);
 	public static ExchangeMeta HITBTC = new ExchangeMeta(5, "HIT-BTC", "https://hitbtc.com", "https://hitbtc.com/exchange/", "?ref_id=5a87e613af10d", false, true);
-	public static ExchangeMeta KUCOIN = new ExchangeMeta(6, "KUCOIN", "www.kucoin.com", "https://www.kucoin.com/#/trade.pro/", "", false, true);
+	public static ExchangeMeta KUCOIN = new ExchangeMeta(6, "KUCOIN", "www.kucoin.com", "https://www.kucoin.com/#/trade.pro/", "#/?r=JfueNM", false, true);
 	/** be careful with https://www.cryptopia.co.nz/Exchange?market= as params need symbol in this format LINDA_BTC */
 	public static ExchangeMeta CRYPTOPIA = new ExchangeMeta(7, "CRYPTOPIA", "https://www.cryptopia.co.nz", "https://www.cryptopia.co.nz/Exchange?market=", "&referrer=FedrBodr", false, false);
 	public static ExchangeMeta KUNA = new ExchangeMeta(8, "KUNA", "https://kuna.io/", "https://kuna.io/markets/", "", false, true);
 	public static ExchangeMeta LIVECOIN = new ExchangeMeta(9, "LIVECOIN", "https://www.livecoin.net", "https://www.livecoin.net/en/trade/index?currencyPair=", "&from=Livecoin-Vv9RaReE", false, false);
+	public static ExchangeMeta COINEGG = new ExchangeMeta(10, "COINEGG", "", "", "", false, false);
+	public static ExchangeMeta BITFINEX = new ExchangeMeta(11, "BITFINEX", "", "", "", false, false);
 
 	@Id
 	private int id;

@@ -7,13 +7,15 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface MarketPositionFastRepositoryCustom {
-	List selectTopAfter10MarketPositionFastCompareList();
+	@Transactional(readOnly = true)
+	List<Object[]> selectTopProblemMarketPositionFastCompareList();
 
 	List<Object[]> selectFullMarketPositionFastCompareList();
 
 	List<Object[]> selectTopMarketPositionFastCompareList();
 
-	List<Object[]> selectTopProblemMarketPositionFastCompareList();
+	@Transactional(readOnly = true)
+	List<Object[]> selectTopAfter10MarketPositionFastCompareList();
 
 	@Transactional(readOnly = true)
 	List<DepoFork> selectTopForksByDeposit(BigDecimal deposit);

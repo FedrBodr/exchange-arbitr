@@ -18,7 +18,7 @@ public class DepoProfit {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable = false)
+	@Column(nullable = false, precision = 19, scale = 4)
 	private BigDecimal deposit;
 	/**
 	 * average price on first exchange by sell orders for the deposit(we buy)
